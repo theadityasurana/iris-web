@@ -1,0 +1,20 @@
+/** Shared palette for Iris, Premium, and other marketing screens */
+export const marketing = {
+  background: '#121212',
+  surface: '#1E1E1E',
+  surfaceElevated: '#2A2A2A',
+  gradientStart: '#0F172A',
+  gradientMid: '#1E293B',
+  gradientEnd: '#121212',
+  accent: '#E65100',
+  accentSoft: 'rgba(230, 81, 0, 0.15)',
+  accentGlow: '#FF8A00',
+  scannerStart: '#0A0014',
+  scannerMid: '#0F1A2E',
+  scannerEnd: '#0A1628',
+  terminalBg: '#0D1117',
+  terminalGreen: '#00FF41',
+  textPrimary: '#FFFFFF',
+  textSecondary: 'rgba(255, 255, 255, 0.7)',
+  textTertiary: 'rgba(255, 255, 255, 0.45)',
+} as const;
