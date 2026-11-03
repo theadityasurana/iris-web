@@ -7,4 +7,3 @@
 /app/assets/*  /app/assets/:splat  200
 /app/logo.png  /app/logo.png  200
 /app/*  /app/  200
-/how-it-works  /how-it-works/index.html  301

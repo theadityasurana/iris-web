@@ -65,7 +65,6 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: {
           app: resolve(__dirname, 'app/index.html'),
-          howItWorks: resolve(__dirname, 'how-it-works/index.html'),
         },
       },
     },

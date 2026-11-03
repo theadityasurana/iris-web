@@ -14,7 +14,7 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 const PUBLIC = resolve(__dir, '../public');
 const DIST = resolve(__dir, '../dist');
 
-const SKIP = new Set(['app', 'how-it-works']);
+const SKIP = new Set(['app']);
 
 for (const entry of readdirSync(PUBLIC)) {
   if (SKIP.has(entry)) continue;

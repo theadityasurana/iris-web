@@ -18,7 +18,7 @@ export function AuthLayout({ title, subtitle, children, footer }: { title: strin
       </div>
       <aside className="auth-aside" aria-hidden="true">
         <div className="auth-aside-inner">
-          <img src="https://irisjobs.live/media/iris-poster-1080.jpg" alt="" />
+          <img src="/media/iris-poster-1080.jpg" alt="" />
           <div className="auth-quote">
             <p className="t-heading">Swipe right on a job. Iris fills in the application and submits it for you.</p>
             <p className="t-callout muted" style={{ marginTop: 10 }}>Same account as the Iris app on iPhone and Android.</p>
