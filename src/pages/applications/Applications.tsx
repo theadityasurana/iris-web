@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Send, Mic, FileText, Bookmark, ScrollText, Sparkles, ChevronRight } from 'lucide-react';
 import { useApplications, useEntitlements } from '@web/lib/queries';
-import { CompanyLogo, Empty, SkeletonRows, StatusBadge, timeAgo } from '@web/ui/bits';
+import { CompanyLogo, Empty, SkeletonList, StatusBadge, timeAgo } from '@web/ui/bits';
 
 type Filter = 'done' | 'pending';
 
@@ -97,7 +97,7 @@ export default function Applications() {
           <div className="input-wrap" style={{ width: 260 }}><Search /><input className="input" value={q} onChange={e => setQ(e.target.value)} placeholder="Search applications" style={{ height: 38 }} /></div>
         </div>
 
-        {isLoading ? <SkeletonRows /> : list.length === 0 ? (
+        {isLoading ? <SkeletonList /> : list.length === 0 ? (
           apps.length === 0
             ? <Empty icon={Send} title="No applications yet" body="Swipe right on a job and Iris applies for you. It shows up here straight away." action={<Link to="/app/jobs" className="btn">Find jobs</Link>} />
             : <Empty icon={Search} title={q ? 'No matches' : filter === 'pending' ? 'Nothing in the queue' : 'Nothing submitted yet'} />

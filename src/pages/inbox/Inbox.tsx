@@ -5,7 +5,7 @@ import { Inbox as InboxIcon, Star, Send, Archive, PenSquare, Copy, Search, Arrow
 import { useAuth } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 import { Modal, ConfirmModal } from '@web/ui/Modal';
-import { Empty, SkeletonRows, Avatar, timeAgo } from '@web/ui/bits';
+import { Empty, SkeletonList, SkeletonRows, Avatar, timeAgo } from '@web/ui/bits';
 import { isValidEmail } from '@web/lib/validate';
 import {
   getOrCreateProxyEmail, fetchInboundEmails, fetchSentEmails, fetchStarredEmails, fetchThreadMessages,
@@ -285,7 +285,7 @@ export default function Inbox() {
             </div>
           )}
         </div>
-        {isLoading ? <div style={{ padding: 12 }}><SkeletonRows n={7} h={58} /></div> : threads.length === 0 ? (
+        {isLoading ? <div style={{ padding: 12 }}><SkeletonList n={7} /></div> : threads.length === 0 ? (
           <Empty icon={MailOpen} title={q ? 'No matches' : folder === 'inbox' ? 'No mail yet' : `Nothing ${folder === 'sent' ? 'sent' : folder}`}
             body={folder === 'inbox' && !q ? 'Replies from companies you apply to arrive here.' : undefined} />
         ) : (

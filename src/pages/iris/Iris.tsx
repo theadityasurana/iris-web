@@ -27,7 +27,7 @@ export default function Iris() {
   const { userId } = useAuth();
   const ent = useEntitlements();
   const qc = useQueryClient();
-  const { showToast } = useToast();
+  const toast = useToast();
 
   const { data: enabled = false } = useQuery({
     queryKey: ['iris-enabled', userId],
@@ -75,7 +75,7 @@ export default function Iris() {
     await saveIrisPreferences(userId, patch);
     qc.invalidateQueries({ queryKey: ['iris-preferences', userId] });
     setSaving(false);
-    showToast('Preferences saved');
+    toast('Preferences saved');
   };
 
   if (!ent.iris) {

@@ -2,11 +2,22 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { companyLogoCandidates } from '@/lib/jobs';
 
+const LOGO_DEV_TOKEN = (typeof process !== 'undefined' && process.env?.EXPO_PUBLIC_LOGO_DEV_TOKEN) || '';
+
+function logoDevUrl(domain: string) {
+  if (!LOGO_DEV_TOKEN || !domain) return null;
+  return `https://img.logo.dev/${domain}?token=${LOGO_DEV_TOKEN}&size=80&format=png`;
+}
+
 /** Company logo with the app's provider chain, ending in an initial badge. */
 export function CompanyLogo({ name, url, website, size }: { name: string; url?: string | null; website?: string | null; size?: 'sm' | 'lg' }) {
   const candidates = useMemo(() => {
     const list = companyLogoCandidates(name || '', url && url.startsWith('http') ? url : null, website);
     if (url && url.startsWith('http') && !list.includes(url)) list.unshift(url);
+    // Prepend logo.dev if we have a domain
+    const domain = website?.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+    const logoDevSrc = domain ? logoDevUrl(domain) : null;
+    if (logoDevSrc && !list.includes(logoDevSrc)) list.unshift(logoDevSrc);
     return list;
   }, [name, url, website]);
   const [i, setI] = useState(0);
@@ -16,7 +27,7 @@ export function CompanyLogo({ name, url, website, size }: { name: string; url?: 
     <div className={`logo ${size ?? ''}`}>
       {src ? (
         <img src={src} alt="" loading="lazy" onError={() => setI(n => n + 1)}
-          onLoad={e => { const img = e.currentTarget; if (img.naturalWidth <= 16 && i < candidates.length) setI(n => n + 1); }} />
+          onLoad={e => { const img = e.currentTarget; if (img.naturalWidth <= 16 && i < candidates.length - 1) setI(n => n + 1); }} />
       ) : (
         <span className="initial">{(name || '?').trim().charAt(0).toUpperCase()}</span>
       )}
@@ -46,6 +57,39 @@ export function SkeletonRows({ n = 5, h = 64 }: { n?: number; h?: number }) {
   return (
     <div className="stack gap-8">
       {Array.from({ length: n }, (_, i) => <div key={i} className="sk" style={{ height: h, borderRadius: 14 }} />)}
+    </div>
+  );
+}
+
+export function SkeletonCard() {
+  return (
+    <div className="sk-card">
+      <div className="sk-row">
+        <div className="sk sk-circle" style={{ width: 42, height: 42 }} />
+        <div className="stack gap-6" style={{ flex: 1 }}>
+          <div className="sk" style={{ height: 14, width: '55%' }} />
+          <div className="sk" style={{ height: 12, width: '35%' }} />
+        </div>
+      </div>
+      <div className="sk" style={{ height: 12, width: '80%' }} />
+      <div className="sk" style={{ height: 12, width: '60%' }} />
+      <div className="sk" style={{ height: 12, width: '40%' }} />
+    </div>
+  );
+}
+
+export function SkeletonList({ n = 5 }: { n?: number }) {
+  return (
+    <div className="stack gap-2">
+      {Array.from({ length: n }, (_, i) => (
+        <div key={i} className="sk-row" style={{ padding: '12px 16px' }}>
+          <div className="sk sk-circle" style={{ width: 38, height: 38, flexShrink: 0 }} />
+          <div className="stack gap-6" style={{ flex: 1 }}>
+            <div className="sk" style={{ height: 13, width: `${50 + (i * 13) % 35}%` }} />
+            <div className="sk" style={{ height: 11, width: `${30 + (i * 17) % 30}%` }} />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
