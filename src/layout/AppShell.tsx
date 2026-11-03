@@ -1,11 +1,33 @@
-import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Layers, Send, Mail, Sparkles, Mic, User, Bookmark, CreditCard, Settings, LifeBuoy, Moon, Sun, Smartphone } from 'lucide-react';
+import { Layers, Send, Mail, Sparkles, Mic, User, Bookmark, CreditCard, Settings, LifeBuoy, Moon, Sun, Smartphone, LogOut } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useEntitlements, useFreeSwipes, useUnreadMail } from '@web/lib/queries';
 import { Avatar } from '@web/ui/bits';
 import { freeSwipesPerCycle } from '@/lib/daily-swipes';
 import { getPlanDisplayName } from '@/lib/subscription';
+
+function SignOutBtn() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      className="icon-btn"
+      title="Sign out"
+      aria-label="Sign out"
+      disabled={busy}
+      onClick={async () => {
+        if (!confirm('Sign out?')) return;
+        setBusy(true);
+        await logout();
+        navigate('/app/sign-in', { replace: true });
+      }}
+    >
+      <LogOut size={16} />
+    </button>
+  );
+}
 
 const PRIMARY = [
   { to: '/app/jobs', label: 'Jobs', icon: Layers },
@@ -118,9 +140,12 @@ export function AppShell() {
                 <div className="t-caption muted ellipsis">{profile?.email}</div>
               </div>
             </Link>
-            <button className="icon-btn theme-toggle" onClick={toggle} aria-label="Toggle theme">
-              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-            </button>
+            <div className="row gap-4">
+              <button className="icon-btn theme-toggle" onClick={toggle} aria-label="Toggle theme">
+                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
+              <SignOutBtn />
+            </div>
           </div>
         </div>
       </aside>

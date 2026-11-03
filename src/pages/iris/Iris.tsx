@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { Zap, Lock, ChevronRight, Settings2, X } from 'lucide-react';
+import { Zap, ChevronRight, Settings2, X } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useEntitlements } from '@web/lib/queries';
 import { Switch } from '@web/ui/bits';
@@ -80,14 +80,32 @@ export default function Iris() {
 
   if (!ent.iris) {
     return (
-      <div className="page narrow">
-        <div className="empty" style={{ paddingTop: 80 }}>
-          <div className="ico"><Lock /></div>
-          <div className="t-title">Iris auto-apply</div>
-          <p>Iris is available on Starter, Pro, and Ultra plans. Upgrade to let Iris apply to jobs overnight on your behalf.</p>
-          <Link to="/app/plans" className="btn brand" style={{ marginTop: 16 }}>
-            <Zap size={16} /> View plans
-          </Link>
+      <div className="page">
+        <div className="page-head">
+          <div>
+            <h1 className="t-title">Iris auto-apply</h1>
+            <p className="t-callout muted" style={{ marginTop: 4 }}>Iris applies to matching jobs overnight while you sleep.</p>
+          </div>
+          <Link to="/app/plans" className="btn brand"><Zap size={15} />Upgrade</Link>
+        </div>
+        <div className="iris-upsell-grid">
+          {[
+            { title: 'Applies while you sleep', body: 'Iris runs between 12am–8am and submits applications to jobs that match your profile, preferences, and minimum match score.' },
+            { title: 'Fully tailored applications', body: 'Every application uses your resume, cover letter, and profile data — tailored to the specific job description.' },
+            { title: 'You stay in control', body: 'Set a daily limit, minimum match score, watchlist companies to prioritise, and blocked companies to skip.' },
+            { title: 'Pause anytime', body: 'Toggle Iris on or off instantly. Pause on weekends, set salary floors, and choose your outreach tone.' },
+            { title: 'Full activity report', body: 'See every application Iris submitted, with status tracking and a weekly Iris report summarising your pipeline.' },
+            { title: 'Available on Starter, Pro & Ultra', body: 'Starter: 75 credits/mo · Pro: 200 credits/mo · Ultra: 500 credits/mo. All plans include Iris auto-apply.' },
+          ].map(({ title, body }) => (
+            <div key={title} className="card pad">
+              <div className="t-callout" style={{ fontWeight: 600, marginBottom: 6 }}>{title}</div>
+              <p className="t-caption muted">{body}</p>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 28, display: 'flex', gap: 12 }}>
+          <Link to="/app/plans" className="btn brand" style={{ flex: 1, justifyContent: 'center' }}><Zap size={15} />View plans & upgrade</Link>
+          <Link to="/app/jobs" className="btn secondary" style={{ flex: 1, justifyContent: 'center' }}>Keep swiping manually</Link>
         </div>
       </div>
     );

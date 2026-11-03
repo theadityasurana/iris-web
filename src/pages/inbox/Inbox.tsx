@@ -292,16 +292,22 @@ export default function Inbox() {
           <div className="threads">
             {threads.map(t => {
               const d = t.latest.data as InboundEmail & SentEmail;
+              const senderName = who(t.latest);
               return (
                 <button key={t.id} className={`thread ${t.unread ? 'unread' : ''} ${openThread === t.id ? 'active' : ''}`} onClick={() => go(t.id)}>
-                  <div className="row gap-8">
-                    {t.unread && <span className="unread-dot" />}
-                    <span className="grow ellipsis t-callout who">{who(t.latest)}{t.count > 1 && <span className="muted"> · {t.count}</span>}</span>
-                    {t.starred && <Star size={13} fill="currentColor" className="star" />}
-                    <time className="t-caption muted">{timeAgo(dateOf(t.latest))}</time>
+                  <div className="row gap-10">
+                    <Avatar name={senderName} size={undefined} />
+                    <div className="grow" style={{ minWidth: 0 }}>
+                      <div className="row gap-6">
+                        {t.unread && <span className="unread-dot" style={{ flexShrink: 0 }} />}
+                        <span className="grow ellipsis t-callout who">{senderName}{t.count > 1 && <span className="muted"> · {t.count}</span>}</span>
+                        {t.starred && <Star size={13} fill="currentColor" className="star" style={{ flexShrink: 0 }} />}
+                        <time className="t-caption muted" style={{ flexShrink: 0 }}>{timeAgo(dateOf(t.latest))}</time>
+                      </div>
+                      <div className="t-callout ellipsis subj">{d.subject || '(no subject)'}</div>
+                      <div className="t-caption muted ellipsis">{snippet(d.body_text)}</div>
+                    </div>
                   </div>
-                  <div className="t-callout ellipsis subj">{d.subject || '(no subject)'}</div>
-                  <div className="t-caption muted ellipsis">{snippet(d.body_text)}</div>
                 </button>
               );
             })}

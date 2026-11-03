@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Mic, Lock, ChevronRight, Clock } from 'lucide-react';
+import { Mic, ChevronRight, Clock } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useEntitlements } from '@web/lib/queries';
 import { SkeletonRows, formatDate, timeAgo } from '@web/ui/bits';
@@ -22,12 +22,32 @@ export default function Interviews() {
 
   if (ent.interviewsPerMonth === 0) {
     return (
-      <div className="page narrow">
-        <div className="empty" style={{ paddingTop: 80 }}>
-          <div className="ico"><Lock /></div>
-          <div className="t-title">AI mock interviews</div>
-          <p>AI mock interviews are available on Pro and Ultra plans (10 per month).</p>
-          <Link to="/app/plans" className="btn brand" style={{ marginTop: 16 }}>View plans</Link>
+      <div className="page">
+        <div className="page-head">
+          <div>
+            <h1 className="t-title">Mock interviews</h1>
+            <p className="t-callout muted" style={{ marginTop: 4 }}>Practice with a real-time AI interviewer before the real thing.</p>
+          </div>
+          <Link to="/app/plans" className="btn brand"><Mic size={15} />Upgrade</Link>
+        </div>
+        <div className="iris-upsell-grid">
+          {[
+            { title: 'Real-time voice interviewer', body: 'Join a live voice session with an AI interviewer. It asks real questions, listens to your answers, and follows up — just like a real interview.' },
+            { title: 'Choose your interviewer style', body: 'Pick from Professional, Warm & Friendly, Tough Interviewer, or Technical Lead. Each has a different tone and question style.' },
+            { title: 'Detailed performance report', body: 'After each session, Iris generates a report with scores across communication, technical depth, and confidence — with specific suggestions to improve.' },
+            { title: 'Practice for any role', body: 'Enter any job title and optional company name. Iris tailors the questions to that specific role and seniority level.' },
+            { title: 'Full session history', body: 'Every past session is saved with its transcript and report. Review your progress over time.' },
+            { title: 'Available on Pro & Ultra', body: 'Pro plan: 10 mock interviews per month. Ultra plan: unlimited. Upgrade to start practising today.' },
+          ].map(({ title, body }) => (
+            <div key={title} className="card pad">
+              <div className="t-callout" style={{ fontWeight: 600, marginBottom: 6 }}>{title}</div>
+              <p className="t-caption muted">{body}</p>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 28, display: 'flex', gap: 12 }}>
+          <Link to="/app/plans" className="btn brand" style={{ flex: 1, justifyContent: 'center' }}><Mic size={15} />View plans & upgrade</Link>
+          <Link to="/app/jobs" className="btn secondary" style={{ flex: 1, justifyContent: 'center' }}>Back to jobs</Link>
         </div>
       </div>
     );

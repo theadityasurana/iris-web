@@ -4,7 +4,7 @@ import { Search, Send, Mic, FileText, Bookmark, ScrollText, Sparkles, ChevronRig
 import { useApplications, useEntitlements } from '@web/lib/queries';
 import { CompanyLogo, Empty, SkeletonList, StatusBadge, timeAgo } from '@web/ui/bits';
 
-type Filter = 'done' | 'pending';
+type Filter = 'done' | 'pending' | 'processing';
 
 /** 30-day bar chart of applications per day. */
 function Streak({ dates }: { dates: string[] }) {
@@ -49,10 +49,10 @@ export default function Applications() {
   const viaIris = apps.filter(a => a.appliedByIris).length;
 
   const list = useMemo(() => {
-    const base = filter === 'pending' ? pending : done;
+    const base = filter === 'pending' ? pending : filter === 'processing' ? apps.filter(a => a.status === 'processing') : done;
     const ql = q.trim().toLowerCase();
     return ql ? base.filter(a => a.job.jobTitle.toLowerCase().includes(ql) || a.job.companyName.toLowerCase().includes(ql)) : base;
-  }, [filter, pending, done, q]);
+  }, [filter, pending, done, apps, q]);
 
   return (
     <div className="page">
@@ -92,7 +92,8 @@ export default function Applications() {
         <div className="row between wrap gap-12" style={{ marginBottom: 12 }}>
           <div className="segmented">
             <button className={filter === 'done' ? 'on' : ''} onClick={() => setFilter('done')}>Submitted <span className="muted num">{done.length}</span></button>
-            <button className={filter === 'pending' ? 'on' : ''} onClick={() => setFilter('pending')}>In progress <span className="muted num">{pending.length}</span></button>
+            <button className={filter === 'pending' ? 'on' : ''} onClick={() => setFilter('pending')}>Pending <span className="muted num">{pending.length}</span></button>
+            <button className={filter === 'processing' ? 'on' : ''} onClick={() => setFilter('processing')}>Processing <span className="muted num">{apps.filter(a => a.status === 'processing').length}</span></button>
           </div>
           <div className="input-wrap" style={{ width: 260 }}><Search /><input className="input" value={q} onChange={e => setQ(e.target.value)} placeholder="Search applications" style={{ height: 38 }} /></div>
         </div>
