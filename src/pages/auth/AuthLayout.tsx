@@ -18,7 +18,7 @@ export function AuthLayout({ title, subtitle, children, footer }: { title: strin
       </div>
       <aside className="auth-aside" aria-hidden="true">
         <div className="auth-aside-inner">
-          <img src="/media/iris-poster-1080.jpg" alt="" />
+          <video src="/media/iris-1080.mp4" autoPlay muted loop playsInline poster="/media/iris-poster-1080.jpg" />
           <div className="auth-quote">
             <p className="t-heading">Swipe right on a job. Iris fills in the application and submits it for you.</p>
             <p className="t-callout muted" style={{ marginTop: 10 }}>Same account as the Iris app on iPhone and Android.</p>
@@ -67,9 +67,6 @@ export function OAuthButtons() {
           {busy === 'apple' ? <span className="spinner" /> : <AppleMark />}Continue with Apple
         </button>
       )}
-      <button className="btn outline lg block" onClick={() => go('linkedin_oidc')} disabled={!!busy}>
-        {busy === 'linkedin_oidc' ? <span className="spinner" /> : <LinkedInMark />}Continue with LinkedIn
-      </button>
     </div>
   );
 }

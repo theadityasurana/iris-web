@@ -17,7 +17,7 @@ import { defaultOnboardingData, type OnboardingData } from '@/types/onboarding';
 export type OAuthProvider = 'google' | 'linkedin_oidc' | 'apple';
 
 /** Apple web sign-in needs a Services ID + secret in Supabase; flip on once set. */
-export const APPLE_WEB_ENABLED = false;
+export const APPLE_WEB_ENABLED = true;
 
 const SWIPED_KEY = 'iris_web_swiped_jobs';
 export const APP_ORIGIN = typeof window !== 'undefined' ? window.location.origin : 'https://irisjobs.live';
