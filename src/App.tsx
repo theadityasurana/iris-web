@@ -30,6 +30,7 @@ const EditSection = lazy(() => import('@web/pages/profile/EditSection'));
 const Resumes = lazy(() => import('@web/pages/profile/Resumes'));
 const ProfilePreview = lazy(() => import('@web/pages/profile/ProfilePreview'));
 const Plans = lazy(() => import('@web/pages/plans/Plans'));
+const FreeCredits = lazy(() => import('@web/pages/plans/FreeCredits'));
 const Settings = lazy(() => import('@web/pages/settings/Settings'));
 const Help = lazy(() => import('@web/pages/settings/Help'));
 const InboxSettingsPage = lazy(() => import('@web/pages/settings/InboxSettingsPage'));
@@ -95,6 +96,7 @@ export function App() {
           <Route path="/app/profile/resumes" element={<Resumes />} />
           <Route path="/app/profile/preview" element={<ProfilePreview />} />
           <Route path="/app/plans" element={<Plans />} />
+          <Route path="/app/free-credits" element={<FreeCredits />} />
           <Route path="/app/settings" element={<Settings />} />
           <Route path="/app/settings/inbox" element={<InboxSettingsPage />} />
           <Route path="/app/help" element={<Help />} />

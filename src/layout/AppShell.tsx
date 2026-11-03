@@ -1,6 +1,6 @@
 import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Layers, Send, Mail, Sparkles, Mic, User, Bookmark, CreditCard, Settings, LifeBuoy, Moon, Sun, Smartphone, LogOut } from 'lucide-react';
+import { Layers, Send, Mail, Sparkles, Mic, User, Bookmark, CreditCard, Settings, LifeBuoy, Moon, Sun, Smartphone, LogOut, Gift } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useEntitlements, useFreeSwipes, useUnreadMail } from '@web/lib/queries';
 import { Avatar } from '@web/ui/bits';
@@ -39,6 +39,7 @@ const PRIMARY = [
 ];
 const SECONDARY = [
   { to: '/app/saved', label: 'Saved jobs', icon: Bookmark },
+  { to: '/app/free-credits', label: 'Free credits', icon: Gift },
   { to: '/app/plans', label: 'Plans & billing', icon: CreditCard },
   { to: '/app/settings', label: 'Settings', icon: Settings },
   { to: '/app/help', label: 'Help', icon: LifeBuoy },

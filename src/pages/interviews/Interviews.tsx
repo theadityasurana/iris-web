@@ -30,14 +30,14 @@ export default function Interviews() {
           </div>
           <Link to="/app/plans" className="btn brand"><Mic size={15} />Upgrade</Link>
         </div>
-        <div className="iris-upsell-grid">
+        <div className="iris-upsell-grid" style={{ marginBottom: 24 }}>
           {[
-            { title: 'Real-time voice interviewer', body: 'Join a live voice session with an AI interviewer. It asks real questions, listens to your answers, and follows up — just like a real interview.' },
-            { title: 'Choose your interviewer style', body: 'Pick from Professional, Warm & Friendly, Tough Interviewer, or Technical Lead. Each has a different tone and question style.' },
-            { title: 'Detailed performance report', body: 'After each session, Iris generates a report with scores across communication, technical depth, and confidence — with specific suggestions to improve.' },
-            { title: 'Practice for any role', body: 'Enter any job title and optional company name. Iris tailors the questions to that specific role and seniority level.' },
+            { title: 'Real-time voice interviewer', body: 'Join a live voice session with an AI interviewer that asks real questions, listens, and follows up — just like a real interview.' },
+            { title: 'Choose your style', body: 'Professional, Warm & Friendly, Tough Interviewer, or Technical Lead. Each has a different tone and question style.' },
+            { title: 'Detailed report', body: 'After each session, Iris generates a report with scores across communication, technical depth, and confidence.' },
+            { title: 'Practice for any role', body: 'Enter any job title and optional company name. Iris tailors questions to that specific role and seniority level.' },
             { title: 'Full session history', body: 'Every past session is saved with its transcript and report. Review your progress over time.' },
-            { title: 'Available on Pro & Ultra', body: 'Pro plan: 10 mock interviews per month. Ultra plan: unlimited. Upgrade to start practising today.' },
+            { title: 'Pro & Ultra plans', body: 'Pro: 10 mock interviews per month. Ultra: unlimited. Upgrade to start practising today.' },
           ].map(({ title, body }) => (
             <div key={title} className="card pad">
               <div className="t-callout" style={{ fontWeight: 600, marginBottom: 6 }}>{title}</div>
@@ -45,7 +45,26 @@ export default function Interviews() {
             </div>
           ))}
         </div>
-        <div style={{ marginTop: 28, display: 'flex', gap: 12 }}>
+        <div className="card pad" style={{ marginBottom: 16 }}>
+          <div className="t-overline muted" style={{ marginBottom: 12 }}>INTERVIEWER VOICES</div>
+          <div className="stack gap-8">
+            {[
+              { id: 'iris-professional', label: 'Professional', desc: 'Confident & clear', color: '#7C3AED' },
+              { id: 'iris-warm', label: 'Warm & Friendly', desc: 'Encouraging tone', color: '#EC4899' },
+              { id: 'iris-strict', label: 'Tough Interviewer', desc: 'Direct, challenging', color: '#EF4444' },
+              { id: 'iris-technical', label: 'Technical Lead', desc: 'System design focus', color: '#3B82F6' },
+            ].map(v => (
+              <div key={v.id} className="row gap-12" style={{ padding: '10px 14px', borderRadius: 'var(--r-3)', background: 'var(--surface-2)' }}>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: v.color, flexShrink: 0 }} />
+                <div className="grow">
+                  <div className="t-callout" style={{ fontWeight: 600 }}>{v.label}</div>
+                  <div className="t-caption muted">{v.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 12 }}>
           <Link to="/app/plans" className="btn brand" style={{ flex: 1, justifyContent: 'center' }}><Mic size={15} />View plans & upgrade</Link>
           <Link to="/app/jobs" className="btn secondary" style={{ flex: 1, justifyContent: 'center' }}>Back to jobs</Link>
         </div>

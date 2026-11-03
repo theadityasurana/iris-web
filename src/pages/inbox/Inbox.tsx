@@ -29,8 +29,23 @@ const threadKey = (m: MailItem) => m.data.thread_id || computeThreadId(m.data.su
 const who = (m: MailItem) => (m.kind === 'inbound' ? (m.data.from_name || m.data.from_email) : `To: ${m.data.to_email}`);
 const snippet = (t?: string | null) => (t || '').replace(/\s+/g, ' ').trim().slice(0, 140);
 
+function SenderAvatar({ name, email }: { name: string; email?: string }) {
+  const domain = email?.split('@')[1];
+  const [imgFailed, setImgFailed] = useState(false);
+  const logoSrc = domain && !imgFailed
+    ? `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
+    : null;
+  if (logoSrc) {
+    return (
+      <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fff', border: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
+        <img src={logoSrc} alt="" width={22} height={22} style={{ objectFit: 'contain' }} onError={() => setImgFailed(true)} />
+      </div>
+    );
+  }
+  return <Avatar name={name} />;
+}
+
 function groupThreads(items: MailItem[]): Thread[] {
-  const map = new Map<string, Thread>();
   for (const m of items) {
     const id = threadKey(m);
     const t = map.get(id);
@@ -296,7 +311,7 @@ export default function Inbox() {
               return (
                 <button key={t.id} className={`thread ${t.unread ? 'unread' : ''} ${openThread === t.id ? 'active' : ''}`} onClick={() => go(t.id)}>
                   <div className="row gap-10">
-                    <Avatar name={senderName} size={undefined} />
+                    <SenderAvatar name={senderName} email={(t.latest.data as InboundEmail).from_email} />
                     <div className="grow" style={{ minWidth: 0 }}>
                       <div className="row gap-6">
                         {t.unread && <span className="unread-dot" style={{ flexShrink: 0 }} />}
