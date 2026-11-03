@@ -6,7 +6,8 @@ import { useAuth } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 import { getReferralStats, createReferralCode, claimSocialFollow, getSocialFollowStatus, type SocialPlatform } from '@/lib/referral';
 import { rc } from '@/lib/remote-config';
-import { inviteLink } from '@/lib/social-share';
+
+const inviteLink = (code: string) => `https://irisjobs.live/invite/${code}`;
 
 const SOCIAL_ICONS: Record<SocialPlatform, typeof Instagram> = {
   instagram: Instagram,
