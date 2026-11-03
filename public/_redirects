@@ -4,5 +4,6 @@
 /invite/*  /index.html  200
 /download  /index.html  200
 /download/  /index.html  200
+/app/assets/*  /app/assets/:splat  200
 /app/*  /app/  200
 /how-it-works  /how-it-works/index.html  301
