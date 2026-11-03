@@ -6,6 +6,7 @@ import { useAuth } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 import { getReferralStats, createReferralCode, claimSocialFollow, getSocialFollowStatus, type SocialPlatform } from '@/lib/referral';
 import { rc } from '@/lib/remote-config';
+import { inviteLink } from '@/lib/social-share';
 
 const SOCIAL_ICONS: Record<SocialPlatform, typeof Instagram> = {
   instagram: Instagram,
@@ -64,7 +65,7 @@ export default function FreeCredits() {
   const followReward = limits.social_follow_reward;
 
   const referralLink = referralStats?.referralCode
-    ? `https://nextquark.in/invite/${referralStats.referralCode}`
+    ? inviteLink(referralStats.referralCode)
     : null;
 
   async function ensureCode() {
@@ -77,7 +78,7 @@ export default function FreeCredits() {
   async function handleCopy() {
     const code = await ensureCode();
     if (!code) return;
-    const link = `https://nextquark.in/invite/${code}`;
+    const link = inviteLink(code);
     await navigator.clipboard.writeText(link).catch(() => navigator.clipboard.writeText(code));
     setCopied(true);
     toast('Referral link copied');
@@ -236,21 +237,21 @@ export default function FreeCredits() {
           <div className="t-callout" style={{ fontWeight: 700, marginBottom: 12 }}>Share your code</div>
           <div className="row gap-8 wrap">
             <a
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I'm using Iris: swipe right on a job and AI applies for you. Use my code ${code} and we both get ${referralReward} free credits.\n\nhttps://nextquark.in/invite/${code}`)}`}
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I'm using Iris: swipe right on a job and AI applies for you. Use my code ${code} and we both get ${referralReward} free credits.\n\n${inviteLink(code)}`)}`}
               target="_blank" rel="noopener"
               className="btn outline sm"
             >
               <Twitter size={14} />Share on X
             </a>
             <a
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://nextquark.in/invite/${code}`)}`}
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(inviteLink(code))}`}
               target="_blank" rel="noopener"
               className="btn outline sm"
             >
               <Linkedin size={14} />Share on LinkedIn
             </a>
             <a
-              href={`https://wa.me/?text=${encodeURIComponent(`Hey! I've been using Iris to apply to jobs. You just swipe right and AI handles the application. Use my code *${code}* and we both get ${referralReward} free credits: https://nextquark.in/invite/${code}`)}`}
+              href={`https://wa.me/?text=${encodeURIComponent(`Hey! I've been using Iris to apply to jobs. You just swipe right and AI handles the application. Use my code *${code}* and we both get ${referralReward} free credits: ${inviteLink(code)}`)}`}
               target="_blank" rel="noopener"
               className="btn outline sm"
             >
