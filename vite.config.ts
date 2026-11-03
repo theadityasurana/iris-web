@@ -36,6 +36,7 @@ export default defineConfig(({ mode }) => {
         // Web replacements for modules that only work on a phone.
         { find: /^@\/lib\/supabase$/, replacement: resolve(SRC, 'shims/supabase.ts') },
         { find: /^@\/lib\/posthog$/, replacement: resolve(SRC, 'shims/posthog.ts') },
+        { find: /^@\/lib\/offline$/, replacement: resolve(SRC, 'shims/offline.ts') },
         { find: /^\.\/supabase$/, replacement: resolve(SRC, 'shims/supabase.ts') },
         { find: /^@\/constants\/company-logos$/, replacement: resolve(SRC, 'shims/company-logos.ts') },
         { find: /^react-native$/, replacement: resolve(SRC, 'shims/react-native.ts') },

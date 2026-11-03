@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Iris: Tinder for Jobs. Swipe Right and AI Applies for You</title>
+  <meta name="description" content="Iris is the AI job application app for iPhone and Android. Swipe right on a job and Iris fills in and submits the application for you. Free to try.">
+  <link rel="canonical" href="https://irisjobs.live/">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="keywords" content="AI job application app, Tinder for jobs, swipe to apply jobs, auto apply jobs AI, job search app iPhone Android, AI applies to jobs for you">
+  <meta property="og:url" content="https://irisjobs.live/">
+  <link rel="alternate" type="application/rss+xml" title="Iris Blog" href="https://irisjobs.live/blog/rss.xml">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+    {"@type":"Organization","@id":"https://irisjobs.live/#org","name":"Iris","url":"https://irisjobs.live/","logo":"https://nextquark.in/logo.png",
+     "sameAs":["https://www.instagram.com/irisjobs.live/","https://x.com/irisjobs_live","https://www.linkedin.com/company/tryiris/about/"]},
+    {"@type":"MobileApplication","name":"Iris","alternateName":"Iris: Tinder for Jobs","operatingSystem":"iOS, Android","applicationCategory":"BusinessApplication",
+     "description":"An AI job application app. Swipe right on a job and Iris completes and submits the application using your resume.",
+     "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@id":"https://irisjobs.live/#org"},
+     "downloadUrl":["https://apps.apple.com/in/app/nextquark/id6761863089","https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke"],
+     "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.8","ratingCount":"120"}},
+    {"@type":"SoftwareApplication","name":"Iris","alternateName":"Iris: Tinder for Jobs","operatingSystem":"iOS, Android","applicationCategory":"BusinessApplication",
+     "description":"Swipe right on a job and Iris auto-applies using your resume. The fastest way to apply to hundreds of jobs.",
+     "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"url":"https://irisjobs.live/",
+     "downloadUrl":["https://apps.apple.com/in/app/nextquark/id6761863089","https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke"]},
+    {"@type":"WebSite","name":"Iris","url":"https://irisjobs.live/","publisher":{"@id":"https://irisjobs.live/#org"}}]}</script>
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="apple-touch-icon" href="/logo.png">
+  <meta property="og:title" content="Iris - Tinder for Jobs!">
+  <meta property="og:description" content="Swipe right. AI applies to 100s of jobs in seconds. Over 2 million jobs globally. Try for free!">
+  <!-- Link previews: a frame from the video as the image, plus the video itself for apps that play it inline.
+       ?v= busts preview caches; bump it whenever the video or image changes. -->
+  <meta property="og:image" content="https://irisjobs.live/yoiris.jpeg">
+  <meta property="og:image:secure_url" content="https://irisjobs.live/yoiris.jpeg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="670">
+  <meta property="og:image:alt" content="Iris — Tinder for Jobs">
+  <meta property="og:video" content="https://nextquark.in/media/iris-1080.mp4?v=3">
+  <meta property="og:video:secure_url" content="https://nextquark.in/media/iris-1080.mp4?v=3">
+  <meta property="og:video:type" content="video/mp4">
+  <meta property="og:video:width" content="1280">
+  <meta property="og:video:height" content="720">
+  <meta property="og:type" content="video.other">
+  <meta property="og:site_name" content="Iris">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Iris - Tinder for Jobs!">
+  <meta name="twitter:description" content="Swipe right. AI applies to 100s of jobs in seconds. Over 2 million jobs globally. Try for free!">
+  <meta name="twitter:image" content="https://irisjobs.live/yoiris.jpeg">
+  <link rel="preload" as="image" href="/media/iris-poster-1080.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0a0a0a;
+      --ink-2: #3f3f46;
+      --muted: #71717a;
+      --line: rgba(10, 10, 10, 0.08);
+      --frame: 8px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    html { background: #fff; }
+    body { font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--ink); background: #fff; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Hero: the video, framed, filling the first screen ─────────────────── */
+    .hero {
+      position: relative;
+      margin: var(--frame);
+      min-height: calc(100svh - var(--frame) * 2);
+      border-radius: 28px;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line); pointer-events: none; z-index: 6; }
+    .nav {
+      position: relative; z-index: 3;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 16px 0 18px;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 11px; font-weight: 800; font-size: 1.45rem; letter-spacing: -0.03em; }
+    .nav-brand img { width: 40px; height: 40px; border-radius: 11px; }
+    .nav-right { display: flex; align-items: center; gap: 22px; }
+    .nav-links { display: none; font-size: 0.95rem; font-weight: 500; color: var(--ink-2); }
+    .nav-links:hover { color: var(--ink); }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+      height: 40px; padding: 0 16px; border-radius: 999px;
+      background: var(--ink); color: #fff; font-weight: 600; font-size: 0.9rem; letter-spacing: -0.01em;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .pill svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .pill.light { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+    .pill:active { transform: scale(0.97); }
+    @media (hover: hover) { .pill:hover { opacity: 0.86; } }
+
+    .stage { position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; padding-bottom: 24px; }
+    .video-box { position: relative; width: 100%; aspect-ratio: 1.2; overflow: hidden; }
+    .video-box video, .video-box img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: 30% 50%; display: block;
+    }
+
+    .copy { position: relative; z-index: 2; padding: 6px 22px 22px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .headline { font-size: clamp(2.1rem, 9.5vw, 3rem); font-weight: 800; line-height: 0.98; letter-spacing: -0.028em; text-transform: uppercase; }
+    .sub { margin-top: 14px; font-size: 1rem; line-height: 1.45; color: var(--ink-2); max-width: 32ch; margin-left: auto; margin-right: auto; text-wrap: balance; }
+    #job-slot:not(:empty) { width: 100%; margin-top: 18px; }
+    .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
+    .ctas .pill { height: 50px; padding: 0 22px; font-size: 1rem; }
+    .countdown { margin-top: 12px; font-size: 0.8rem; color: var(--muted); min-height: 1.2em; font-variant-numeric: tabular-nums; }
+    .progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: transparent; z-index: 4; }
+    .progress-bar { height: 100%; width: 0; background: var(--ink); }
+    .qr { display: none; }
+
+    /* Job / invite card */
+    .job {
+      text-align: left; padding: 18px; border-radius: 20px; background: #fafafa; box-shadow: inset 0 0 0 1px var(--line);
+      display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: center;
+    }
+    .job .co-logo { grid-row: span 2; width: 48px; height: 48px; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); object-fit: contain; padding: 6px; }
+    .job .co-initial { display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; }
+    .job .co-name { font-size: 0.78rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .job .role-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
+    .job .role-meta { grid-column: 1 / -1; margin-top: 8px; font-size: 0.86rem; color: var(--ink-2); line-height: 1.45; }
+    .job.solo { grid-template-columns: 1fr; text-align: center; }
+    .job.invite .code-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 6px; }
+    .job.invite .code { font-size: 1.6rem; font-weight: 800; letter-spacing: 0.12em; font-variant-numeric: tabular-nums; }
+    .job.invite .copy { display: inline-flex; align-items: center; justify-content: center; line-height: 1; height: 34px; padding: 0 14px; border-radius: 999px; border: 0; background: var(--ink); color: #fff; font: 600 0.85rem 'Inter Tight', sans-serif; cursor: pointer; }
+    .job.invite .role-meta { margin-top: 6px; }
+    .pulse { animation: pulse 1.2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    body.mode-job .video-box { display: none; }
+    body.mode-job .stage { justify-content: center; }
+
+    /* ── Where our users land jobs ─────────────────────────────────────────── */
+    .placed { padding: 72px 20px 40px; max-width: 1120px; margin: 0 auto; text-align: center; }
+    .placed h2 { font-size: clamp(1.6rem, 6vw, 2.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; }
+    .placed p { margin: 14px auto 0; max-width: 46ch; font-size: 1rem; line-height: 1.5; color: var(--muted); }
+    .logo-grid {
+      margin-top: 44px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 18px 10px;
+      justify-items: center;
+    }
+    .logo {
+      width: 40px; height: 40px; border-radius: 10px;
+      background-repeat: no-repeat;
+      filter: grayscale(1); opacity: 0.6;
+      transition: filter 0.6s ease, opacity 0.6s ease, transform 0.3s ease;
+    }
+    .logo.lit { filter: none; opacity: 1; }
+    .logo:hover, .logo:active { filter: none; opacity: 1; transform: scale(1.12); }
+
+    /* ── Numbers ── */
+    .stats { padding: 40px 20px 80px; max-width: 1000px; margin: 0 auto; text-align: center; }
+    .stats h2 { font-size: clamp(1.6rem, 6vw, 2.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.08; max-width: 20ch; margin: 0 auto; }
+    .stats > p { margin: 14px auto 0; max-width: 52ch; font-size: 1rem; line-height: 1.5; color: var(--muted); }
+    .stat-grid { margin-top: 44px; display: grid; grid-template-columns: 1fr; gap: 36px; }
+    .stat b { display: block; font-size: clamp(2.6rem, 11vw, 3.4rem); font-weight: 800; letter-spacing: -0.05em; line-height: 1; color: #18181b; font-variant-numeric: tabular-nums; }
+    .stat span { display: block; margin-top: 8px; font-size: 0.92rem; color: var(--muted); }
+
+    /* ── Footer ── */
+    .footer { margin: 0 var(--frame); border-top: 1px solid var(--line); }
+    .footer-top { padding: 48px 20px 36px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .footer-brand { display: flex; align-items: center; gap: 12px; font-size: 1.9rem; font-weight: 800; letter-spacing: -0.04em; }
+    .footer-brand img { width: 48px; height: 48px; border-radius: 13px; }
+    .footer-tag { margin-top: 6px; font-size: 1rem; color: var(--muted); }
+    .footer-bar {
+      border-top: 1px solid var(--line); padding: 16px 12px calc(16px + env(safe-area-inset-bottom));
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .legal { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; white-space: nowrap; font-size: 0.78rem; color: var(--muted); }
+    .legal .long { display: none; }
+    .legal a { color: var(--ink-2); }
+    .legal a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+    .socials { display: flex; gap: 6px; flex-shrink: 0; }
+    .socials a { width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); transition: background 0.2s ease, color 0.2s ease; }
+    .socials a:hover { background: var(--ink); color: #fff; }
+    .socials svg { width: 16px; height: 16px; }
+
+    /* ── Desktop: the video fills the whole frame, copy sits along the bottom ─ */
+    @media (min-width: 900px) {
+      :root { --frame: 10px; }
+      .hero { border-radius: 32px; }
+      .nav { padding: 22px 24px 0 26px; }
+      .stage { flex: 1; min-height: 0; justify-content: flex-start; padding-bottom: 0; }
+      .video-box { flex: 1; aspect-ratio: auto; min-height: 360px; }
+      .video-box video, .video-box img { object-fit: contain; object-position: 50% 50%; }
+      .copy {
+        padding: 8px 32px 30px;
+        display: grid; grid-template-columns: 1fr auto; align-items: end; text-align: left; gap: 8px 32px;
+        border-top: 1px solid var(--line); margin: 0 32px; padding-left: 0; padding-right: 0; padding-top: 26px;
+      }
+      .copy-text { max-width: 640px; }
+      .headline { font-size: clamp(2.4rem, 3.6vw, 3.4rem); }
+      .hero { height: calc(100svh - var(--frame) * 2); min-height: 640px; }
+      .sub { max-width: 46ch; font-size: 1.05rem; margin-left: 0; }
+      .ctas { margin-top: 0; justify-content: flex-end; align-items: center; flex-wrap: nowrap; }
+      .actions-col { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+      .countdown { margin-top: 0; text-align: right; }
+      .qr {
+        display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 8px; border-radius: 16px;
+        background: #fff; box-shadow: inset 0 0 0 1px var(--line);
+      }
+      .qr img { width: 72px; height: 72px; border-radius: 8px; }
+      .qr span { font-size: 0.78rem; line-height: 1.3; color: var(--ink-2); max-width: 11ch; }
+      #job-slot:not(:empty) { max-width: 520px; }
+      body.mode-job .copy { border-top: 0; grid-template-columns: 1fr; justify-items: center; text-align: center; padding-top: 40px; }
+      body.mode-job .sub { margin-left: auto; }
+      body.mode-job .actions-col { align-items: center; }
+      body.mode-job .qr { display: none; }
+      .placed { padding-top: 112px; }
+      .logo-grid { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 30px 16px; }
+      .logo { width: 48px; height: 48px; border-radius: 12px; }
+      .nav-brand { font-size: 1.6rem; }
+      .nav-brand img { width: 44px; height: 44px; border-radius: 12px; }
+      .stats { padding: 56px 32px 112px; }
+      .stat-grid { grid-template-columns: repeat(3, 1fr); gap: 48px; margin-top: 56px; }
+      .stat b { font-size: 3.6rem; }
+      .footer-bar { padding: 18px 24px; }
+      .legal { font-size: 0.86rem; gap: 20px; }
+      .legal .long { display: inline; }
+      .socials a { width: 38px; height: 38px; }
+      .nav-links { display: flex; }
+    }
+    @media (prefers-reduced-motion: reduce) { .logo { transition: none; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" id="hero">
+      <nav class="nav">
+        <a class="nav-brand" href="/"><img src="/logo.png" alt=""><span>Iris</span></a>
+        <div class="nav-right"><a class="nav-links" href="/blog/">Blog</a>
+        <a class="nav-links" href="https://irisjobs.live/how-it-works/">How it works</a>
+        <a class="nav-links" href="https://irisjobs.live/app/sign-in" style="margin-right:4px">Sign in</a>
+        <a class="pill" id="nav-cta" href="#">Download
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a></div>
+      </nav>
+
+      <div class="stage">
+        <div class="video-box">
+          <img src="/media/iris-poster-1080.jpg" alt="" aria-hidden="true">
+          <video id="hero-video" src="/media/iris-1080.mp4" poster="/media/iris-poster-1080.jpg"
+                 autoplay muted loop playsinline webkit-playsinline preload="auto"
+                 disablepictureinpicture disableremoteplayback aria-label="Iris app demo"></video>
+        </div>
+
+        <div class="copy">
+          <div class="copy-text">
+            <h1 class="headline" id="page-title">Swipe right.<br>AI applies.</h1>
+            <p class="sub" id="page-bio">Apply to hundreds of jobs in seconds. Over 2 million jobs worldwide. Free to try.</p>
+            <div id="job-slot"></div>
+          </div>
+          <div class="actions-col">
+            <div class="ctas" id="actions"></div>
+            <div class="qr" id="qr"><img src="/media/qr.png?v=2" alt="QR code: scan with your phone camera to get Iris"><span>Scan to get the app</span></div>
+            <p class="countdown" id="countdown"></p>
+            <a id="open-now" href="#" class="pill" style="display:none;margin-top:8px">Open Now
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="progress" id="progress" hidden><div class="progress-bar" id="progress-bar"></div></div>
+    </section>
+
+    <section class="placed" id="placed" aria-label="Where our users land jobs">
+      <h2>Where Iris users are getting hired</h2>
+      <p>Startups, scale-ups and household names. Here are <span id="placed-count">100+</span> of the companies our users have landed roles at.</p>
+      <div class="logo-grid" id="logo-grid"></div>
+    </section>
+
+    <section class="stats" aria-label="Iris in numbers">
+      <h2>1,200+ job seekers already swipe with Iris</h2>
+      <p>One swipe is one application. Iris does the forms, the cover letters and the follow-ups, so your search takes minutes, not months.</p>
+      <div class="stat-grid">
+        <div class="stat"><b data-count="140" data-suffix="K+">140K+</b><span>swipes since March 2026</span></div>
+        <div class="stat"><b data-count="750" data-suffix="K+">750K+</b><span>jobs live right now</span></div>
+        <div class="stat"><b data-count="39000" data-suffix="+">39,000+</b><span>applications sent by AI</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-top">
+      <a class="footer-brand" href="/"><img src="/logo.png" alt=""><span>Iris</span></a>
+      <p class="footer-tag">Tinder for jobs</p>
+    </div>
+    <div class="footer-bar">
+      <nav class="legal" aria-label="Legal">
+        <span>© <span id="year">2026</span> Iris</span>
+        <a href="/blog/">Blog</a>
+        <a href="https://nextquark.framer.website/terms" target="_blank" rel="noopener">Terms<span class="long"> of Service</span></a>
+        <a href="https://nextquark.framer.website/privacy" target="_blank" rel="noopener">Privacy<span class="long"> Policy</span></a>
+      </nav>
+      <nav class="socials" aria-label="Iris on social media">
+        <a href="https://www.instagram.com/irisjobs.live/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg></a>
+        <a href="https://x.com/irisjobs_live" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3zm-1.08 16.17h1.7L7.4 4.74H5.58l11.09 14.43z"/></svg></a>
+        <a href="https://www.linkedin.com/company/tryiris/about/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3v-11zm6.5 0h3.8v1.5h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.46h-4v-4.84c0-1.16-.02-2.64-1.61-2.64-1.61 0-1.86 1.26-1.86 2.56v4.92h-4v-11z"/></svg></a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    var SUPABASE_URL = 'https://widujxpahzlpegzjjpqp.supabase.co';
+    var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndpZHVqeHBhaHpscGVnempqcHFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NTI2NjIsImV4cCI6MjA4NzMyODY2Mn0.OyjX0Qg4UlDPfTmCwhdK3JuE30698f6A-a01LunhDtM';
+    var PLAY_STORE = 'https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke';
+    var APP_STORE = 'https://apps.apple.com/in/app/nextquark/id6761863089';
+    var HEADERS = { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY };
+    // Landing pages: show at least this much of the video before opening the store.
+    var VIDEO_WATCH_MS = 20000;
+    // If the video can't start (slow network, autoplay blocked), start the countdown anyway after this.
+    var VIDEO_START_GRACE_MS = 3000;
+    var JOB_REDIRECT_MS = 12000;
+    // Company logos: one sprite image built by scripts/build-logos.py (re-run it when companies change).
+    var LOGOS = /*LOGOS*/{ names: ["Abaka", "Adyen", "Affirm", "AirBnB", "Airtable", "Alphagrep", "Anduril", "Anthropic", "Anyscale", "Appflyer", "Archer", "Ashby", "Assembled", "Astranis", "Atlan ", "Avathon", "Baidu", "Benchling", "Binance", "Bubble", "Calendly", "Carta", "Cartesia ", "Celonis", "Character", "Chime", "Clipboard", "Cloudflare", "CloudSEK", "Cohere", "CommerceIQ", "Commvault", "Contentful", "Continental", "Coursera", "CRED", "Datadog", "DoorDash", "Drivetrain", "Duolingo", "Easyship", "ElevenLabs", "Emergent", "Enterpret", "Farmako", "Figma", "Finbox", "Fivetran", "Flashblade", "Giga", "Gitlab", "Glean", "Gotion", "Groq", "Groww", "Hackerrank", "Hevodata", "HeyGen", "HighLevel", "Hightouch", "Hubspot", "Hyperface", "Hyreo", "Infrrd", "Inmobi", "Janestreet", "JumpCloud", "KnowBe4", "Labelbox", "LaunchDarkly", "Linear", "Linkedin", "Livekit", "LLNL", "Lovable", "Matchgroup", "Mercury", "Mindtickle", "Mistral", "Moloco", "Mphasis", "Natera", "Naukri.com", "Netomi", "Neuralink", "NewsBreak", "nextquark", "Nium", "Notion", "OBE", "Okta", "OpenAI", "Patreon", "Perplexity", "Pika", "Pinterest", "Plane", "Planet", "Postman", "Prodigal", "Pulumi", "Quince", "Radar", "Ramp", "Replit", "Robinhood", "Roblox", "Rubrik", "Runway", "Samsara", "Sardine", "Seatgeek", "Sentry", "ServiceNow", "Sigma-Computing", "Sigmoid", "SingleStore", "Snorkel", "Snowflake", "Spacex", "Speechify", "Sprinto", "Stripe", "Substack", "Supabase", "The Better India", "The Family Office Company", "Together.ai ", "Tomo", "Twitch", "Uber", "UiPath", "Unlimit", "Visa", "Webflow", "Wing", "WorkOS", "Zania ", "Zepto", "Zeta", "Zscaler"], sprite: {"cols": 16, "tile": 64, "v": 1793622234843} }/*END*/;
+    var storeTimer = null;
+    var countdownTimer = null;
+    var countdownStarted = false;
+
+    var ua = navigator.userAgent || '';
+    var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var isAndroid = /Android/i.test(ua);
+    var isMobile = isIOS || isAndroid;
+    var storeUrl = isIOS ? APP_STORE : isAndroid ? PLAY_STORE : null;
+    var host = window.location.hostname;
+    var path = window.location.pathname.replace(/\/$/, '') || '/';
+
+    var APPLE_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.87-.76-1.47.02-2.83.86-3.59 2.18-1.53 2.66-.39 6.6 1.1 8.76.73 1.06 1.6 2.24 2.73 2.2 1.1-.04 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.07 2.65-2.14.84-1.22 1.18-2.41 1.2-2.47-.03-.01-2.3-.88-2.32-3.5zM14.2 6.13c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.64-1.05 1.67-.92 2.66.97.08 1.96-.49 2.56-1.21z"/></svg>';
+    var PLAY_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.6 2.2 13.4 12 3.6 21.8c-.36-.2-.6-.6-.6-1.06V3.26c0-.46.24-.86.6-1.06zm13.1 6.5-3.3 3.3 3.3 3.3 3.72-2.12c.73-.42.73-1.47 0-1.88L16.7 8.7zM4.63 2.19 16.7 8.7 13.4 12 3.6 2.2c.3-.17.68-.2 1.03-.01zM16.7 15.3 4.63 21.81c-.35.19-.73.16-1.03-.01L13.4 12l3.3 3.3z"/></svg>';
+
+    function sendTrack(payload) {
+      try {
+        fetch('/api/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          keepalive: true
+        });
+      } catch (_) {}
+    }
+
+    // Every visit is counted the moment the page opens. Location comes from the
+    // visitor's IP (Cloudflare adds country/city/region server-side in /api/track),
+    // so there is no location prompt to scare people off.
+    function trackVisit() {
+      var params = new URLSearchParams(window.location.search);
+      sendTrack({
+        host: host,
+        path: path,
+        campaign: params.get('c') || params.get('campaign') || params.get('utm_campaign') || null,
+        device_type: isIOS || isAndroid ? 'mobile' : 'desktop',
+        referrer: document.referrer || ''
+      });
+    }
+
+    function esc(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function goStore(url) { window.location.href = url || storeUrl; }
+
+    function pillHtml(href, label, icon, light) {
+      return '<a class="pill' + (light ? ' light' : '') + '" href="' + href + '">' + icon + '<span>' + label + '</span></a>';
+    }
+
+    function setupStoreButton() {
+      var actions = document.getElementById('actions');
+      var nav = document.getElementById('nav-cta');
+      if (isIOS) {
+        actions.innerHTML = pillHtml(APP_STORE, 'Download on the App Store', APPLE_SVG);
+        nav.href = APP_STORE;
+      } else if (isAndroid) {
+        actions.innerHTML = pillHtml(PLAY_STORE, 'Get it on Google Play', PLAY_SVG);
+        nav.href = PLAY_STORE;
+      } else {
+        actions.innerHTML = pillHtml(APP_STORE, 'App Store', APPLE_SVG) + pillHtml(PLAY_STORE, 'Google Play', PLAY_SVG, true);
+        nav.href = APP_STORE;
+      }
+    }
+
+    // Countdown with a thin progress line along the bottom of the frame, then the store (phones only).
+    function scheduleStore(ms) {
+      if (storeTimer) clearTimeout(storeTimer);
+      if (countdownTimer) clearInterval(countdownTimer);
+      var cd = document.getElementById('countdown');
+      var progress = document.getElementById('progress');
+      var bar = document.getElementById('progress-bar');
+      if (!isMobile) {
+        cd.textContent = '';
+        progress.hidden = true;
+        return;
+      }
+      var label = isIOS ? 'App Store' : 'Google Play';
+      var left = Math.ceil(ms / 1000);
+      progress.hidden = false;
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+      void bar.offsetWidth;
+      bar.style.transition = 'width ' + ms + 'ms linear';
+      bar.style.width = '100%';
+      cd.textContent = 'Opening ' + label + ' in ' + left + 's';
+      countdownTimer = setInterval(function() {
+        left -= 1;
+        if (left <= 0) { clearInterval(countdownTimer); cd.textContent = 'Opening ' + label + '…'; }
+        else cd.textContent = 'Opening ' + label + ' in ' + left + 's';
+      }, 1000);
+      storeTimer = setTimeout(function() { goStore(storeUrl); }, ms);
+      var openNow = document.getElementById('open-now');
+      if (openNow && isMobile) { openNow.href = storeUrl; openNow.style.display = 'inline-flex'; }
+    }
+
+    // Landing pages: start the 5s countdown once the video is actually playing,
+    // so visitors see at least 5 seconds of it. If it can't start within the
+    // grace period, count down anyway so nobody gets stuck.
+    function scheduleAfterVideo(watchMs) {
+      watchMs = watchMs || VIDEO_WATCH_MS;
+      var video = document.getElementById('hero-video');
+      var cd = document.getElementById('countdown');
+      function start() {
+        if (countdownStarted) return;
+        countdownStarted = true;
+        scheduleStore(watchMs);
+      }
+      if (!isMobile) { scheduleStore(watchMs); return; }
+      if (!video) { start(); return; }
+      if (!video.paused && video.currentTime > 0) { start(); return; }
+      cd.textContent = 'Loading preview…';
+      video.addEventListener('playing', start, { once: true });
+      var p = video.play && video.play();
+      if (p && p.catch) p.catch(function() { start(); });
+      setTimeout(start, VIDEO_START_GRACE_MS);
+    }
+
+    // ── Logos: one sprite image, positioned per tile ──
+    function renderLogos() {
+      var names = LOGOS.names || [];
+      var grid = document.getElementById('logo-grid');
+      if (!names.length) { document.getElementById('placed').hidden = true; return; }
+      var desktop = window.matchMedia('(min-width: 900px)').matches;
+      var size = desktop ? 48 : 40;
+      var cols = LOGOS.sprite.cols;
+      var rows = Math.ceil(names.length / cols);
+      var url = '/media/logos.webp?v=' + LOGOS.sprite.v;
+      var order = names.map(function(_, i) { return i; });
+      for (var i = order.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = order[i]; order[i] = order[j]; order[j] = t; }
+      grid.innerHTML = order.map(function(i) {
+        var x = -(i % cols) * size, y = -Math.floor(i / cols) * size;
+        return '<div class="logo" role="img" aria-label="' + esc(names[i]) + '" title="' + esc(names[i]) + '" style="background-image:url(' + url + ');background-size:' + (cols * size) + 'px ' + (rows * size) + 'px;background-position:' + x + 'px ' + y + 'px"></div>';
+      }).join('');
+      document.getElementById('placed-count').textContent = names.length;
+      colourOnScroll(grid);
+    }
+
+    // Each logo turns from grey to colour as it scrolls into view (and stays coloured),
+    // sweeping left to right along each row.
+    function colourOnScroll(grid) {
+      var pending = Array.prototype.slice.call(grid.querySelectorAll('.logo'));
+      var col = 0, rowTop = null;
+      pending.forEach(function(t) {
+        if (t.offsetTop !== rowTop) { rowTop = t.offsetTop; col = 0; }
+        t.style.transitionDelay = (col++ * 35) + 'ms';
+      });
+      var queued = false;
+      function check() {
+        queued = false;
+        var limit = window.innerHeight * 0.88;
+        pending = pending.filter(function(t) {
+          var r = t.getBoundingClientRect();
+          if (r.top < limit && r.bottom > 0) { t.classList.add('lit'); return false; }
+          return true;
+        });
+        if (!pending.length) { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); }
+      }
+      function onScroll() { if (!queued) { queued = true; setTimeout(check, 16); } }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      check();
+    }
+
+    // Stats count up from zero the first time they scroll into view.
+    function countUpOnScroll() {
+      var els = Array.prototype.slice.call(document.querySelectorAll('[data-count]'));
+      if (!els.length) return;
+      var fmt = function(n) { return n.toLocaleString('en-US'); };
+      els.forEach(function(el) { el.textContent = '0' + el.getAttribute('data-suffix'); });
+      var started = false, queued = false;
+      function run() {
+        started = true;
+        window.removeEventListener('scroll', onScroll);
+        var t0 = null, dur = 1600;
+        function step(ts) {
+          if (t0 === null) t0 = ts;
+          var p = Math.min(1, (ts - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+          els.forEach(function(el) { el.textContent = fmt(Math.round(Number(el.getAttribute('data-count')) * e)) + el.getAttribute('data-suffix'); });
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+      function check() {
+        queued = false;
+        if (started) return;
+        var r = els[0].getBoundingClientRect();
+        if (r.top < window.innerHeight * 0.88 && r.bottom > 0) run();
+      }
+      function onScroll() { if (!queued) { queued = true; setTimeout(check, 16); } }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      check();
+    }
+
+    function logoUrl(name, db, website) {
+      if (db) return db;
+      var d = String(website || '').replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0];
+      if (!d) d = String(name).toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
+      return 'https://www.google.com/s2/favicons?domain=' + encodeURIComponent(d) + '&sz=128';
+    }
+
+    function jobCardHtml(job) {
+      if (!job) return '';
+      var co = esc(job.company_name);
+      var title = esc(job.title);
+      var meta = esc(jobMetaLine(job));
+      var img = logoUrl(job.company_name, null, job.company_website);
+      var initial = esc((job.company_initial || job.company_name || 'N').charAt(0).toUpperCase());
+      return '<div class="job">' +
+        '<img class="co-logo" src="' + esc(img) + '" alt="" onerror="this.onerror=null;this.style.display=\'none\';this.nextElementSibling&&(this.nextElementSibling.style.display=\'flex\')">' +
+        '<div class="co-logo co-initial" style="display:none">' + initial + '</div>' +
+        '<p class="co-name">' + co + '</p>' +
+        '<h2 class="role-title">' + title + '</h2>' +
+        (meta || job.salary_range ? '<p class="role-meta">' + meta + (job.salary_range ? (meta ? ' · ' : '') + '<b>' + esc(job.salary_range) + '</b>' : '') + '</p>' : '') +
+        '</div>';
+    }
+
+    function jobMetaLine(job) {
+      var bits = [];
+      if (job.location) bits.push(String(job.location).trim());
+      if (job.type) bits.push(String(job.type));
+      if (job.experience) bits.push(job.experience);
+      var posted = postedLabel(job.posted_at);
+      if (posted) bits.push(posted);
+      // "Internship · Internship" when type and level say the same thing.
+      return bits.filter(function(b, i) { return b && bits.findIndex(function(x) { return String(x).toLowerCase() === String(b).toLowerCase(); }) === i; }).join(' · ');
+    }
+
+    function postedLabel(v) {
+      if (!v) return '';
+      var d = new Date(v);
+      if (isNaN(d)) return 'Posted ' + v;
+      var days = Math.floor((Date.now() - d.getTime()) / 86400000);
+      if (days <= 0) return 'Posted today';
+      if (days === 1) return 'Posted yesterday';
+      if (days < 30) return 'Posted ' + days + ' days ago';
+      return 'Posted ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function soloCard(kicker, title, body) {
+      return '<div class="job solo"><p class="co-name">' + esc(kicker) + '</p><h2 class="role-title">' + esc(title) + '</h2>' + (body ? '<p class="role-meta">' + esc(body) + '</p>' : '') + '</div>';
+    }
+
+    function renderPage(opts) {
+      if (opts.headline) document.getElementById('page-title').textContent = opts.headline;
+      if (opts.bio) document.getElementById('page-bio').textContent = opts.bio;
+      document.getElementById('job-slot').innerHTML = opts.jobCard || '';
+      if (opts.docTitle) document.title = opts.docTitle;
+    }
+
+    function fetchJob(jobId) {
+      var id = String(jobId || '').trim();
+      if (!id) return Promise.resolve(null);
+      var sel = 'id,company_name,company_initial,title,location,type,experience,salary_range,posted_at,company_website';
+      var url = SUPABASE_URL + '/rest/v1/jobs?id=eq.' + encodeURIComponent(id) + '&select=' + sel + '&limit=1';
+      return fetch(url, { headers: HEADERS })
+        .then(function(r) { return r.json().then(function(rows) { return { ok: r.ok, rows: rows }; }); })
+        .then(function(res) {
+          if (res.ok && Array.isArray(res.rows) && res.rows[0]) return res.rows[0];
+          return null;
+        });
+    }
+
+    function normalizeJob(job) {
+      job.title = (job.title || '').trim() || 'Open role';
+      job.company_name = (job.company_name || '').trim() || 'Company';
+      return job;
+    }
+
+    // Landing page (download hosts, irisjobs.live, invites).
+    function showDownload() {
+      scheduleAfterVideo();
+    }
+
+    // Job links: the video stays; the copy and a job card describe the role.
+    function showJobLoading() {
+      renderPage({ headline: 'Apply to this job in one swipe.', bio: 'Open it in Iris and apply in seconds. No forms, no cover letters.',
+        jobCard: '<div class="job solo pulse"><p class="co-name">Loading</p><h2 class="role-title">Fetching role…</h2></div>' });
+    }
+
+    function showJob(job) {
+      job = normalizeJob(job);
+      renderPage({ jobCard: jobCardHtml(job), docTitle: job.title + ' at ' + job.company_name + ' – Iris' });
+    }
+
+    function showJobFallback() {
+      renderPage({ jobCard: soloCard('Iris', 'Open this role in the app', 'Download Iris to see the full details and apply with one swipe.') });
+    }
+
+    // Referral links: who invited them, and their code ready to copy.
+    function showInvite(code, name) {
+      var first = String(name || '').trim().split(/\s+/)[0];
+      renderPage({
+        headline: (first ? first : 'A friend') + ' invited you to Iris.',
+        bio: 'Sign up with their code and you both get 5 free swipes.',
+        docTitle: (first ? first + ' invited you' : 'You\'re invited') + ' to Iris',
+        jobCard: '<div class="job solo invite"><p class="co-name">Your invite code</p>' +
+          '<div class="code-row"><span class="code" id="invite-code">' + esc(code) + '</span>' +
+          '<button type="button" class="copy" id="copy-code">Copy</button></div>' +
+          '<p class="role-meta">Enter it when you sign up in the app.</p></div>'
+      });
+      function copy() {
+        try { navigator.clipboard && navigator.clipboard.writeText(code); } catch (_) {}
+        var b = document.getElementById('copy-code'); if (b) { b.textContent = 'Copied'; }
+      }
+      document.getElementById('copy-code').addEventListener('click', copy);
+      // Tapping a store button copies the code too, so it's ready to paste at sign-up.
+      document.querySelectorAll('#actions a, #nav-cta').forEach(function(a) { a.addEventListener('click', copy); });
+    }
+
+    function sb(endpoint) {
+      return fetch(SUPABASE_URL + '/rest/v1/' + endpoint, { headers: HEADERS }).then(function(r) {
+        if (!r.ok) throw new Error('api');
+        return r.json();
+      });
+    }
+
+    setupStoreButton();
+    renderLogos();
+    document.getElementById('year').textContent = new Date().getFullYear();
+    countUpOnScroll();
+
+    var DOWNLOAD_HOSTS = ['download.nextquark.in', 'iris.nextquark.in'];
+    var LINK_DOMAINS = ['irisjobs.live', 'www.irisjobs.live'];
+    // irisjobs.live: its home page is the download page; /job, /invite, /post work as on nextquark.in.
+    var isLinkDomainHome = LINK_DOMAINS.indexOf(host) !== -1 && !/^\/(job|invite|post|iris)(\/|$)/.test(path);
+    if (DOWNLOAD_HOSTS.indexOf(host) !== -1 || isLinkDomainHome || path === '/download') {
+      trackVisit();
+      showDownload();
+    } else if (path === '/' && (host === 'nextquark.in' || host === 'www.nextquark.in')) {
+      window.location.replace('https://irisjobs.live/');
+    } else {
+      trackVisit();
+      var jobMatch = path.match(/^\/job\/([^/?#]+)/);
+      var invMatch = path.match(/^\/invite\/([^/?#]+)/);
+
+      if (jobMatch || invMatch || /^\/post\//.test(path)) {
+        var noindex = document.createElement('meta'); noindex.name = 'robots'; noindex.content = 'noindex';
+        document.head.appendChild(noindex);
+      }
+      if (jobMatch) {
+        // Longer than the landing page: people read the role before the store opens.
+        showJobLoading();
+        scheduleAfterVideo(JOB_REDIRECT_MS);
+        var rawId = decodeURIComponent(jobMatch[1]).split('?')[0].split('#')[0].trim();
+        fetchJob(rawId)
+          .then(function(j) { j ? showJob(j) : showJobFallback(); })
+          .catch(function() { showJobFallback(); });
+      } else if (invMatch) {
+        var code = decodeURIComponent(invMatch[1]).toUpperCase();
+        showInvite(code, '');
+        scheduleAfterVideo(8000);
+        sb('profiles?referral_code=eq.' + encodeURIComponent(code) + '&select=full_name,first_name&limit=1')
+          .then(function(rows) { var r = rows && rows[0]; if (r) showInvite(code, r.first_name || r.full_name); })
+          .catch(function() {});
+      } else {
+        showDownload();
+      }
+    }
+  </script>
+</body>
+</html>

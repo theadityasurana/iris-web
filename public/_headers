@@ -1,0 +1,11 @@
+# No caching anywhere: every visit and every link-preview crawl gets the latest page, video and image.
+/*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+  CDN-Cache-Control: no-store
+  Pragma: no-cache
+
+/.well-known/apple-app-site-association
+  Content-Type: application/json
+
+/.well-known/assetlinks.json
+  Content-Type: application/json

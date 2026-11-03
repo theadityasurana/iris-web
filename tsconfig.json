@@ -17,6 +17,7 @@
       "@web/*": ["./src/*"],
       "@/lib/supabase": ["./src/shims/supabase.ts"],
       "@/lib/posthog": ["./src/shims/posthog.ts"],
+      "@/lib/offline": ["./src/shims/offline.ts"],
       "@/*": ["./shared/*"],
       "react-native": ["./src/shims/react-native.ts"],
       "@react-native-async-storage/async-storage": ["./src/shims/async-storage.ts"],

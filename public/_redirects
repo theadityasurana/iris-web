@@ -1,1 +1,8 @@
-/app/*  /app/index.html  200
+/job/*  /index.html  200
+/post/*  /index.html  200
+/iris  /index.html  200
+/invite/*  /index.html  200
+/download  /index.html  200
+/download/  /index.html  200
+/app/*  /app/  200
+/how-it-works  /how-it-works/index.html  301
