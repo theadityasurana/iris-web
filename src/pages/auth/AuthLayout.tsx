@@ -17,12 +17,10 @@ export function AuthLayout({ title, subtitle, children, footer }: { title: strin
         {footer && <div className="auth-foot t-callout muted">{footer}</div>}
       </div>
       <aside className="auth-aside" aria-hidden="true">
-        <div className="auth-aside-inner">
-          <video src="/media/iris-1080.mp4" autoPlay muted loop playsInline poster="/media/iris-poster-1080.jpg" />
-          <div className="auth-quote">
-            <p className="t-heading">Swipe right on a job. Iris fills in the application and submits it for you.</p>
-            <p className="t-callout muted" style={{ marginTop: 10 }}>Same account as the Iris app on iPhone and Android.</p>
-          </div>
+        <video src="/media/iris-1080.mp4" autoPlay muted loop playsInline poster="/media/iris-poster-1080.jpg" />
+        <div className="auth-quote">
+          <p className="t-heading">Swipe right on a job. Iris fills in the application and submits it for you.</p>
+          <p className="t-callout muted" style={{ marginTop: 10 }}>Same account as the Iris app on iPhone and Android.</p>
         </div>
       </aside>
     </div>

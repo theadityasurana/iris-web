@@ -350,7 +350,6 @@
 .auth-body { width: 100%; max-width: 360px; margin: auto; padding: 40px 0; }
 .auth-foot { text-align: center; }
 .auth-aside { position: sticky; top: 0; height: 100dvh; overflow: hidden; background: #0d0d0c; }
-.auth-aside-inner { position: relative; width: 100%; height: 100%; }
 .auth-aside video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.88; display: block; }
 .auth-quote { position: absolute; left: 28px; right: 28px; bottom: 28px; padding: 22px 24px; border-radius: var(--r-4); background: rgba(255,255,255,0.93); color: #1c1c1b; backdrop-filter: blur(12px); }
 .auth-quote .muted { color: #6b6b66; }
