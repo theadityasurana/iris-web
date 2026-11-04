@@ -344,22 +344,22 @@
 /* ── Auth ───────────────────────────────────────────────────────────────── */
 .link { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
 .link:hover { text-decoration-color: var(--ink); }
-.auth { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 100dvh; }
-.auth-form { display: flex; flex-direction: column; padding: 28px 40px; }
+.auth { display: grid; grid-template-columns: minmax(360px, 460px) minmax(0, 1fr); min-height: 100dvh; background: var(--bg); }
+.auth-form { display: flex; flex-direction: column; padding: 28px 40px; border-right: 1px solid var(--line); }
 .auth-brand { padding: 0; }
-.auth-body { width: 100%; max-width: 380px; margin: auto; padding: 48px 0; }
+.auth-body { width: 100%; max-width: 360px; margin: auto; padding: 40px 0; }
 .auth-foot { text-align: center; }
-.auth-aside { padding: 12px; }
-.auth-aside-inner { position: relative; height: 100%; min-height: 480px; border-radius: var(--r-5); overflow: hidden; background: #0d0d0c; }
-.auth-aside-inner img, .auth-aside-inner video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.92; display: block; }
-.auth-quote { position: absolute; left: 24px; right: 24px; bottom: 24px; padding: 20px 22px; border-radius: var(--r-4); background: rgba(255,255,255,0.94); color: #1c1c1b; backdrop-filter: blur(10px); }
+.auth-aside { position: sticky; top: 0; height: 100dvh; overflow: hidden; background: #0d0d0c; }
+.auth-aside-inner { position: relative; width: 100%; height: 100%; }
+.auth-aside video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.88; display: block; }
+.auth-quote { position: absolute; left: 28px; right: 28px; bottom: 28px; padding: 22px 24px; border-radius: var(--r-4); background: rgba(255,255,255,0.93); color: #1c1c1b; backdrop-filter: blur(12px); }
 .auth-quote .muted { color: #6b6b66; }
 .or { display: flex; align-items: center; gap: 12px; margin: 22px 0; color: var(--ink-4); font-size: 12.5px; }
 .or::before, .or::after { content: ''; flex: 1; height: 1px; background: var(--line); }
 @media (max-width: 900px) {
   .auth { grid-template-columns: 1fr; }
   .auth-aside { display: none; }
-  .auth-form { padding: 20px 20px 28px; }
+  .auth-form { padding: 20px 20px 28px; border-right: 0; }
   .auth-body { padding: 36px 0; }
 }
 
