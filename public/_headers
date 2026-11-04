@@ -2,6 +2,11 @@
 /*
   Cache-Control: no-store, no-cache, must-revalidate, max-age=0
   CDN-Cache-Control: no-store
+
+# Allow social crawlers to cache the preview image
+/yoiris.jpeg
+  Cache-Control: public, max-age=86400
+  CDN-Cache-Control: public, max-age=86400
   Pragma: no-cache
 
 /.well-known/apple-app-site-association
