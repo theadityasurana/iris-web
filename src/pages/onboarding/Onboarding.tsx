@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, ChevronLeft, Upload, Check, Plus, X, User, Briefcase, GraduationCap, Zap, Settings, FileText } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Upload, Check, Plus, X, User, Briefcase, GraduationCap, Zap, Settings, FileText, LogOut } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { defaultOnboardingData, type OnboardingData } from '@/types/onboarding';
 import { getRolesGroupedByCategory } from '@/constants/roles';
@@ -25,62 +25,55 @@ const EXP_LEVELS = [
   { id: 'expert', label: 'Expert / Leadership (10+ yrs)' },
 ];
 
-function ProfilePreview({ data, avatarFile }: { data: OnboardingData; avatarFile: File | null }) {
-  const name = [data.firstName, data.lastName].filter(Boolean).join(' ') || 'Your name';
-  const avatarSrc = avatarFile ? URL.createObjectURL(avatarFile) : null;
-  const initials = [data.firstName?.[0], data.lastName?.[0]].filter(Boolean).join('').toUpperCase() || '?';
+function SummaryPreview({ data, step, resumeFile }: { data: OnboardingData; step: number; resumeFile: File | null }) {
+  const name = [data.firstName, data.lastName].filter(Boolean).join(' ');
+  const level = EXP_LEVELS.find(l => l.id === data.experienceLevel)?.label;
+  const hasExp = data.workExperience.some(e => e.title || e.company);
+  const hasEdu = data.education.some(e => e.institution || e.degree);
 
   return (
     <div className="ob-preview">
-      <div className="ob-preview-label t-overline muted">Live preview</div>
-      <div className="card pad ob-preview-card">
-        {/* Header */}
-        <div className="row gap-14" style={{ marginBottom: 16 }}>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', border: '2px solid var(--line)' }}>
-            {avatarSrc
-              ? <img src={avatarSrc} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : <span style={{ fontWeight: 700, fontSize: 20, color: 'var(--ink-3)' }}>{initials}</span>}
-          </div>
-          <div className="grow">
-            <div className="t-sub" style={{ marginBottom: 2 }}>{name}</div>
-            {data.headline && <div className="t-callout muted">{data.headline}</div>}
-            {data.location && <div className="t-caption muted" style={{ marginTop: 2 }}>{data.location}</div>}
-          </div>
-        </div>
+      <div className="t-overline muted" style={{ marginBottom: 16 }}>Your profile so far</div>
+      <div className="stack gap-12">
 
-        {/* Desired roles */}
+        {/* Name / headline */}
+        {(name || data.headline) && (
+          <div className="card pad" style={{ padding: '14px 16px' }}>
+            {name && <div className="t-sub" style={{ marginBottom: 2 }}>{name}</div>}
+            {data.headline && <div className="t-caption muted">{data.headline}</div>}
+            {data.location && <div className="t-caption muted">{data.location}</div>}
+          </div>
+        )}
+
+        {/* Roles */}
         {data.desiredRoles.length > 0 && (
-          <div style={{ marginBottom: 14 }}>
-            <div className="t-overline muted" style={{ marginBottom: 6 }}>Targeting</div>
+          <div>
+            <div className="t-overline muted" style={{ marginBottom: 8 }}>Targeting</div>
             <div className="chips">
-              {data.desiredRoles.slice(0, 4).map(r => <span key={r} className="chip static">{r}</span>)}
-              {data.desiredRoles.length > 4 && <span className="chip static">+{data.desiredRoles.length - 4}</span>}
+              {data.desiredRoles.slice(0, 5).map(r => <span key={r} className="chip static">{r}</span>)}
+              {data.desiredRoles.length > 5 && <span className="chip static">+{data.desiredRoles.length - 5}</span>}
             </div>
           </div>
         )}
 
-        {/* Experience level */}
-        {data.experienceLevel && (
-          <div style={{ marginBottom: 14 }}>
-            <div className="t-overline muted" style={{ marginBottom: 6 }}>Level</div>
-            <span className="badge dark">{EXP_LEVELS.find(l => l.id === data.experienceLevel)?.label}</span>
+        {/* Level */}
+        {level && (
+          <div>
+            <div className="t-overline muted" style={{ marginBottom: 8 }}>Level</div>
+            <span className="badge dark">{level}</span>
           </div>
         )}
 
         {/* Experience */}
-        {data.workExperience.filter(e => e.title || e.company).length > 0 && (
-          <div style={{ marginBottom: 14 }}>
+        {hasExp && (
+          <div>
             <div className="t-overline muted" style={{ marginBottom: 8 }}>Experience</div>
-            <div className="stack gap-8">
+            <div className="stack gap-6">
               {data.workExperience.filter(e => e.title || e.company).slice(0, 3).map(e => (
-                <div key={e.id} className="row gap-10">
-                  <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Briefcase size={14} style={{ color: 'var(--ink-3)' }} />
-                  </div>
-                  <div>
-                    <div className="t-callout" style={{ fontWeight: 600 }}>{e.title || 'Role'}</div>
-                    <div className="t-caption muted">{e.company || 'Company'}{e.startYear ? ` · ${e.startYear}–${e.isCurrent ? 'Present' : (e.endYear || '…')}` : ''}</div>
-                  </div>
+                <div key={e.id} className="t-caption">
+                  <span style={{ fontWeight: 600 }}>{e.title || '—'}</span>
+                  {e.company && <span className="muted"> · {e.company}</span>}
+                  {e.startYear && <span className="muted"> · {e.startYear}–{e.isCurrent ? 'Present' : (e.endYear || '…')}</span>}
                 </div>
               ))}
             </div>
@@ -88,19 +81,14 @@ function ProfilePreview({ data, avatarFile }: { data: OnboardingData; avatarFile
         )}
 
         {/* Education */}
-        {data.education.filter(e => e.institution || e.degree).length > 0 && (
-          <div style={{ marginBottom: 14 }}>
+        {hasEdu && (
+          <div>
             <div className="t-overline muted" style={{ marginBottom: 8 }}>Education</div>
-            <div className="stack gap-8">
+            <div className="stack gap-6">
               {data.education.filter(e => e.institution || e.degree).slice(0, 2).map(e => (
-                <div key={e.id} className="row gap-10">
-                  <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <GraduationCap size={14} style={{ color: 'var(--ink-3)' }} />
-                  </div>
-                  <div>
-                    <div className="t-callout" style={{ fontWeight: 600 }}>{e.degree || 'Degree'}{e.field ? ` in ${e.field}` : ''}</div>
-                    <div className="t-caption muted">{e.institution || 'Institution'}</div>
-                  </div>
+                <div key={e.id} className="t-caption">
+                  <span style={{ fontWeight: 600 }}>{e.degree || '—'}{e.field ? ` in ${e.field}` : ''}</span>
+                  {e.institution && <span className="muted"> · {e.institution}</span>}
                 </div>
               ))}
             </div>
@@ -109,24 +97,47 @@ function ProfilePreview({ data, avatarFile }: { data: OnboardingData; avatarFile
 
         {/* Skills */}
         {data.skills.length > 0 && (
-          <div style={{ marginBottom: 14 }}>
-            <div className="t-overline muted" style={{ marginBottom: 6 }}>Skills</div>
+          <div>
+            <div className="t-overline muted" style={{ marginBottom: 8 }}>Skills</div>
             <div className="chips">
-              {data.skills.slice(0, 6).map(s => <span key={s.name} className="chip static">{s.name}</span>)}
-              {data.skills.length > 6 && <span className="chip static">+{data.skills.length - 6}</span>}
+              {data.skills.slice(0, 8).map(s => <span key={s.name} className="chip static">{s.name}</span>)}
+              {data.skills.length > 8 && <span className="chip static">+{data.skills.length - 8}</span>}
             </div>
           </div>
         )}
 
-        {/* Work prefs */}
+        {/* Work mode */}
         {data.workPreferences.length > 0 && (
           <div>
-            <div className="t-overline muted" style={{ marginBottom: 6 }}>Work mode</div>
+            <div className="t-overline muted" style={{ marginBottom: 8 }}>Work mode</div>
             <div className="chips">
               {data.workPreferences.map(p => <span key={p} className="chip static">{p}</span>)}
             </div>
           </div>
         )}
+
+        {/* Resume */}
+        {resumeFile && (
+          <div>
+            <div className="t-overline muted" style={{ marginBottom: 8 }}>Resume</div>
+            <div className="t-caption row gap-6">
+              <FileText size={13} style={{ color: 'var(--ink-3)', flexShrink: 0 }} />
+              <span className="ellipsis">{resumeFile.name}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Placeholder when nothing entered yet */}
+        {!name && !data.desiredRoles.length && !level && !hasExp && !hasEdu && !data.skills.length && (
+          <div className="t-caption muted" style={{ textAlign: 'center', padding: '24px 0' }}>
+            Fill in the form and your details will appear here.
+          </div>
+        )}
+
+        {/* Step hint */}
+        <div className="t-caption muted" style={{ marginTop: 4 }}>
+          Step {Math.min(step + 1, STEPS.length)} of {STEPS.length}
+        </div>
       </div>
     </div>
   );
@@ -134,7 +145,7 @@ function ProfilePreview({ data, avatarFile }: { data: OnboardingData; avatarFile
 
 export default function Onboarding() {
   const navigate = useNavigate();
-  const { onboardingData, saveOnboardingProgress, completeOnboarding } = useAuth();
+  const { onboardingData, saveOnboardingProgress, completeOnboarding, logout } = useAuth();
   const [step, setStep] = useState(0);
   const [data, setData] = useState<OnboardingData>({ ...defaultOnboardingData, ...onboardingData });
   const [submitting, setSubmitting] = useState(false);
@@ -146,13 +157,13 @@ export default function Onboarding() {
   const fileRef = useRef<HTMLInputElement>(null);
   const avatarRef = useRef<HTMLInputElement>(null);
 
-  const update = (partial: Partial<OnboardingData>) => {
-    const next = { ...data, ...partial };
-    setData(next);
-    saveOnboardingProgress({ ...partial, onboardingStep: step + 1 });
-  };
+  // Only update local state while typing — save to DB on step navigation
+  const update = (partial: Partial<OnboardingData>) => setData(prev => ({ ...prev, ...partial }));
 
-  const goNext = () => setStep(s => Math.min(s + 1, STEPS.length));
+  const goNext = () => {
+    saveOnboardingProgress({ ...data, onboardingStep: step + 1 });
+    setStep(s => Math.min(s + 1, STEPS.length));
+  };
   const goBack = () => setStep(s => Math.max(s - 1, 0));
 
   async function finish() {
@@ -182,7 +193,9 @@ export default function Onboarding() {
             </div>
           ))}
         </div>
-        <div className="t-caption muted">{isDone ? 'Done' : `${step + 1} / ${STEPS.length}`}</div>
+        <button className="btn ghost sm" onClick={async () => { await logout(); navigate('/app/sign-in', { replace: true }); }}>
+          <LogOut size={15} />Sign out
+        </button>
       </div>
 
       {/* Progress bar */}
@@ -415,7 +428,11 @@ export default function Onboarding() {
               {step === 6 && (
                 <>
                   <h1 className="t-title" style={{ marginBottom: 6 }}>Upload your resume</h1>
-                  <p className="t-callout muted" style={{ marginBottom: 24 }}>Iris uses your resume to tailor every application. You can skip this and add it later.</p>
+                  <p className="t-callout muted" style={{ marginBottom: 16 }}>Iris parses your resume to tailor every application automatically. You can skip this and add it later from your profile.</p>
+                  <div className="banner green" style={{ marginBottom: 20 }}>
+                    <FileText size={16} />
+                    <span>Your resume is parsed once and used to fill in application forms — you never have to copy-paste again.</span>
+                  </div>
                   <input ref={fileRef} type="file" accept=".pdf,.doc,.docx" style={{ display: 'none' }}
                     onChange={e => { const f = e.target.files?.[0]; if (f) setResumeFile(f); }} />
                   {resumeFile ? (
@@ -440,15 +457,15 @@ export default function Onboarding() {
               {/* Nav */}
               <div className="row between" style={{ marginTop: 32 }}>
                 <button className="btn secondary" onClick={goBack} disabled={step === 0}><ChevronLeft size={16} />Back</button>
-                <button className="btn" onClick={step === STEPS.length - 1 ? goNext : goNext}>
+                <button className="btn" onClick={goNext}>
                   {step === 6 && !resumeFile ? 'Skip' : 'Continue'}<ChevronRight size={16} />
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Right: live preview */}
-          <ProfilePreview data={data} avatarFile={avatarFile} />
+          {/* Right: summary */}
+          <SummaryPreview data={data} step={step} resumeFile={resumeFile} />
         </div>
       )}
     </div>
