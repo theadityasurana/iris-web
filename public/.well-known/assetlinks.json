@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.rork.hireswipe_v3_clone_ceuofke",
+    "sha256_cert_fingerprints": ["AB:8D:D1:15:B4:FA:BD:69:42:E9:C8:4B:54:D8:07:44:69:20:A3:63:10:78:DB:FB:29:F2:1E:63:5A:75:1F:EC"]
+  }
+}]
