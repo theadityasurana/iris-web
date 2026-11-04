@@ -1,13 +1,18 @@
-# No caching anywhere: every visit and every link-preview crawl gets the latest page, video and image.
-/*
+# No caching for HTML and JS/CSS assets
+/*.html
   Cache-Control: no-store, no-cache, must-revalidate, max-age=0
   CDN-Cache-Control: no-store
+  Pragma: no-cache
 
-# Allow social crawlers to cache the preview image
+/app/assets/*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+  CDN-Cache-Control: no-store
+  Pragma: no-cache
+
+# Preview image: must be cacheable for social crawlers
 /yoiris.jpeg
   Cache-Control: public, max-age=86400
   CDN-Cache-Control: public, max-age=86400
-  Pragma: no-cache
 
 /.well-known/apple-app-site-association
   Content-Type: application/json
