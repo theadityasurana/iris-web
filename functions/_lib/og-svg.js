@@ -79,6 +79,31 @@ ${centred(SANS, 'Tinder for Jobs: Free to Try  ·  iOS  ·  Android  ·  Web', 6
 </svg>`;
 }
 
+/** Latin names only, since the bundled fonts are Latin. Others read "A friend", as on an unknown code. */
+function displayName(name) {
+  const n = clean(name);
+  return /^[\x20-\x7e]+$/.test(n) ? fit(SERIF, n, 68, 560) : '';
+}
+
+export function inviteSvg(name, code, reward = 5) {
+  const who = displayName(name) || 'A friend';
+  const irisW = widthOf(SERIF, 'Iris', 40);
+  const x = 600 - (52 + 12 + irisW) / 2;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
+<image width="1200" height="630" href="${BG}"/>
+<image x="${x.toFixed(1)}" y="36" width="52" height="52" href="${LOGO}"/>
+${line(SERIF, 'Iris', x + 64, 75, 40, '#23201b')}
+${centred(SERIF, `${who} invited you to Iris.`, 600, 178, 68, '#23201b')}
+<rect x="147" y="230" width="906" height="268" rx="30" fill="#3a2a10" opacity=".14"/>
+<rect x="150" y="222" width="900" height="268" rx="30" fill="#fffdf9"/>
+<rect x="340" y="282" width="520" height="118" rx="20" fill="#f7f3ff" stroke="#5536c4" stroke-width="2" stroke-dasharray="9 8"/>
+${centred(SANS, 'YOUR INVITE CODE', 600, 265, 21, '#5536c4', 2.2)}
+${centred(SERIF, code, 600, 368, 84, '#23201b', 8)}
+${centred(SANS, `Sign up with this code and you both get ${reward} free swipes.`, 600, 448, 28, '#4e4a41')}
+${centred(SANS, 'Tinder for Jobs: Free to Try  ·  iOS  ·  Android  ·  Web', 600, 556, 25, '#2f2b24')}
+</svg>`;
+}
+
 export function companyDomain(job) {
   return String(job.company_website || '').replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0]
     || `${String(job.company_name).toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;

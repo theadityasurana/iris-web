@@ -128,3 +128,23 @@ test('every page shares one preview image, including on X', async () => {
     assert.match(h, /name="twitter:card" content="summary_large_image"/, f);
   }
 });
+
+test('referral previews: one per code, first name only, and safe with odd input', async () => {
+  const { invitePreview } = await import('../../functions/invite/[code].js');
+  const { firstName, normalizeCode } = await import('../../functions/_lib/referrer.js');
+  const { inviteSvg } = await import('../../functions/_lib/og-svg.js');
+  assert.equal(normalizeCode('adit1234'), 'ADIT1234');
+  for (const bad of ['', 'a', 'x;drop', '../../etc', 'A'.repeat(40), 'AB%20CD']) assert.equal(normalizeCode(bad), null, bad);
+  assert.equal(firstName({ full_name: 'Aditya Surana' }), 'Aditya');
+  assert.equal(firstName({ first_name: 'Asha', full_name: 'Asha Rao' }), 'Asha');
+  assert.equal(firstName(null), '');
+  const p = invitePreview('Asha', 'ASHA1234', 'https://irisjobs.live');
+  assert.equal(p.title, 'Asha invited you to Iris');
+  assert.match(p.description, /ASHA1234/);
+  const u = new URL(p.image);
+  assert.equal(u.pathname, '/og/invite/ASHA1234.jpg');
+  assert.equal(u.search, '');
+  assert.equal(invitePreview('', 'ASHA1234', 'https://x').title, 'A friend invited you to Iris');
+  for (const name of ['Asha', '', 'आदित्य', '<b>x</b>', 'A very very very very very very long name indeed']) assert.ok(inviteSvg(name, 'ASHA1234').endsWith('</svg>'), name);
+  assert.ok(!inviteSvg('<b>x</b>', 'ASHA1234').includes('<b>'));
+});
