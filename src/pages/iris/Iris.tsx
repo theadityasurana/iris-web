@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowRight, ChevronDown, FileText, Lock, Moon, SlidersHorizontal, Upload, X, Send, type LucideIcon } from 'lucide-react';
+import { ArrowRight, Lock, X, Send } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useEntitlements } from '@web/lib/queries';
 import { useToast } from '@web/ui/Toast';
 import { CompanyLogo, Empty, Switch, timeAgo } from '@web/ui/bits';
+import { IrisAbout } from '@web/pages/iris/IrisAbout';
 import { fetchAllCompanies } from '@/lib/jobs';
 import { DEFAULT_IRIS_PREFS, getIrisApplications, getIrisEnabled, getIrisPreferences, saveIrisPreferences, setIrisEnabled, type IrisPreferences, type SalaryCurrency } from '@/lib/iris';
 
@@ -16,30 +17,6 @@ const LOCATIONS = [
   { value: 'unified', label: 'Best matches' }, { value: 'india', label: 'India' }, { value: 'usa', label: 'USA' },
   { value: 'remote', label: 'Remote' }, { value: 'discover', label: 'Global' },
 ] as const;
-const STEPS: { icon: LucideIcon; title: string; desc: string }[] = [
-  { icon: Upload, title: 'Add your resume', desc: 'Iris reads your experience and uses it for every application.' },
-  { icon: SlidersHorizontal, title: 'Set your criteria', desc: 'Match threshold, salary floor, company size, and companies to prioritise or avoid.' },
-  { icon: Moon, title: 'Iris works overnight', desc: 'It finds matching roles and applies, up to your daily limit.' },
-  { icon: FileText, title: 'Wake up to a report', desc: 'See what was sent, with an ATS score and interview prep for each job.' },
-];
-const FAQS = [
-  { q: 'How is Iris different from mass-apply tools?', a: 'Iris only applies when a job clears the match score you set, and it never applies to companies you block. You decide how selective it is.' },
-  { q: 'How many applications does Iris send per day?', a: 'Up to the daily limit you choose here, from 1 to 10. Each one uses a credit.' },
-  { q: 'When does Iris run?', a: 'Overnight. You can pause it on weekends or switch it off at any time, and it stops straight away.' },
-  { q: 'Do I need a resume?', a: 'Yes. Iris uses your resume and profile to fill in applications, so add a PDF or DOCX from your profile first.' },
-  { q: 'Can I see what Iris sent?', a: 'Yes. Every application appears under Applications, and replies land in your Tracker.' },
-  { q: 'Which plans include Iris?', a: 'Starter, Pro and Ultra plans bought in the Iris mobile app.' },
-];
-
-function Faq({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="faq-item">
-      <button onClick={() => setOpen(o => !o)} aria-expanded={open}><span>{q}</span><ChevronDown size={17} style={{ transform: open ? 'rotate(180deg)' : undefined, transition: 'transform .2s' }} /></button>
-      {open && <p className="t-callout soft">{a}</p>}
-    </div>
-  );
-}
 
 function CompanyList({ label, hint, items, options, onChange, disabled }: { label: string; hint: string; items: string[]; options: string[]; onChange: (next: string[]) => void; disabled?: boolean }) {
   const [draft, setDraft] = useState('');
@@ -191,22 +168,7 @@ export default function Iris() {
         </>
       )}
 
-      {tab === 'about' && (
-        <>
-          <h2 className="t-title">How it works</h2>
-          <div className="iris-steps">
-            {STEPS.map(({ icon: Icon, title, desc }, i) => (
-              <article key={title} className="card pad">
-                <div className="row between"><Icon size={20} /><span className="t-overline muted">0{i + 1}</span></div>
-                <h3 className="p-card-title" style={{ marginTop: 14 }}>{title}</h3>
-                <p className="t-callout soft" style={{ marginTop: 4 }}>{desc}</p>
-              </article>
-            ))}
-          </div>
-          <h2 className="t-title" style={{ marginTop: 36, marginBottom: 12 }}>Frequently asked questions</h2>
-          <div className="card faq-card">{FAQS.map(f => <Faq key={f.q} {...f} />)}</div>
-        </>
-      )}
+      {tab === 'about' && <IrisAbout />}
     </div>
   );
 }

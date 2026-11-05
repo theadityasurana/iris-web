@@ -12,10 +12,23 @@ import { supabase } from '@/lib/supabase';
 import { canApply } from '@/lib/entitlements';
 import { decrementApplicationCount } from '@/lib/subscription';
 import { useDailySwipe as consumeFreeSwipe } from '@/lib/daily-swipes';
-import { addToLiveApplicationQueue, incrementRightSwipe, saveJob } from '@/lib/jobs';
+import { addToLiveApplicationQueue, fetchUserApplications, incrementRightSwipe, saveJob } from '@/lib/jobs';
+import { FIRST_APPLY_EVENT, type FirstApplyDetail } from '@web/pages/jobs/FirstApplyShow';
 import type { Job } from '@/types';
 
 export type ApplyOutcome = 'applied' | 'no-credits' | 'failed';
+
+const firstApplyKey = (userId: string) => `iris_first_apply_seen_${userId}`;
+
+/** True only for someone with no earlier applications, once per device. */
+async function isFirstApplication(userId: string, cached: unknown[] | undefined) {
+  try {
+    if (localStorage.getItem(firstApplyKey(userId))) return false;
+    const earlier = cached ?? await fetchUserApplications(userId);
+    localStorage.setItem(firstApplyKey(userId), '1');
+    return earlier.length === 0;
+  } catch { return false; }
+}
 
 export function useJobActions() {
   const { userId, profile, addSwipedJobId } = useAuth();
@@ -46,10 +59,15 @@ export function useJobActions() {
     qc.invalidateQueries({ queryKey: ['daily-swipes', userId] });
     if (!charged) { setOutOfCredits(true); return 'no-credits'; }
 
+    const first = await isFirstApplication(userId, qc.getQueryData<unknown[]>(['user-applications', userId]));
     addSwipedJobId(job.id);
     incrementRightSwipe(job.id).catch(() => {});
     const ok = await addToLiveApplicationQueue(userId, job, profile);
     qc.invalidateQueries({ queryKey: ['user-applications', userId] });
+    if (ok && first) {
+      const detail: FirstApplyDetail = { title: job.jobTitle, company: job.companyName, logo: job.companyLogo, website: job.companyWebsite, portalUrl: job.portalUrl };
+      window.dispatchEvent(new CustomEvent(FIRST_APPLY_EVENT, { detail }));
+    }
     return ok ? 'applied' : 'failed';
   }, [userId, profile, entitlements, freeLeft, webCredits, addSwipedJobId, qc]);
 

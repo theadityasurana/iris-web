@@ -507,7 +507,7 @@ def write_simple_pages():
         extra_head=jsonld({"@context": "https://schema.org", "@type": "Organization", "name": "The Iris Team", "url": SITE + AUTHOR_URL, "parentOrganization": ORG})))
     credits = json.loads((ROOT / "docs" / "image-credits.json").read_text())
     items = "".join(
-        f'<li><a href="{e(c["page"])}" rel="nofollow noopener">{e(c["title"])}</a> by {e(c["artist"] or "unknown")}, {e(c["license"])}. Cropped and resized.</li>' for c in credits)
+        f'<li><a href="{e(c["page"])}" rel="nofollow noopener">{e(c["title"])}</a> by {e(c["artist"] or "unknown")}, {e(c["license"])}. Cropped, resized and colour-graded with a painterly finish.</li>' for c in credits)
     d = ROOT / "public" / "credits"
     d.mkdir(exist_ok=True)
     (d / "index.html").write_text(page(
@@ -521,7 +521,7 @@ def write_simple_pages():
 def write_discovery_files(posts):
     pub = ROOT / "public"
     today = dt.date.today().isoformat()
-    urls = [(SITE + "/", today), (SITE + "/blog/", max(p["updated"] for p in posts)), (SITE + AUTHOR_URL, today), (SITE + "/credits/", today)]
+    urls = [(SITE + "/", today), (SITE + "/blog/", max(p["updated"] for p in posts)), (SITE + AUTHOR_URL, today), (SITE + "/credits/", today), (SITE + "/jobs/", today), (SITE + "/tinder-for-jobs/", today)]
     urls += [(f"{SITE}/blog/{p['slug']}/", p["updated"]) for p in posts]
     (pub / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

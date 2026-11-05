@@ -11,6 +11,9 @@ const ForgotPassword = lazy(() => import('@web/pages/auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('@web/pages/auth/ResetPassword'));
 const AuthCallback = lazy(() => import('@web/pages/auth/AuthCallback'));
 const Onboarding = lazy(() => import('@web/pages/onboarding/Onboarding'));
+const FirstJob = lazy(() => import('@web/pages/onboarding/FirstJob'));
+const BrowseJobs = lazy(() => import('@web/pages/browse/BrowseJobs'));
+const Integrations = lazy(() => import('@web/pages/integrations/Integrations'));
 
 const Home = lazy(() => import('@web/pages/home/Home'));
 const Search = lazy(() => import('@web/pages/jobs/Search'));
@@ -57,11 +60,13 @@ function GuestOnly({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+const firstJobPending = () => { try { return sessionStorage.getItem('iris_show_first_job') === '1'; } catch { return false; } };
+
 function OnboardingGate({ children }: { children: ReactNode }) {
   const { isLoading, session, isOnboardingComplete, profileRow } = useAuth();
   if (isLoading || (session && !profileRow)) return <PageLoader />;
   if (!session) return <Navigate to="/app/sign-in" replace />;
-  if (isOnboardingComplete) return <Navigate to="/app/home" replace />;
+  if (isOnboardingComplete) return <Navigate to={firstJobPending() ? '/app/first-job' : '/app/home'} replace />;
   return <>{children}</>;
 }
 
@@ -77,9 +82,13 @@ export function App() {
         <Route path="/app/auth/callback" element={<AuthCallback />} />
         <Route path="/app/onboarding" element={<OnboardingGate><Onboarding /></OnboardingGate>} />
 
+        <Route path="/app/first-job" element={<RequireUser><FirstJob /></RequireUser>} />
+
         <Route element={<RequireUser><AppShell /></RequireUser>}>
           <Route path="/app/home" element={<Home />} />
           <Route path="/app/jobs" element={<Jobs />} />
+          <Route path="/app/browse" element={<BrowseJobs />} />
+          <Route path="/app/integrations" element={<Integrations />} />
           <Route path="/app/jobs/search" element={<Search />} />
           <Route path="/app/tracker" element={<Tracker />} />
           <Route path="/app/jobs/:id" element={<JobDetailsPage />} />

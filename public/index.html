@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#f8f5ef">
   <title>Iris: Tinder for Jobs. Swipe Right and AI Applies for You</title>
   <meta name="description" content="Iris is the AI job application app for iPhone and Android. Swipe right on a job and Iris fills in and submits the application for you. Free to try.">
   <link rel="canonical" href="https://irisjobs.live/">
@@ -18,13 +17,13 @@
     {"@type":"MobileApplication","name":"Iris","alternateName":"Iris: Tinder for Jobs","operatingSystem":"iOS, Android","applicationCategory":"BusinessApplication",
      "description":"An AI job application app. Swipe right on a job and Iris completes and submits the application using your resume.",
      "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@id":"https://irisjobs.live/#org"},
-     "downloadUrl":["https://apps.apple.com/in/app/nextquark/id6761863089","https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke"],
-     "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.8","ratingCount":"120"}},
+     "downloadUrl":["https://apps.apple.com/in/app/nextquark/id6761863089","https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke"]},
     {"@type":"SoftwareApplication","name":"Iris","alternateName":"Iris: Tinder for Jobs","operatingSystem":"iOS, Android","applicationCategory":"BusinessApplication",
      "description":"Swipe right on a job and Iris auto-applies using your resume. The fastest way to apply to hundreds of jobs.",
      "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"url":"https://irisjobs.live/",
      "downloadUrl":["https://apps.apple.com/in/app/nextquark/id6761863089","https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke"]},
     {"@type":"WebSite","name":"Iris","url":"https://irisjobs.live/","publisher":{"@id":"https://irisjobs.live/#org"}}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the Tinder for jobs?", "acceptedAnswer": {"@type": "Answer", "text": "Iris is a Tinder for jobs: you swipe through job cards, and when you swipe right, AI fills in and submits the application for you on the company's own job portal."}}, {"@type": "Question", "name": "Is Iris free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, you can start for free with a set number of applications. Paid plans give you more, and you can cancel any time."}}, {"@type": "Question", "name": "Does Iris really submit the application?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Applications go through the company's own job portal, using your resume and profile. You can follow each one under Applications."}}, {"@type": "Question", "name": "Will it apply to jobs I don't want?", "acceptedAnswer": {"@type": "Answer", "text": "Swiping only applies to roles you swipe right on. Auto-apply only sends applications above the match score you set, and never to companies you block."}}, {"@type": "Question", "name": "Do I need the mobile app?", "acceptedAnswer": {"@type": "Answer", "text": "No. Iris works in your browser as well as on iPhone and Android, and your account is the same everywhere."}}]}</script>
   <link rel="icon" type="image/png" href="/favicon-48.png">
   <link rel="apple-touch-icon" href="/icon-192.png">
   <meta property="og:title" content="Iris - Tinder for Jobs!">
@@ -48,251 +47,450 @@
   <meta name="twitter:title" content="Iris - Tinder for Jobs!">
   <meta name="twitter:description" content="Swipe right. AI applies to 100s of jobs in seconds. Over 2 million jobs globally. Try for free!">
   <meta name="twitter:image" content="https://irisjobs.live/yoiris.jpeg?v=2">
-  <link rel="preload" as="image" href="/media/iris-poster-1080.webp">
+  <link rel="preload" as="image" href="/media/landing/hero.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #0a0a0a;
-      --ink-2: #3f3f46;
-      --muted: #71717a;
-      --line: rgba(10, 10, 10, 0.08);
-      --frame: 8px;
+      --bg: #f8f5ef; --sunken: #f1ecdf; --surface: #fffdf9; --ink: #23201b; --ink-2: #4e4a41; --muted: #797366;
+      --line: #e8e2d7; --line-2: #d8d1c4; --accent: #5536c4; --ok: #2f7a55;
+      --serif: 'EB Garamond', 'Iowan Old Style', Georgia, serif; --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+      --shadow: 0 1px 2px rgba(58,48,30,.05), 0 12px 32px rgba(58,48,30,.08); --shadow-lg: 0 2px 6px rgba(58,48,30,.06), 0 36px 80px rgba(58,48,30,.2);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-    html { background: #fff; }
-    body { font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--ink); background: #fff; }
+    html { background: var(--bg); scroll-behavior: smooth; }
+    body { font-family: var(--sans); color: var(--ink); background: var(--bg); line-height: 1.5; overflow-x: hidden; }
     a { color: inherit; text-decoration: none; }
+    img, video { display: block; max-width: 100%; }
+    em { font-style: italic; }
+    .overline { font-family: var(--mono); font-size: .69rem; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+    .wrap { width: 100%; max-width: 1180px; margin-left: auto; margin-right: auto; padding-left: 20px; padding-right: 20px; }
+    h2.title { font-family: var(--serif); font-weight: 500; font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.06; letter-spacing: -.018em; margin-top: 12px; }
+    h2.title em { color: var(--accent); }
+    .lede { margin-top: 14px; font-size: 1.06rem; color: var(--ink-2); max-width: 54ch; }
 
-    /* ── Hero: the video, framed, filling the first screen ─────────────────── */
-    .hero {
-      position: relative;
-      margin: var(--frame);
-      min-height: calc(100svh - var(--frame) * 2);
-      border-radius: 28px;
-      overflow: hidden;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-    }
-    .hero::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line); pointer-events: none; z-index: 6; }
-    .nav {
-      position: relative; z-index: 3;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 16px 0 18px;
-    }
-    .nav-brand { display: flex; align-items: center; gap: 11px; font-weight: 800; font-size: 1.45rem; letter-spacing: -0.03em; }
-    .nav-brand img { width: 40px; height: 40px; border-radius: 11px; }
-    .nav-right { display: flex; align-items: center; gap: 22px; }
-    .nav-links { display: none; font-size: 0.95rem; font-weight: 500; color: var(--ink-2); }
-    .nav-links:hover { color: var(--ink); }
-    .pill {
-      display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
-      height: 40px; padding: 0 16px; border-radius: 999px;
-      background: var(--ink); color: #fff; font-weight: 600; font-size: 0.9rem; letter-spacing: -0.01em;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
+    .pill { display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; height: 42px; padding: 0 18px; border-radius: 999px; background: var(--ink); color: #fffdf9; font-weight: 500; font-size: .92rem; box-shadow: 0 1px 2px rgba(0,0,0,.2), 0 10px 22px rgba(35,32,27,.18); transition: transform .2s ease, opacity .2s ease; }
     .pill svg { width: 16px; height: 16px; flex-shrink: 0; }
-    .pill.light { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
-    .pill:active { transform: scale(0.97); }
-    @media (hover: hover) { .pill:hover { opacity: 0.86; } }
+    .pill.light { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line-2); }
+    .pill:active { transform: scale(.97); }
+    @media (hover: hover) { .pill:hover { opacity: .86; } }
 
-    .stage { position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; padding-bottom: 24px; }
-    .video-box { position: relative; width: 100%; aspect-ratio: 1.2; overflow: hidden; }
-    .video-box video, .video-box img {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; object-position: 30% 50%; display: block;
-    }
+    .nav { position: sticky; top: 12px; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: calc(100% - 24px); max-width: 1180px; margin: 12px auto 0; padding: 8px 8px 8px 16px; border-radius: 999px; background: rgba(255,253,249,.82); backdrop-filter: saturate(1.4) blur(14px); -webkit-backdrop-filter: saturate(1.4) blur(14px); box-shadow: inset 0 0 0 1px var(--line), var(--shadow); }
+    .nav-brand { display: flex; align-items: center; gap: 9px; font-family: var(--serif); font-weight: 500; font-size: 1.5rem; }
+    .nav-brand img { width: 30px; height: 30px; border-radius: 8px; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-links { display: none; font-size: .93rem; font-weight: 500; color: var(--ink-2); }
+    .nav-links:hover { color: var(--ink); }
 
-    .copy { position: relative; z-index: 2; padding: 6px 22px 22px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-    .headline { font-size: clamp(2.1rem, 9.5vw, 3rem); font-weight: 800; line-height: 0.98; letter-spacing: -0.028em; text-transform: uppercase; }
-    .sub { margin-top: 14px; font-size: 1rem; line-height: 1.45; color: var(--ink-2); max-width: 32ch; margin-left: auto; margin-right: auto; text-wrap: balance; }
-    #job-slot:not(:empty) { width: 100%; margin-top: 18px; }
-    .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
-    .ctas .pill { height: 50px; padding: 0 22px; font-size: 1rem; }
-    .countdown { margin-top: 12px; font-size: 0.8rem; color: var(--muted); min-height: 1.2em; font-variant-numeric: tabular-nums; }
-    .progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: transparent; z-index: 4; }
-    .progress-bar { height: 100%; width: 0; background: var(--ink); }
+    .hero { position: relative; padding: 56px 0 0; text-align: center; }
+    .hero::before { content: ''; position: absolute; inset: -80px 0 auto; height: 620px; z-index: -1; background: radial-gradient(60% 60% at 50% 20%, #f6e6c2 0%, rgba(246,230,194,0) 100%), radial-gradient(40% 50% at 82% 30%, #e8e2f6 0%, rgba(232,226,246,0) 100%); }
+    .headline { font-family: var(--serif); font-weight: 500; font-size: clamp(3.1rem, 11vw, 6.6rem); line-height: .98; letter-spacing: -.028em; margin-top: 14px; }
+    .headline em { color: var(--accent); }
+    .sub { margin: 18px auto 0; font-size: clamp(1.03rem, 2.2vw, 1.2rem); line-height: 1.45; color: var(--ink-2); max-width: 44ch; text-wrap: balance; }
+    #job-slot:not(:empty) { width: 100%; max-width: 540px; margin: 22px auto 0; }
+    .actions-col { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 26px; }
+    .ctas-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; }
+    .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .ctas .pill, .web-cta.pill { height: 52px; padding: 0 24px; font-size: 1rem; }
+    .fine { font-size: .84rem; color: var(--muted); }
+    .countdown { font-size: .82rem; color: var(--muted); min-height: 1.2em; font-variant-numeric: tabular-nums; }
     .qr { display: none; }
+    .stage { position: relative; margin: 36px auto 0; }
+    .video-box { position: relative; width: 100%; aspect-ratio: 1.15; overflow: hidden; border-radius: 26px; background: #fff; box-shadow: inset 0 0 0 1px var(--line), var(--shadow-lg); }
+    .video-box video, .video-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; }
+    .progress { position: fixed; left: 0; right: 0; bottom: 0; height: 3px; z-index: 30; }
+    .progress-bar { height: 100%; width: 0; background: var(--ink); }
 
-    /* Job / invite card */
-    .job {
-      text-align: left; padding: 18px; border-radius: 20px; background: #fafafa; box-shadow: inset 0 0 0 1px var(--line);
-      display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: center;
-    }
+    .job { text-align: left; padding: 20px; border-radius: 20px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line), var(--shadow); display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: center; }
     .job .co-logo { grid-row: span 2; width: 48px; height: 48px; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); object-fit: contain; padding: 6px; }
-    .job .co-initial { display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; }
-    .job .co-name { font-size: 0.78rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-    .job .role-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
-    .job .role-meta { grid-column: 1 / -1; margin-top: 8px; font-size: 0.86rem; color: var(--ink-2); line-height: 1.45; }
+    .job .co-initial { display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1.2rem; }
+    .job .co-name { font-family: var(--mono); font-size: .7rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+    .job .role-title { font-family: var(--serif); font-size: 1.5rem; font-weight: 500; line-height: 1.15; }
+    .job .role-meta { grid-column: 1 / -1; margin-top: 8px; font-size: .88rem; color: var(--ink-2); line-height: 1.45; }
     .job.solo { grid-template-columns: 1fr; text-align: center; }
     .job.invite .code-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 6px; }
-    .job.invite .code { font-size: 1.6rem; font-weight: 800; letter-spacing: 0.12em; font-variant-numeric: tabular-nums; }
-    .job.invite .copy { display: inline-flex; align-items: center; justify-content: center; line-height: 1; height: 34px; padding: 0 14px; border-radius: 999px; border: 0; background: var(--ink); color: #fff; font: 600 0.85rem 'Inter Tight', sans-serif; cursor: pointer; }
+    .job.invite .code { font-family: var(--serif); font-size: 2.1rem; letter-spacing: .12em; font-variant-numeric: tabular-nums; }
+    .job.invite .copy { display: inline-flex; align-items: center; justify-content: center; line-height: 1; height: 34px; padding: 0 14px; border-radius: 999px; border: 0; background: var(--ink); color: #fff; font: 600 0.85rem 'DM Sans', sans-serif; cursor: pointer; }
     .job.invite .role-meta { margin-top: 6px; }
     .pulse { animation: pulse 1.2s ease-in-out infinite; }
-    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-    body.mode-job .video-box { display: none; }
-    body.mode-job .stage { justify-content: center; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+    body.mode-job .video-box, body.mode-job .marketing { display: none; }
 
-    /* ── Where our users land jobs ─────────────────────────────────────────── */
-    .placed { padding: 72px 20px 40px; max-width: 1120px; margin: 0 auto; text-align: center; }
-    .placed h2 { font-size: clamp(1.6rem, 6vw, 2.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; }
-    .placed p { margin: 14px auto 0; max-width: 46ch; font-size: 1rem; line-height: 1.5; color: var(--muted); }
-    .logo-grid {
-      margin-top: 44px;
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 18px 10px;
-      justify-items: center;
-    }
-    .logo {
-      width: 40px; height: 40px; border-radius: 10px;
-      background-repeat: no-repeat;
-      filter: grayscale(1); opacity: 0.6;
-      transition: filter 0.6s ease, opacity 0.6s ease, transform 0.3s ease;
-    }
+    .sec { padding: 88px 0 0; }
+    .sec-head { text-align: center; }
+    .sec-head .lede { margin-left: auto; margin-right: auto; }
+
+    .placed { padding-top: 88px; text-align: center; }
+    .placed h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(2rem, 4.4vw, 3rem); line-height: 1.08; letter-spacing: -.015em; }
+    .placed p { margin: 12px auto 0; max-width: 46ch; color: var(--muted); }
+    .logo-grid { margin-top: 36px; display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 18px 10px; justify-items: center; }
+    .logo { width: 40px; height: 40px; border-radius: 10px; background-repeat: no-repeat; filter: grayscale(1); opacity: .6; transition: filter .6s ease, opacity .6s ease, transform .3s ease; }
     .logo.lit { filter: none; opacity: 1; }
     .logo:hover, .logo:active { filter: none; opacity: 1; transform: scale(1.12); }
 
-    /* ── Numbers ── */
-    .stats { padding: 40px 20px 80px; max-width: 1000px; margin: 0 auto; text-align: center; }
-    .stats h2 { font-size: clamp(1.6rem, 6vw, 2.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.08; max-width: 20ch; margin: 0 auto; }
-    .stats > p { margin: 14px auto 0; max-width: 52ch; font-size: 1rem; line-height: 1.5; color: var(--muted); }
-    .stat-grid { margin-top: 44px; display: grid; grid-template-columns: 1fr; gap: 36px; }
-    .stat b { display: block; font-size: clamp(2.6rem, 11vw, 3.4rem); font-weight: 800; letter-spacing: -0.05em; line-height: 1; color: #18181b; font-variant-numeric: tabular-nums; }
-    .stat span { display: block; margin-top: 8px; font-size: 0.92rem; color: var(--muted); }
+    .stages-tabs { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
+    .stages-tabs button { position: relative; overflow: hidden; display: inline-flex; gap: 8px; align-items: baseline; height: 44px; padding: 0 18px; border: 0; border-radius: 999px; font: 500 .94rem var(--sans); color: var(--ink-2); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); cursor: pointer; line-height: 44px; }
+    .stages-tabs button small { font-family: var(--mono); font-size: .68rem; opacity: .6; }
+    .stages-tabs button.on { background: var(--ink); color: #fffdf9; box-shadow: none; }
+    .stage-card[hidden] { display: none !important; }
+    .stage-card { display: grid; gap: 28px; margin-top: 22px; padding: 28px; border-radius: 28px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line), var(--shadow); text-align: left; animation: rise .35s ease; }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .stage-card h3 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.8rem, 3.4vw, 2.6rem); line-height: 1.1; letter-spacing: -.012em; }
+    .stage-card p { margin-top: 12px; color: var(--ink-2); max-width: 46ch; }
+    .art { min-height: 240px; padding: 20px; border-radius: 18px; background: var(--sunken); font-size: .9rem; display: flex; flex-direction: column; gap: 10px; justify-content: center; min-width: 0; }
+    .art .line { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); min-width: 0; }
+    .art .line > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .art b { font-weight: 600; }
+    .art .score { font-family: var(--serif); font-size: 1.35rem; flex-shrink: 0; }
+    .art .dim { opacity: .55; }
+    .art .tag { flex-shrink: 0; padding: 2px 9px; border-radius: 99px; font-size: .75rem; color: var(--ok); background: #e4f2ea; }
+    .art .tag.wait { color: var(--accent); background: #efeafc; }
+    .art del { color: var(--muted); }
+    .art ins { text-decoration: none; font-family: var(--serif); font-size: 1.2rem; line-height: 1.25; }
 
-    /* ── Footer ── */
-    .footer { margin: 0 var(--frame); border-top: 1px solid var(--line); }
-    .footer-top { padding: 48px 20px 36px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .footer-brand { display: flex; align-items: center; gap: 12px; font-size: 1.9rem; font-weight: 800; letter-spacing: -0.04em; }
-    .footer-brand img { width: 48px; height: 48px; border-radius: 13px; }
-    .footer-tag { margin-top: 6px; font-size: 1rem; color: var(--muted); }
-    .footer-bar {
-      border-top: 1px solid var(--line); padding: 16px 12px calc(16px + env(safe-area-inset-bottom));
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    }
-    .legal { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; white-space: nowrap; font-size: 0.78rem; color: var(--muted); }
+    .surfaces { display: grid; gap: 16px; margin-top: 34px; text-align: left; }
+    .surface { display: flex; flex-direction: column; gap: 8px; padding: 24px; border-radius: 22px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .2s ease, transform .2s ease; min-width: 0; }
+    a.surface:hover { box-shadow: inset 0 0 0 1px var(--line-2), var(--shadow); transform: translateY(-2px); }
+    .surface h3 { font-family: var(--serif); font-weight: 500; font-size: 1.6rem; line-height: 1.15; margin-top: 6px; }
+    .surface p { color: var(--ink-2); font-size: .95rem; }
+    .surface .go { margin-top: auto; padding-top: 12px; font-weight: 500; font-size: .92rem; }
+    .soon { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 99px; font-family: var(--mono); font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; vertical-align: middle; color: var(--accent); background: #efeafc; }
+
+    .band { position: relative; overflow: hidden; margin-top: 88px; padding: 56px 24px; border-radius: 30px; color: #fdf9f0; text-align: center; background: #2c2318; box-shadow: var(--shadow-lg); }
+    .band img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; opacity: .86; }
+    .band::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(35,26,14,.3), rgba(35,26,14,.72)); }
+    .band > div { position: relative; z-index: 1; }
+    .band .overline { color: #f3ead6; }
+    .band h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(2.2rem, 5.4vw, 4rem); line-height: 1.05; letter-spacing: -.018em; margin-top: 10px; }
+    .band p { margin: 12px auto 0; max-width: 48ch; opacity: .92; }
+    .band .pill { margin-top: 22px; height: 52px; padding: 0 26px; font-size: 1rem; background: #fdf9f0; color: #23201b; }
+
+    .stats { text-align: center; }
+    .stat-grid { margin-top: 36px; display: grid; grid-template-columns: 1fr; gap: 30px; }
+    .stat b { display: block; font-family: var(--serif); font-weight: 500; font-size: clamp(3rem, 8vw, 4.8rem); letter-spacing: -.025em; line-height: 1; font-variant-numeric: tabular-nums; }
+    .stat span { display: block; margin-top: 8px; font-size: .94rem; color: var(--muted); }
+
+    .faq { max-width: 780px; margin: 32px auto 0; border-radius: 22px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); padding: 4px 24px; text-align: left; }
+    .faq details + details { border-top: 1px solid var(--line); }
+    .faq summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 58px; padding: 12px 0; font-weight: 500; cursor: pointer; list-style: none; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: '+'; font-family: var(--serif); font-size: 1.6rem; line-height: 1; color: var(--muted); }
+    .faq details[open] summary::after { content: '−'; }
+    .faq p { padding-bottom: 16px; color: var(--ink-2); font-size: .96rem; }
+
+    .footer { margin-top: 88px; border-top: 1px solid var(--line); }
+    .footer-top { padding: 44px 20px 32px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .footer-brand { display: flex; align-items: center; gap: 12px; font-family: var(--serif); font-size: 2.1rem; font-weight: 500; }
+    .footer-brand img { width: 44px; height: 44px; border-radius: 12px; }
+    .footer-tag { margin-top: 4px; color: var(--muted); }
+    .footer-bar { border-top: 1px solid var(--line); padding: 16px 12px calc(16px + env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .legal { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: .78rem; color: var(--muted); }
     .legal .long { display: none; }
     .legal a { color: var(--ink-2); }
     .legal a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
     .socials { display: flex; gap: 6px; flex-shrink: 0; }
-    .socials a { width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); transition: background 0.2s ease, color 0.2s ease; }
+    .socials a { width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px var(--line-2); transition: background .2s ease, color .2s ease; }
     .socials a:hover { background: var(--ink); color: #fff; }
     .socials svg { width: 16px; height: 16px; }
 
-    /* ── Desktop: the video fills the whole frame, copy sits along the bottom ─ */
+    @media (min-width: 760px) {
+      .surfaces { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stage-card { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; padding: 36px; }
+      .stat-grid { grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    }
     @media (min-width: 900px) {
-      :root { --frame: 10px; }
-      .hero { border-radius: 32px; }
-      .nav { padding: 22px 24px 0 26px; }
-      .stage { flex: 1; min-height: 0; justify-content: flex-start; padding-bottom: 0; }
-      .video-box { flex: 1; aspect-ratio: auto; min-height: 360px; }
+      .wrap { padding-left: 28px; padding-right: 28px; }
+      .nav { padding-left: 20px; }
+      .nav-links { display: inline; }
+      .hero { padding-top: 76px; }
+      .video-box { aspect-ratio: 16 / 9; border-radius: 32px; }
       .video-box video, .video-box img { object-fit: contain; object-position: 50% 50%; }
-      .copy {
-        padding: 8px 32px 30px;
-        display: grid; grid-template-columns: 1fr auto; align-items: end; text-align: left; gap: 8px 32px;
-        border-top: 1px solid var(--line); margin: 0 32px; padding-left: 0; padding-right: 0; padding-top: 26px;
-      }
-      .copy-text { max-width: 640px; }
-      .headline { font-size: clamp(2.4rem, 3.6vw, 3.4rem); }
-      .hero { height: calc(100svh - var(--frame) * 2); min-height: 640px; }
-      .sub { max-width: 46ch; font-size: 1.05rem; margin-left: 0; }
-      .ctas { margin-top: 0; justify-content: flex-end; align-items: center; flex-wrap: nowrap; }
-      .actions-col { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
-      .countdown { margin-top: 0; text-align: right; }
-      .qr {
-        display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 8px; border-radius: 16px;
-        background: #fff; box-shadow: inset 0 0 0 1px var(--line);
-      }
+      .qr { position: absolute; right: 18px; bottom: 18px; z-index: 2; display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 8px; border-radius: 16px; background: rgba(255,253,249,.94); box-shadow: inset 0 0 0 1px var(--line), var(--shadow); text-align: left; }
       .qr img { width: 72px; height: 72px; border-radius: 8px; }
-      .qr span { font-size: 0.78rem; line-height: 1.3; color: var(--ink-2); max-width: 11ch; }
-      #job-slot:not(:empty) { max-width: 520px; }
-      body.mode-job .copy { border-top: 0; grid-template-columns: 1fr; justify-items: center; text-align: center; padding-top: 40px; }
-      body.mode-job .sub { margin-left: auto; }
-      body.mode-job .actions-col { align-items: center; }
+      .qr span { font-size: .78rem; line-height: 1.3; color: var(--ink-2); max-width: 11ch; }
       body.mode-job .qr { display: none; }
-      .placed { padding-top: 112px; }
       .logo-grid { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 30px 16px; }
       .logo { width: 48px; height: 48px; border-radius: 12px; }
-      .nav-brand { font-size: 1.6rem; }
-      .nav-brand img { width: 44px; height: 44px; border-radius: 12px; }
-      .stats { padding: 56px 32px 112px; }
-      .stat-grid { grid-template-columns: repeat(3, 1fr); gap: 48px; margin-top: 56px; }
-      .stat b { font-size: 3.6rem; }
+      .surfaces { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       .footer-bar { padding: 18px 24px; }
-      .legal { font-size: 0.86rem; gap: 20px; }
+      .legal { font-size: .86rem; gap: 20px; }
       .legal .long { display: inline; }
       .socials a { width: 38px; height: 38px; }
-      .nav-links { display: flex; }
     }
-    @media (prefers-reduced-motion: reduce) { .logo { transition: none; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .logo, .stage-card { transition: none; animation: none; } }
+
+    /* Painted hero */
+    .hero { padding-top: 0; isolation: isolate; }
+    .hero::before { display: none; }
+    .hero-art { position: absolute; top: -84px; left: 0; right: 0; height: 840px; z-index: -1; background: url(/media/landing/hero.webp) 74% 100% / cover no-repeat; -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent); mask-image: linear-gradient(180deg, #000 72%, transparent); }
+    .hero .wrap { padding-top: 64px; }
+    .hero .overline { color: #4e4a41; }
+    .headline { text-shadow: 0 1px 30px rgba(255, 248, 230, .55); }
+    .sub { color: #3a362e; }
+    .pill { box-shadow: inset 0 -2px 0 #d9a441, 0 1px 2px rgba(0,0,0,.2), 0 10px 22px rgba(35,32,27,.2); }
+    .pill.light { box-shadow: inset 0 0 0 1px var(--line-2), 0 8px 20px rgba(58,48,30,.1); }
+    .stage { margin-top: 110px; }
+    .countdown { color: #3a362e; }
+    .qr { z-index: 3; }
+
+    /* How it works, inside a painted frame */
+    .scene { margin-top: 26px; padding: clamp(14px, 4vw, 48px); border-radius: 30px; background: #6d5a54 url(/media/landing/dusk.webp) 50% 40% / cover no-repeat; box-shadow: var(--shadow-lg); }
+    .window { border-radius: 18px; overflow: hidden; background: var(--surface); box-shadow: 0 24px 60px rgba(30,20,10,.32); }
+    .window-bar { display: flex; align-items: center; gap: 6px; padding: 11px 14px; background: var(--sunken); border-bottom: 1px solid var(--line); }
+    .window-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line-2); }
+    .window-bar span { margin: 0 auto; padding: 2px 12px; border-radius: 99px; background: var(--surface); font-family: var(--mono); font-size: .68rem; color: var(--muted); }
+    .window .stage-card { margin: 0; border-radius: 0; box-shadow: none; min-height: 330px; }
+    .stages-tabs { margin-top: 18px; }
+    .stages-tabs button + button::before { content: none; }
+
+    /* Always in the loop */
+    .loop { display: grid; gap: 24px; overflow: hidden; padding: clamp(24px, 5vw, 56px); border-radius: 30px; background: linear-gradient(115deg, rgba(248,245,239,.96) 34%, rgba(248,245,239,.25)), url(/media/landing/hero.webp) 100% 80% / cover no-repeat; box-shadow: inset 0 0 0 1px var(--line); }
+    .loop-copy { align-self: center; }
+    .phone { width: 100%; max-width: 300px; justify-self: center; padding: 14px 12px 22px; border-radius: 36px; background: #fffdf9; box-shadow: 0 0 0 7px #23201b, var(--shadow-lg); }
+    .phone-time { text-align: center; font-family: var(--serif); font-size: 2.3rem; line-height: 1.1; margin: 8px 0 14px; }
+    .note { display: flex; gap: 10px; padding: 11px; margin-top: 8px; border-radius: 14px; background: var(--sunken); font-size: .8rem; line-height: 1.32; }
+    .note img { width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0; }
+    .note b { display: block; font-weight: 600; }
+    .note span { color: var(--ink-2); }
+    .sample { margin-top: 10px; text-align: center; font-size: .7rem; color: var(--muted); }
+
+    /* Dark band */
+    .dark { margin-top: 88px; padding: 80px 0; color: #f7f3ea; background: linear-gradient(180deg, #1f1838, #2a2047); }
+    .dark .overline { color: #bcb2d8; }
+    .dark h2.title { color: #fbf7ee; }
+    .dark h2.title em { color: #c9b8ff; }
+    .dark .stat span { color: #bcb2d8; }
+    .dark .stats { padding: 0; }
+    .wordmarks { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 34px; margin-top: 48px; padding-top: 34px; border-top: 1px solid rgba(255,255,255,.14); font-family: var(--serif); font-size: clamp(1.25rem, 2.6vw, 1.75rem); color: #e6e0f3; }
+
+    /* Closing offer */
+    .offer { position: relative; overflow: hidden; margin-top: 88px; padding: clamp(84px, 13vw, 170px) 20px; text-align: center; background: url(/media/landing/dusk.webp) 50% 70% / cover no-repeat; }
+    .offer::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--bg), rgba(248,245,239,.25) 34%, rgba(248,245,239,0)); }
+    .offer > div { position: relative; }
+    .offer h2 { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(2.3rem, 6vw, 4.2rem); line-height: 1.06; letter-spacing: -.015em; text-shadow: 0 1px 24px rgba(255,240,220,.6); }
+    .offer p { margin: 14px auto 22px; max-width: 42ch; color: #2f2b24; }
+    .offer .pill { height: 52px; padding: 0 26px; font-size: 1rem; }
+
+    /* Footer */
+    .footer { margin-top: 0; border-top: 0; position: relative; overflow: hidden; }
+    .foot-main { display: grid; gap: 34px; padding: 56px 0 36px; }
+    .foot-brand p { margin-top: 8px; max-width: 36ch; color: var(--ink-2); font-size: .95rem; }
+    .foot-brand .tag { font-family: var(--serif); font-size: 1.9rem; line-height: 1.1; color: var(--ink); margin: 0; }
+    .ask { margin-top: 22px; }
+    .ask-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .ask-chips a { display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 99px; font-size: .86rem; font-weight: 500; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); transition: background .15s ease, color .15s ease; }
+    .ask-chips a:hover { background: var(--ink); color: #fffdf9; }
+    .foot-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; }
+    .foot-cols h3 { font-family: var(--mono); font-size: .68rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .foot-cols a { display: block; padding: 4px 0; font-size: .92rem; color: var(--ink-2); }
+    .foot-cols a:hover { color: var(--ink); }
+    .giant { font-family: var(--serif); font-weight: 500; font-size: clamp(7rem, 30vw, 22rem); line-height: .78; text-align: center; color: rgba(35,32,27,.055); user-select: none; margin-bottom: -.1em; pointer-events: none; }
+
+    @media (max-width: 759px) {
+      .ctas-row, .ctas { width: 100%; flex-direction: column; }
+      .ctas-row { max-width: 340px; margin: 0 auto; }
+      .ctas .pill, .web-cta.pill { width: 100%; }
+    }
+    @media (min-width: 760px) {
+      .loop { grid-template-columns: minmax(0, 1fr) 320px; }
+      .foot-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
+      .foot-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (min-width: 900px) { .hero .wrap { padding-top: 100px; } .hero-art { height: 1060px; background-position: 50% 100%; } .stage { margin-top: 270px; } }
   </style>
 </head>
 <body>
+  <nav class="nav" aria-label="Main">
+    <a class="nav-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
+    <div class="nav-right">
+      <a class="nav-links" href="/#how">How it works</a>
+      <a class="nav-links" href="/jobs/">Jobs</a>
+      <a class="nav-links" href="/blog/">Blog</a>
+      <a class="nav-links" href="https://irisjobs.live/app/sign-in">Sign in</a>
+      <a class="pill" id="nav-cta" href="#">Download <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </nav>
+
   <main>
     <section class="hero" id="hero">
-      <nav class="nav">
-        <a class="nav-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
-        <div class="nav-right"><a class="nav-links" href="/blog/">Blog</a>
-        <a class="nav-links" href="https://irisjobs.live/app/sign-in" style="margin-right:4px">Sign in</a>
-        <a class="pill" id="nav-cta" href="#">Download
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a></div>
-      </nav>
-
-      <div class="stage">
-        <div class="video-box">
-          <img src="/media/iris-poster-1080.webp" alt="The Iris app showing a job card" width="1920" height="1080">
-          <video id="hero-video" src="/media/iris-1080.mp4" poster="/media/iris-poster-1080.webp"
-                 autoplay muted loop playsinline webkit-playsinline preload="metadata"
-                 disablepictureinpicture disableremoteplayback aria-label="Iris app demo"></video>
-        </div>
-
-        <div class="copy">
-          <div class="copy-text">
-            <h1 class="headline" id="page-title">Swipe right.<br>AI applies.</h1>
-            <p class="sub" id="page-bio">Apply to hundreds of jobs in seconds. Over 2 million jobs worldwide. Free to try.</p>
-            <div id="job-slot"></div>
-          </div>
-          <div class="actions-col">
+      <div class="hero-art" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="overline">The Tinder for jobs, with an AI that applies</div>
+        <h1 class="headline" id="page-title">Swipe right.<br><em>AI applies.</em></h1>
+        <p class="sub" id="page-bio">Apply to hundreds of jobs in seconds. Over 2 million jobs worldwide. Free to try.</p>
+        <div id="job-slot"></div>
+        <div class="actions-col">
+          <div class="ctas-row">
             <div class="ctas" id="actions"></div>
-            <div class="qr" id="qr"><img src="/media/qr.png?v=2" alt="QR code: scan with your phone camera to get Iris" width="160" height="160" loading="lazy"><span>Scan to get the app</span></div>
-            <p class="countdown" id="countdown"></p>
-            <a id="open-now" href="#" class="pill" style="display:none;margin-top:8px">Open Now
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
+            <a class="pill light web-cta" id="web-cta" href="https://irisjobs.live/app/sign-up">Continue on web</a>
           </div>
+          <p class="countdown" id="countdown"></p>
+          <a id="open-now" href="#" class="pill" style="display:none">Open Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="stage">
+          <div class="video-box">
+            <img src="/media/iris-poster-1080.webp" alt="The Iris app showing a job card" width="1920" height="1080">
+            <video id="hero-video" src="/media/iris-1080.mp4" poster="/media/iris-poster-1080.webp"
+                   autoplay muted loop playsinline webkit-playsinline preload="metadata"
+                   disablepictureinpicture disableremoteplayback aria-label="Iris app demo"></video>
+          </div>
+          <div class="qr" id="qr"><img src="/media/qr.png?v=2" alt="QR code: scan with your phone camera to get Iris" width="160" height="160" loading="lazy"><span>Scan to get the app</span></div>
         </div>
       </div>
       <div class="progress" id="progress" hidden><div class="progress-bar" id="progress-bar"></div></div>
     </section>
 
-    <section class="placed" id="placed" aria-label="Where our users land jobs">
-      <h2>Where Iris users are getting hired</h2>
-      <p>Startups, scale-ups and household names. Here are <span id="placed-count">100+</span> of the companies our users have landed roles at.</p>
-      <div class="logo-grid" id="logo-grid"></div>
-    </section>
+    <div class="marketing">
+      <section class="placed wrap" id="placed" aria-label="Where our users land jobs">
+        <h2>Where Iris users are getting hired</h2>
+        <p>Startups, scale-ups and household names. Here are <span id="placed-count">100+</span> of the companies our users have landed roles at.</p>
+        <div class="logo-grid" id="logo-grid"></div>
+      </section>
 
-    <section class="stats" aria-label="Iris in numbers">
-      <h2>1,200+ job seekers already swipe with Iris</h2>
-      <p>One swipe is one application. Iris does the forms, the cover letters and the follow-ups, so your search takes minutes, not months.</p>
-      <div class="stat-grid">
-        <div class="stat"><b data-count="140" data-suffix="K+">140K+</b><span>swipes since March 2026</span></div>
-        <div class="stat"><b data-count="750" data-suffix="K+">750K+</b><span>jobs live right now</span></div>
-        <div class="stat"><b data-count="39000" data-suffix="+">39,000+</b><span>applications sent by AI</span></div>
-      </div>
-    </section>
+      <section class="sec wrap" id="how">
+        <div class="sec-head">
+          <div class="overline">How it works</div>
+          <h2 class="title">From a swipe to a <em>submitted application.</em></h2>
+          <p class="lede">You choose the roles. Iris handles the forms, the resume and the follow-up.</p>
+        </div>
+        <div class="stages-tabs" id="stage-tabs" role="tablist" aria-label="How Iris works">
+          <button role="tab" class="on" aria-selected="true" data-stage="0"><small>01</small>Match</button>
+          <button role="tab" aria-selected="false" data-stage="1"><small>02</small>Tailor</button>
+          <button role="tab" aria-selected="false" data-stage="2"><small>03</small>Apply</button>
+          <button role="tab" aria-selected="false" data-stage="3"><small>04</small>Track</button>
+        </div>
+        <div class="scene"><div class="window"><div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>irisjobs.live</span></div><div id="stages">
+          <article class="stage-card" data-panel="0">
+            <div><h3>Only roles worth your time.</h3><p>Iris reads your resume and ranks live roles from company career pages against it, so the best fits come first.</p></div>
+            <div class="art" aria-hidden="true">
+              <div class="line"><span><b>Senior Frontend Engineer</b> · Stripe</span><span class="score">92%</span></div>
+              <div class="line"><span><b>Product Engineer</b> · Linear</span><span class="score">88%</span></div>
+              <div class="line dim"><span>Java Backend, on-site</span><span class="score">24%</span></div>
+              <div class="line dim"><span>React Intern</span><span class="score">31%</span></div>
+            </div>
+          </article>
+          <article class="stage-card" data-panel="1" hidden>
+            <div><h3>Your experience, in their language.</h3><p>Your resume is tuned to each job description using what you have really done. You decide how far it goes, or switch it off.</p></div>
+            <div class="art" aria-hidden="true">
+              <del>Worked on the company website and helped improve speed.</del>
+              <ins>Cut page load time on a React storefront, the exact skill this role asks for.</ins>
+            </div>
+          </article>
+          <article class="stage-card" data-panel="2" hidden>
+            <div><h3>Swipe right. The form fills itself.</h3><p>Iris opens the company’s own application, completes every field from your profile, attaches your resume and submits.</p></div>
+            <div class="art" aria-hidden="true">
+              <div class="line"><span>Your details</span><span class="tag">Filled</span></div>
+              <div class="line"><span>Resume and cover letter</span><span class="tag">Attached</span></div>
+              <div class="line"><span>Screening questions</span><span class="tag">Answered</span></div>
+              <div class="line"><span>Submit to the company portal</span><span class="tag wait">Sending</span></div>
+            </div>
+          </article>
+          <article class="stage-card" data-panel="3" hidden>
+            <div><h3>Replies find the right application.</h3><p>A dedicated inbox catches confirmations, recruiter replies and interview invites, and your tracker updates itself.</p></div>
+            <div class="art" aria-hidden="true">
+              <div class="line"><span><b>Stripe</b> · Interview request</span><span class="tag">Interview</span></div>
+              <div class="line"><span><b>Anthropic</b> · Next steps inside</span><span class="tag">Reply</span></div>
+              <div class="line"><span><b>Vercel</b> · Application received</span><span class="tag wait">Sent</span></div>
+            </div>
+          </article>
+        </div></div></div>
+      </section>
+
+      <section class="sec wrap">
+        <div class="loop">
+          <div class="loop-copy">
+            <div class="overline">After you apply</div>
+            <h2 class="title">You’re always <em>in the loop.</em></h2>
+            <p class="lede">Every confirmation, recruiter reply and interview invite lands in one place, on the right application. Nothing gets lost in your inbox.</p>
+          </div>
+          <div>
+            <div class="phone" aria-label="Example of Iris updates on a phone">
+              <div class="phone-time" aria-hidden="true">9:41</div>
+              <div class="note"><img src="/logo.webp" alt="Iris" width="26" height="26" loading="lazy"><div><b>Interview request</b><span>A recruiter replied about your Product Manager application.</span></div></div>
+              <div class="note"><img src="/logo.webp" alt="Iris" width="26" height="26" loading="lazy"><div><b>Application submitted</b><span>Your application for Software Engineer has gone in.</span></div></div>
+              <div class="note"><img src="/logo.webp" alt="Iris" width="26" height="26" loading="lazy"><div><b>3 new matches</b><span>Fresh roles that fit your profile are ready to swipe.</span></div></div>
+            </div>
+            <p class="sample">Example updates</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec wrap">
+        <div class="sec-head"><div class="overline">Wherever you are</div><h2 class="title">Your search, <em>on every screen.</em></h2></div>
+        <div class="surfaces">
+          <a class="surface" href="https://apps.apple.com/in/app/nextquark/id6761863089" target="_blank" rel="noopener"><span class="overline">iPhone</span><h3>Swipe in the queue</h3><p>The full swipe experience, with alerts when a recruiter replies.</p><span class="go">App Store →</span></a>
+          <a class="surface" href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener"><span class="overline">Android</span><h3>Apply on the go</h3><p>The same feed, credits and applications on any Android phone.</p><span class="go">Google Play →</span></a>
+          <a class="surface" href="https://irisjobs.live/app/sign-up"><span class="overline">Web</span><h3>Your whole pipeline</h3><p>A big-screen view of your feed, applications, tracker and inbox.</p><span class="go">Open Iris →</span></a>
+          <div class="surface"><span class="overline">WhatsApp <span class="soon">Soon</span></span><h3>Matches by message</h3><p>Ask for your latest matches in a chat and open them in one tap.</p></div>
+        </div>
+      </section>
+
+      <section class="wrap">
+        <div class="band">
+          <img src="/media/onboarding/preferences.webp" alt="Autumn hills under a clear sky" loading="lazy" width="880" height="1100">
+          <div>
+            <div class="overline">Open roles</div>
+            <h2>See what’s live today.</h2>
+            <p>Search roles from company career pages. No account needed to look around.</p>
+            <a class="pill" href="/jobs/">Browse jobs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="dark" aria-label="Iris in numbers"><div class="stats wrap">
+        <div class="overline">So far</div>
+        <h2 class="title">You pick the jobs. <em>Iris does the rest.</em></h2>
+        <p class="lede" style="margin:14px auto 0;color:#d9d2ea">1,200+ job seekers already swipe with Iris.</p>
+        <div class="stat-grid">
+          <div class="stat"><b data-count="140" data-suffix="K+">140K+</b><span>swipes since March 2026</span></div>
+          <div class="stat"><b data-count="750" data-suffix="K+">750K+</b><span>jobs live right now</span></div>
+          <div class="stat"><b data-count="39000" data-suffix="+">39,000+</b><span>applications sent by AI</span></div>
+        </div>
+        <div class="wordmarks" aria-label="Application systems Iris works with"><span>Greenhouse</span><span>Lever</span><span>Ashby</span><span>SmartRecruiters</span><span>Workday</span></div>
+      </div></section>
+
+      <section class="sec wrap" aria-label="Questions">
+        <div class="sec-head"><div class="overline">Questions</div><h2 class="title">Good to know.</h2></div>
+        <div class="faq">
+          <details open><summary>What is the Tinder for jobs?</summary><p>Iris is a Tinder for jobs: you swipe through job cards, and when you swipe right, AI fills in and submits the application for you on the company’s own job portal.</p></details>
+          <details><summary>Is Iris free?</summary><p>Yes, you can start for free with a set number of applications. Paid plans give you more, and you can cancel any time.</p></details>
+          <details><summary>Does Iris really submit the application?</summary><p>Yes. Applications go through the company’s own job portal, using your resume and profile. You can follow each one under Applications.</p></details>
+          <details><summary>Will it apply to jobs I don’t want?</summary><p>Swiping only applies to roles you swipe right on. Auto-apply only sends applications above the match score you set, and never to companies you block.</p></details>
+          <details><summary>Do I need the mobile app?</summary><p>No. Iris works in your browser as well as on iPhone and Android, and your account is the same everywhere.</p></details>
+        </div>
+      </section>
+
+      <section class="offer">
+        <div>
+          <h2>Job hunting,<br>minus the forms.</h2>
+          <p>Start free. No card needed. Swipe right on your first job today.</p>
+          <a class="pill" href="https://irisjobs.live/app/sign-up">Apply to your first job</a>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer class="footer">
-    <div class="footer-top">
-      <a class="footer-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
-      <p class="footer-tag">Tinder for jobs</p>
+    <div class="wrap foot-main">
+      <div class="foot-brand">
+        <a class="footer-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
+        <p>The Tinder for jobs. Swipe right, and AI applies for you.</p>
+        <div class="ask">
+          <div class="overline">Ask your LLM about Iris</div>
+          <div class="ask-chips"><a href="https://claude.ai/new?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow">Claude</a><a href="https://www.google.com/search?udm=50&amp;q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow">Gemini</a><a href="https://chatgpt.com/?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F&amp;hints=search" target="_blank" rel="noopener nofollow">ChatGPT</a><a href="https://www.perplexity.ai/search?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow">Perplexity</a></div>
+        </div>
+      </div>
+      <nav class="foot-cols" aria-label="Footer">
+        <div><h3>Product</h3><a href="/jobs/">Browse jobs</a><a href="/tinder-for-jobs/">Tinder for jobs</a><a href="https://irisjobs.live/app/sign-up">Continue on web</a><a href="https://apps.apple.com/in/app/nextquark/id6761863089" target="_blank" rel="noopener">App Store</a><a href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener">Google Play</a></div>
+        <div><h3>Company</h3><a href="/blog/">Blog</a><a href="/credits/">Credits</a><a href="https://nextquark.framer.website/terms" target="_blank" rel="noopener">Terms</a><a href="https://nextquark.framer.website/privacy" target="_blank" rel="noopener">Privacy</a></div>
+        <div><h3>Social</h3><a href="https://www.instagram.com/irisjobs.live/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/irisjobs_live" target="_blank" rel="noopener">X</a><a href="https://www.linkedin.com/company/tryiris/about/" target="_blank" rel="noopener">LinkedIn</a></div>
+      </nav>
     </div>
     <div class="footer-bar">
       <nav class="legal" aria-label="Legal">
         <span>© <span id="year">2026</span> Iris</span>
+        <a href="/jobs/">Jobs</a>
         <a href="/blog/">Blog</a>
         <a href="https://nextquark.framer.website/terms" target="_blank" rel="noopener">Terms<span class="long"> of Service</span></a>
         <a href="https://nextquark.framer.website/privacy" target="_blank" rel="noopener">Privacy<span class="long"> Policy</span></a>
@@ -303,6 +501,7 @@
         <a href="https://www.linkedin.com/company/tryiris/about/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3v-11zm6.5 0h3.8v1.5h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.46h-4v-4.84c0-1.16-.02-2.64-1.61-2.64-1.61 0-1.86 1.26-1.86 2.56v4.92h-4v-11z"/></svg></a>
       </nav>
     </div>
+    <div class="giant" aria-hidden="true">Iris</div>
   </footer>
 
   <script>
@@ -378,7 +577,7 @@
         actions.innerHTML = pillHtml(PLAY_STORE, 'Get it on Google Play', PLAY_SVG);
         nav.href = PLAY_STORE;
       } else {
-        actions.innerHTML = pillHtml(APP_STORE, 'App Store', APPLE_SVG) + pillHtml(PLAY_STORE, 'Google Play', PLAY_SVG, true);
+        actions.innerHTML = pillHtml(APP_STORE, 'App Store', APPLE_SVG) + pillHtml(PLAY_STORE, 'Google Play', PLAY_SVG);
         nav.href = APP_STORE;
       }
     }
@@ -635,6 +834,21 @@
       });
     }
 
+    // How it works: moves on by itself until someone picks a stage.
+    (function stagesCarousel() {
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('#stage-tabs button'));
+      var panels = Array.prototype.slice.call(document.querySelectorAll('#stages [data-panel]'));
+      if (!tabs.length) return;
+      var current = 0, timer = null;
+      function show(i) {
+        current = i;
+        tabs.forEach(function(t, n) { t.classList.toggle('on', n === i); t.setAttribute('aria-selected', n === i ? 'true' : 'false'); });
+        panels.forEach(function(p, n) { p.hidden = n !== i; });
+      }
+      tabs.forEach(function(t, i) { t.addEventListener('click', function() { clearInterval(timer); show(i); }); });
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) timer = setInterval(function() { show((current + 1) % tabs.length); }, 5000);
+    })();
+
     setupStoreButton();
     renderLogos();
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -663,6 +877,7 @@
         showJobLoading();
         scheduleAfterVideo(JOB_REDIRECT_MS);
         var rawId = decodeURIComponent(jobMatch[1]).split('?')[0].split('#')[0].trim();
+        document.getElementById('web-cta').href = 'https://irisjobs.live/app/jobs/' + encodeURIComponent(rawId);
         fetchJob(rawId)
           .then(function(j) { j ? showJob(j) : showJobFallback(); })
           .catch(function() { showJobFallback(); });

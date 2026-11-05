@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { CreditCard, Eye, EyeOff, LogOut, Mail, Moon, SlidersHorizontal, Smartphone, Sun, Trash2, User, WandSparkles, type LucideIcon } from 'lucide-react';
+import { Check, CreditCard, Eye, EyeOff, LogOut, Mail, Moon, SlidersHorizontal, Smartphone, Sun, Trash2, User, WandSparkles, type LucideIcon } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useFreeSwipes, useEntitlements, useSubscription, useTransactions } from '@web/lib/queries';
 import { useWebPlan, webPlanUsable } from '@web/lib/webBilling';
@@ -182,9 +182,20 @@ function Billing() {
       <section className="plan-hero">
         <div className="t-overline muted">Your plan{active ? ` · ${active.period}` : ''}</div>
         <div className="plan-hero-name">{planName}</div>
+        <p className="t-callout soft">{active || ent.paid ? 'Thanks for backing Iris.' : 'Upgrade to let your agent apply to more jobs.'}</p>
         {active?.current_period_end && <p className="t-callout soft">{active.status === 'cancelled' ? 'Ends' : 'Renews'} {formatDate(active.current_period_end)}</p>}
         {!active && sub?.subscription_end_date && ent.paid && <p className="t-callout soft">Managed in the mobile app. Renews {formatDate(sub.subscription_end_date)}</p>}
         <Link to="/app/plans" className="btn" style={{ marginTop: 16 }}>{active || ent.paid ? 'View plans' : 'Upgrade'}</Link>
+      </section>
+      <section className="p-card" style={{ marginTop: 16 }}>
+        <div className="t-callout soft" style={{ marginBottom: 10 }}>What’s included</div>
+        <ul className="plan-list included">
+          <li><Check size={15} />Job feed, search and swipe</li>
+          <li><Check size={15} />Applications submitted for you</li>
+          <li><Check size={15} />Your own application inbox</li>
+          <li><Check size={15} />Application tracking and replies</li>
+          {ent.iris && <li><Check size={15} />Iris auto-apply overnight</li>}
+        </ul>
       </section>
       <section className="p-card" style={{ marginTop: 16 }}>
         <div className="t-callout soft">Applications this cycle</div>
@@ -196,7 +207,7 @@ function Billing() {
         ) : <div className="usage-big num">{appLeft ?? '–'} left</div>}
       </section>
       <section className="p-card" style={{ marginTop: 16 }}>
-        <h3 className="t-heading">History</h3>
+        <h3 className="t-heading">Billing history</h3>
         <p className="t-callout muted">Recent plan and credit activity from your account.</p>
         {isLoading ? <div className="sk" style={{ height: 56, marginTop: 14, borderRadius: 12 }} /> : tx.length === 0 ? <div className="dashed-empty">Nothing yet.</div> : (
           <div className="list lined" style={{ marginTop: 10 }}>

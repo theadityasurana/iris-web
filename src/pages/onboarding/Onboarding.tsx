@@ -415,13 +415,15 @@ export default function Onboarding() {
     setSubmitting(true);
     setError('');
     try {
+      try { sessionStorage.setItem('iris_show_first_job', '1'); } catch { /* private mode */ }
       await completeOnboarding(data, {});
       if (data.referralCode.trim() && userId) {
         const r = await applyReferralCode(userId, data.referralCode.trim().toUpperCase()).catch(() => null);
         if (r && !r.success) toast(r.message, 'error');
       }
-      navigate('/app/home', { replace: true });
+      navigate('/app/first-job', { replace: true });
     } catch (e: any) {
+      try { sessionStorage.removeItem('iris_show_first_job'); } catch { /* private mode */ }
       setError(e?.message || 'Something went wrong. Please try again.');
       setSubmitting(false);
     }

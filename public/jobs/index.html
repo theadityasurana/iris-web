@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f8f5ef">
+  <title>Browse Jobs from Company Career Pages | Iris</title>
+  <meta name="description" content="Search live roles from company career pages by title, company, location, experience and work mode. Find one you like and let Iris apply for you.">
+  <link rel="canonical" href="https://irisjobs.live/jobs/">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://irisjobs.live/jobs/">
+  <meta property="og:site_name" content="Iris">
+  <meta property="og:title" content="Browse jobs | Iris">
+  <meta property="og:description" content="Search live roles from company career pages. Find one you like and let Iris apply for you.">
+  <meta property="og:image" content="https://irisjobs.live/yoiris.jpeg?v=2">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Browse jobs | Iris">
+  <meta name="twitter:description" content="Search live roles from company career pages. Find one you like and let Iris apply for you.">
+  <meta name="twitter:image" content="https://irisjobs.live/yoiris.jpeg?v=2">
+  <link rel="icon" type="image/png" href="/favicon-48.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Browse jobs","url":"https://irisjobs.live/jobs/","isPartOf":{"@type":"WebSite","name":"Iris","url":"https://irisjobs.live/"},"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Iris","item":"https://irisjobs.live/"},{"@type":"ListItem","position":2,"name":"Jobs","item":"https://irisjobs.live/jobs/"}]}}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #f8f5ef; --surface: #fffdf9; --ink: #23201b; --ink-2: #4e4a41; --muted: #797366; --line: #e8e2d7; --line-2: #d8d1c4; --accent: #5536c4; --serif: 'EB Garamond', Georgia, serif; --sans: 'DM Sans', -apple-system, 'Segoe UI', sans-serif; }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--sans); color: var(--ink); background: var(--bg); line-height: 1.5; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    em { font-style: italic; color: var(--accent); }
+    button, input { font: inherit; color: inherit; }
+    .nav { position: sticky; top: 12px; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: calc(100% - 24px); max-width: 1180px; margin: 12px auto 0; padding: 8px 8px 8px 16px; border-radius: 999px; background: rgba(255,253,249,.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px var(--line), 0 10px 28px rgba(58,48,30,.07); }
+    .brand { display: flex; align-items: center; gap: 9px; font-family: var(--serif); font-weight: 500; font-size: 1.5rem; }
+    .brand img { width: 30px; height: 30px; border-radius: 8px; }
+    .right { display: flex; align-items: center; gap: 18px; font-weight: 500; font-size: .93rem; color: var(--ink-2); }
+    .hide-sm { display: none; }
+    .pill { display: inline-flex; align-items: center; justify-content: center; height: 42px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--ink); color: #fffdf9; font-weight: 500; font-size: .94rem; cursor: pointer; white-space: nowrap; }
+    main { max-width: 1240px; margin: 0 auto; padding: 56px 20px 72px; }
+    .head { max-width: 860px; margin: 0 auto; text-align: center; }
+    h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(3rem, 9vw, 5.4rem); line-height: 1; letter-spacing: -.025em; }
+    .lede { margin: 16px auto 0; max-width: 54ch; font-size: 1.08rem; color: var(--ink-2); }
+    form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; max-width: 780px; margin: 28px auto 0; padding: 8px; border-radius: 28px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2), 0 10px 28px rgba(58,48,30,.07); }
+    form:focus-within { box-shadow: inset 0 0 0 1.5px var(--accent), 0 0 0 3px #efeafc; }
+    form input { flex: 1 1 200px; min-width: 0; height: 46px; padding: 0 16px; border: 0; outline: 0; background: none; font-size: 1rem; }
+    form input::placeholder { color: var(--muted); }
+    form .pill { height: 46px; flex: 1 1 100%; }
+    .filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 20px; margin-top: 20px; }
+    .group { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+    .chip { min-height: 36px; padding: 4px 14px; border: 0; border-radius: 999px; background: var(--surface); color: var(--ink-2); font-size: .86rem; box-shadow: inset 0 0 0 1px var(--line-2); cursor: pointer; }
+    .chip:hover { color: var(--ink); box-shadow: inset 0 0 0 1px var(--muted); }
+    .chip[aria-pressed="true"] { background: var(--ink); color: #fffdf9; box-shadow: none; }
+    .rule { display: flex; align-items: center; gap: 14px; min-height: 36px; margin: 34px 0 18px; font-size: .85rem; color: var(--muted); }
+    .rule hr { flex: 1; border: 0; border-top: 1px solid var(--line); }
+    .rule button { border: 0; background: none; cursor: pointer; color: var(--ink-2); }
+    #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 268px), 1fr)); gap: 18px; transition: opacity .18s ease; }
+    #grid.busy { opacity: .55; }
+    .card { display: flex; flex-direction: column; min-width: 0; min-height: 296px; padding: 20px; border-radius: 22px; box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px rgba(58,48,30,.06); transition: transform .18s ease, box-shadow .18s ease; }
+    a.card:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px var(--line-2), 0 24px 54px rgba(58,48,30,.14); }
+    .t0 { background: linear-gradient(180deg, #f7ecd2, var(--surface) 62%); } .t1 { background: linear-gradient(180deg, #dfeee2, var(--surface) 62%); } .t2 { background: linear-gradient(180deg, #f6e1dc, var(--surface) 62%); } .t3 { background: linear-gradient(180deg, #dfe9f4, var(--surface) 62%); } .t4 { background: linear-gradient(180deg, #e8e2f6, var(--surface) 62%); }
+    .top { display: flex; justify-content: space-between; gap: 8px; font-size: .8rem; color: var(--ink-2); min-width: 0; }
+    .ell { display: block; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .pay { flex-shrink: 1; max-width: 55%; padding: 2px 9px; border-radius: 99px; background: var(--surface); font-weight: 500; }
+    .title { margin-top: 14px; font-family: var(--serif); font-size: 1.45rem; font-weight: 500; line-height: 1.18; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 14px 0; max-height: 56px; overflow: hidden; }
+    .tags span { max-width: 100%; padding: 3px 9px; border-radius: 99px; background: rgba(35,32,27,.07); font-size: .75rem; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .foot { display: flex; align-items: center; gap: 10px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); min-width: 0; }
+    .foot > div { flex: 1; min-width: 0; }
+    .foot b { font-weight: 600; font-size: .88rem; }
+    .foot small { color: var(--muted); font-size: .75rem; }
+    .logo { flex-shrink: 0; width: 32px; height: 32px; border-radius: 8px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); object-fit: contain; padding: 3px; }
+    .go { flex-shrink: 0; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); }
+    .sk { background: linear-gradient(90deg, #f1ecdf, #f8f5ef, #f1ecdf); background-size: 200% 100%; animation: sk 1.3s linear infinite; border-radius: 8px; }
+    @keyframes sk { to { background-position: -200% 0; } }
+    .note { grid-column: 1 / -1; padding: 44px 20px; text-align: center; border-radius: 22px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+    .note h2 { font-family: var(--serif); font-weight: 500; font-size: 1.8rem; }
+    .note p { margin: 6px 0 16px; color: var(--ink-2); }
+    #more { display: flex; justify-content: center; margin-top: 26px; }
+    footer { padding: 24px 20px 32px; border-top: 1px solid var(--line); text-align: center; font-size: .85rem; color: var(--muted); }
+    footer a { color: var(--ink-2); margin: 0 8px; }
+    @media (min-width: 640px) { form { border-radius: 999px; } form .pill { flex: 0 0 auto; } form input + input { border-left: 1px solid var(--line); } }
+    @media (min-width: 760px) { .hide-sm { display: inline; } }
+    @media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
+  </style>
+</head>
+<body>
+  <nav class="nav" aria-label="Main">
+    <a class="brand" href="/"><img src="/logo.webp" alt="Iris logo" width="30" height="30"><span>Iris</span></a>
+    <div class="right">
+      <a class="hide-sm" href="/#how">How it works</a>
+      <a class="hide-sm" href="/blog/">Blog</a>
+      <a class="hide-sm" href="/app/sign-in">Sign in</a>
+      <a class="pill" href="/app/sign-up">Get started</a>
+    </div>
+  </nav>
+  <main>
+    <header class="head">
+      <h1>Find a role. <em>Iris applies.</em></h1>
+      <p class="lede">Fresh roles from company career pages. Pick one you like, and Iris fills in the application for you.</p>
+      <form id="search" role="search">
+        <input id="q" maxlength="60" placeholder="Job title or company" aria-label="Job title or company" autocomplete="off">
+        <input id="loc" maxlength="40" placeholder="City or country" aria-label="City or country" autocomplete="off">
+        <button class="pill" type="submit">Search</button>
+      </form>
+      <div class="filters" id="filters">
+        <div class="group" role="group" aria-label="Experience"><button type="button" class="chip" data-k="level" data-v="intern" aria-pressed="false">Internship</button><button type="button" class="chip" data-k="level" data-v="entry" aria-pressed="false">Entry level</button><button type="button" class="chip" data-k="level" data-v="experienced" aria-pressed="false">Experienced</button></div>
+        <div class="group" role="group" aria-label="Work mode"><button type="button" class="chip" data-k="mode" data-v="remote" aria-pressed="false">Remote</button><button type="button" class="chip" data-k="mode" data-v="hybrid" aria-pressed="false">Hybrid</button><button type="button" class="chip" data-k="mode" data-v="onsite" aria-pressed="false">On-site</button></div>
+        <div class="group" role="group" aria-label="Job type"><button type="button" class="chip" data-k="type" data-v="full" aria-pressed="false">Full time</button><button type="button" class="chip" data-k="type" data-v="part" aria-pressed="false">Part time</button><button type="button" class="chip" data-k="type" data-v="contract" aria-pressed="false">Contract</button></div>
+        <div class="group" role="group" aria-label="Posted"><button type="button" class="chip" data-k="days" data-v="1" aria-pressed="false">24h</button><button type="button" class="chip" data-k="days" data-v="7" aria-pressed="false">7d</button><button type="button" class="chip" data-k="days" data-v="14" aria-pressed="false">14d</button><button type="button" class="chip" data-k="days" data-v="30" aria-pressed="false">30d</button></div>
+      </div>
+    </header>
+    <div class="rule"><span id="label">Today’s 10 picks</span><hr><button id="clear" type="button" hidden>Clear all</button></div>
+    <section id="grid" aria-live="polite" aria-label="Jobs"></section>
+    <div id="more" hidden><button class="pill" type="button">Show more</button></div>
+  </main>
+  <footer>© <span id="year">2026</span> Iris <a href="/">Home</a><a href="/blog/">Blog</a><a href="https://nextquark.framer.website/terms" rel="noopener">Terms</a><a href="https://nextquark.framer.website/privacy" rel="noopener">Privacy</a></footer>
+  <script>
+    var params = new URLSearchParams(location.search), offset = 0, seq = 0, shown = 0;
+    var $ = function(id) { return document.getElementById(id); };
+    var grid = $('grid'), moreBox = $('more');
+    var KEYS = ['q', 'loc', 'level', 'mode', 'type', 'days'];
+    function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+    function ago(v) {
+      var d = new Date(v); if (!v || isNaN(d)) return '';
+      var days = Math.floor((Date.now() - d.getTime()) / 864e5);
+      return days <= 0 ? 'Today' : days === 1 ? 'Yesterday' : days < 30 ? days + 'd ago' : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+    function domain(j) { return String(j.website || '').replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0] || String(j.company).toLowerCase().replace(/[^a-z0-9]/g, '') + '.com'; }
+    function card(j, i) {
+      var tags = [j.experience, j.type].concat(j.skills || []).filter(Boolean).slice(0, 5).map(function(t) { return '<span>' + esc(t) + '</span>'; }).join('');
+      var sub = [ago(j.posted), j.ats].filter(Boolean).join(' · ');
+      return '<a class="card t' + (i % 5) + '" href="/app/jobs/' + encodeURIComponent(j.id) + '">' +
+        '<div class="top"><span class="ell">' + esc(j.location || 'Location open') + '</span>' + (j.salary ? '<b class="pay ell">' + esc(j.salary) + '</b>' : '') + '</div>' +
+        '<h2 class="title">' + esc(j.title) + '</h2><div class="tags">' + tags + '</div>' +
+        '<div class="foot"><img class="logo" loading="lazy" alt="" width="32" height="32" src="https://www.google.com/s2/favicons?domain=' + encodeURIComponent(domain(j)) + '&sz=64" onerror="this.style.visibility=\'hidden\'">' +
+        '<div><b class="ell">' + esc(j.company) + '</b><small class="ell">' + esc(sub) + '</small></div><span class="go" aria-hidden="true">→</span></div></a>';
+    }
+    function skeleton() { var h = ''; for (var i = 0; i < 10; i++) h += '<div class="card" aria-hidden="true"><div class="sk" style="height:12px;width:50%"></div><div class="sk" style="height:24px;width:85%;margin-top:14px"></div><div class="sk" style="height:24px;width:60%;margin-top:12px"></div><div class="sk" style="height:34px;margin-top:auto"></div></div>'; grid.innerHTML = h; }
+    function syncUi() {
+      $('q').value = params.get('q') || ''; $('loc').value = params.get('loc') || '';
+      document.querySelectorAll('.chip').forEach(function(c) { c.setAttribute('aria-pressed', params.get(c.dataset.k) === c.dataset.v ? 'true' : 'false'); });
+      var filtered = KEYS.some(function(k) { return params.get(k); });
+      $('label').textContent = filtered ? 'Your results' : 'Today’s 10 picks';
+      $('clear').hidden = !filtered;
+    }
+    function load(append) {
+      var mine = ++seq;
+      if (append) { offset += 10; } else { offset = 0; shown = 0; if (grid.children.length) grid.classList.add('busy'); else skeleton(); }
+      var qs = new URLSearchParams(); KEYS.forEach(function(k) { if (params.get(k)) qs.set(k, params.get(k)); });
+      if (offset) qs.set('offset', offset);
+      fetch('/api/jobs?' + qs).then(function(r) { if (!r.ok) throw 0; return r.json(); }).then(function(data) {
+        if (mine !== seq) return;
+        grid.classList.remove('busy');
+        var html = data.jobs.map(function(j, i) { return card(j, shown + i); }).join('');
+        if (!append && !data.jobs.length) html = '<div class="note"><h2>No roles match that yet</h2><p>Try fewer filters or a broader search.</p></div>';
+        if (append) grid.insertAdjacentHTML('beforeend', html); else grid.innerHTML = html;
+        shown += data.jobs.length;
+        moreBox.hidden = !(data.hasMore && KEYS.some(function(k) { return params.get(k); }));
+      }).catch(function() {
+        if (mine !== seq) return;
+        grid.classList.remove('busy');
+        grid.innerHTML = '<div class="note"><h2>We couldn’t load jobs</h2><p>Please try again in a moment.</p><button class="pill" type="button" id="retry">Try again</button></div>';
+        $('retry').onclick = function() { load(false); };
+      });
+    }
+    function apply() { history.replaceState(null, '', params.toString() ? '?' + params : location.pathname); syncUi(); load(false); }
+    $('search').addEventListener('submit', function(e) {
+      e.preventDefault();
+      ['q', 'loc'].forEach(function(k) { var v = $(k).value.trim(); if (v) params.set(k, v); else params.delete(k); });
+      apply();
+    });
+    $('filters').addEventListener('click', function(e) {
+      var c = e.target.closest('.chip'); if (!c) return;
+      if (params.get(c.dataset.k) === c.dataset.v) params.delete(c.dataset.k); else params.set(c.dataset.k, c.dataset.v);
+      apply();
+    });
+    $('clear').addEventListener('click', function() { params = new URLSearchParams(); apply(); });
+    moreBox.querySelector('button').addEventListener('click', function() { load(true); });
+    $('year').textContent = new Date().getFullYear();
+    syncUi(); load(false);
+  </script>
+</body>
+</html>

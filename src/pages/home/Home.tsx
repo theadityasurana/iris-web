@@ -2,7 +2,8 @@ import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, Inbox as InboxIcon, Search, ClipboardList, RotateCcw, WifiOff } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
-import { useApplications } from '@web/lib/queries';
+import { useApplications, useEntitlements } from '@web/lib/queries';
+import { useCredits } from '@web/lib/webBilling';
 import { useToast } from '@web/ui/Toast';
 import { CompanyLogo, Empty, SkeletonList, StatusBadge, timeAgo } from '@web/ui/bits';
 import type { Job } from '@/types';
@@ -47,11 +48,16 @@ export default function Home() {
     return (apps.data ?? []).filter(a => !ql || `${a.job.companyName} ${a.job.jobTitle}`.toLowerCase().includes(ql)).slice(0, 5);
   }, [apps.data, q]);
   const shown = feed.visible.slice(0, VISIBLE);
+  const ent = useEntitlements();
+  const { webLeft } = useCredits();
+  const isFree = !ent.paid && webLeft <= 0;
+  const behind = feed.visible.slice(VISIBLE);
+  const logos = useMemo(() => [...new Map(behind.map(j => [j.companyName, j])).values()].slice(0, 5), [behind]);
 
   return (
     <div className="page wide">
       <section className="hero-card">
-        <img src="/media/onboarding/goal.webp" alt="" width={880} height={1100} />
+        <img src="/media/onboarding/final.webp" alt="" width={880} height={1100} />
         <div className="hero-copy">
           <div className="t-overline">{firstName ? `Welcome back, ${firstName}` : 'Your goal'}</div>
           <h1 className="t-display">{goal ? <>{goal}.</> : <>Where do you want to <em>land?</em></>}</h1>
@@ -79,7 +85,25 @@ export default function Home() {
           </div>
         </div>
         {shown.length > 0 ? (
-          <div className="tile-grid">{shown.map(j => <JobTile key={j.id} job={j} onSave={() => act('save', j)} onPass={() => act('pass', j)} onApply={() => act('apply', j)} />)}</div>
+          <>
+            <div className="tile-grid">{shown.map(j => <JobTile key={j.id} job={j} onSave={() => act('save', j)} onPass={() => act('pass', j)} onApply={() => act('apply', j)} />)}</div>
+            {isFree && behind.length > 0 && (
+              <div className="feed-gate">
+                <div className="feed-gate-ghosts" aria-hidden="true">{[0, 1, 2].map(i => <div key={i} className="tile feed-ghost"><JobTileSkeleton /></div>)}</div>
+                <div className="feed-gate-card">
+                  <div className="t-overline">You’ve seen your top {shown.length}</div>
+                  <h3 className="t-display"><span className="num">{behind.length}</span>{feed.remaining > behind.length + shown.length ? '+' : ''} more {behind.length === 1 ? 'role matches' : 'roles match'} you</h3>
+                  <p className="soft">Keep swiping for free, or upgrade and let your agent apply to the ones you pick.</p>
+                  <div className="feed-gate-logos">{logos.map(j => <CompanyLogo key={j.companyName} name={j.companyName} url={j.companyLogo} website={j.companyWebsite} size="sm" />)}</div>
+                  {logos.length > 0 && <p className="t-caption muted">Roles at {logos.slice(0, 2).map(j => j.companyName).join(', ')}{logos.length > 2 ? ' and more' : ''}</p>}
+                  <div className="row gap-8 wrap center" style={{ marginTop: 18 }}>
+                    <Link to="/app/jobs" className="btn lg">See the full feed<ArrowRight /></Link>
+                    <Link to="/app/plans" className="btn lg outline">Compare plans</Link>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         ) : (!feed.initialLoaded || feed.loading) ? (
           <div className="tile-grid" role="status" aria-label="Loading jobs">{Array.from({ length: 3 }, (_, i) => <JobTileSkeleton key={i} />)}</div>
         ) : feed.error ? (
