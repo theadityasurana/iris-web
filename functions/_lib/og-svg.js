@@ -96,7 +96,7 @@ ${line(SERIF, 'Iris', x + 64, 75, 40, '#23201b')}
 ${centred(SERIF, `${who} invited you to Iris.`, 600, 178, 68, '#23201b')}
 <rect x="147" y="230" width="906" height="268" rx="30" fill="#3a2a10" opacity=".14"/>
 <rect x="150" y="222" width="900" height="268" rx="30" fill="#fffdf9"/>
-<rect x="340" y="282" width="520" height="118" rx="20" fill="#f7f3ff" stroke="#5536c4" stroke-width="2" stroke-dasharray="9 8"/>
+<rect x="270" y="282" width="660" height="118" rx="20" fill="#f7f3ff" stroke="#5536c4" stroke-width="2" stroke-dasharray="9 8"/>
 ${centred(SANS, 'YOUR INVITE CODE', 600, 265, 21, '#5536c4', 2.2)}
 ${centred(SERIF, code, 600, 368, 84, '#23201b', 8)}
 ${centred(SANS, `Sign up with this code and you both get ${reward} free swipes.`, 600, 448, 28, '#4e4a41')}
