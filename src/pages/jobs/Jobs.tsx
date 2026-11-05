@@ -25,11 +25,12 @@ export default function Jobs() {
   const toast = useToast();
   const [tags, setTags] = useState<string[]>(() => readStored('iris_feed_tags', []));
   const navigate = useNavigate();
+  // Swiping is the product, so it is the default. The grid is the opt-in view.
   const [view, setView] = useState<'feed' | 'swipe'>(() => {
-    try { const v = localStorage.getItem('iris_jobs_view'); if (v === 'feed' || v === 'swipe') return v; } catch { /* private mode */ }
-    return window.matchMedia('(max-width: 640px)').matches ? 'swipe' : 'feed';
+    try { if (localStorage.getItem('iris_jobs_view_v2') === 'feed') return 'feed'; } catch { /* private mode */ }
+    return 'swipe';
   });
-  useEffect(() => { try { localStorage.setItem('iris_jobs_view', view); } catch { /* private mode */ } }, [view]);
+  useEffect(() => { try { localStorage.setItem('iris_jobs_view_v2', view); } catch { /* private mode */ } }, [view]);
   const [filters, setFilters] = useState<FeedPanelFilters>(() => readStored('iris_feed_filters', EMPTY_FILTERS));
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [companies, setCompanies] = useState<string[]>([]);
@@ -134,11 +135,11 @@ export default function Jobs() {
       <div className="page-head">
         <div>
           <h1 className="t-title">Jobs</h1>
-          <p>Matched to your roles, level and location. Nearest and strongest first.</p>
+          <p>Swipe right to apply, left to pass, up to save.</p>
         </div>
         <div className="segmented" role="group" aria-label="View">
-          <button className={view === 'feed' ? 'on' : ''} onClick={() => setView('feed')} aria-pressed={view === 'feed'}><LayoutGrid size={15} />Feed</button>
           <button className={view === 'swipe' ? 'on' : ''} onClick={() => setView('swipe')} aria-pressed={view === 'swipe'}><Layers size={15} />Swipe</button>
+          <button className={view === 'feed' ? 'on' : ''} onClick={() => setView('feed')} aria-pressed={view === 'feed'}><LayoutGrid size={15} />Grid</button>
         </div>
       </div>
 

@@ -56,7 +56,10 @@ export default function Home() {
           <div className="t-overline">{firstName ? `Welcome back, ${firstName}` : 'Your goal'}</div>
           <h1 className="t-display">{goal ? <>{goal}.</> : <>Where do you want to <em>land?</em></>}</h1>
           <p>{goal ? 'Iris is prioritising roles that fit this goal. Swipe through them, or let auto-apply work while you sleep.' : 'Tell Iris what you are after and it will prioritise the roles that fit.'}</p>
-          <Link to="/app/iris" className="btn lg hero-btn">Set up auto-apply<ArrowRight /></Link>
+          <div className="row gap-8 wrap center" style={{ marginTop: 22 }}>
+            <Link to="/app/jobs" className="btn lg hero-btn">Start swiping<ArrowRight /></Link>
+            <Link to="/app/iris" className="btn lg outline hero-alt">Set up auto-apply</Link>
+          </div>
         </div>
       </section>
 
@@ -72,7 +75,7 @@ export default function Home() {
           <h2 className="t-title">Jobs for you {shown.length > 0 && <span className="count-note">({shown.length})</span>}</h2>
           <div className="row gap-8">
             <Link to="/app/jobs/search" className="btn outline"><Search />Search</Link>
-            <Link to="/app/jobs" className="btn">Browse jobs</Link>
+            <Link to="/app/jobs" className="btn">Swipe jobs</Link>
           </div>
         </div>
         {shown.length > 0 ? (
