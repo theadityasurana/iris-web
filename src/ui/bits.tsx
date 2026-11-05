@@ -10,7 +10,7 @@ function logoDevUrl(domain: string) {
 }
 
 export function Logo({ size = 30 }: { size?: number }) {
-  return <img className="brand-logo" src="/app/logo.webp" alt="Iris" width={size} height={size} style={{ width: size, height: size }} />;
+  return <img className="brand-logo" src="/logo.webp" alt="Iris" width={size} height={size} style={{ width: size, height: size }} />;
 }
 
 /** Company logo with the app's provider chain, ending in an initial badge. */

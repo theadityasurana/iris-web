@@ -13,13 +13,11 @@
   Cache-Control: public, max-age=0, must-revalidate
 
 /app/*
-  Cache-Control: no-cache
   X-Robots-Tag: noindex
 
 # Hashed bundles never change, so browsers can keep them for a year.
 /app/assets/*
   Cache-Control: public, max-age=31536000, immutable
-  X-Robots-Tag: noindex
 
 /media/*
   Cache-Control: public, max-age=2592000
