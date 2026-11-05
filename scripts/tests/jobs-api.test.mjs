@@ -90,8 +90,7 @@ test('job link previews use the job, and strip markup', async () => {
   const p = previewFor({ title: 'Engineer', company_name: 'Stripe', location: 'Pune', type: 'Full-time', description: '<p>Build <b>things</b>.</p>' }, 'https://irisjobs.live', 'a b');
   assert.equal(p.title, 'Engineer at Stripe | Apply in one swipe on Iris');
   assert.equal(p.description, 'Pune · Full-time. Build things .');
-  assert.ok(p.image.startsWith('https://images.weserv.nl/?url=irisjobs.live%2Fapi%2Fog%2Fjob%2Fa%2520b.svg&output=jpg'));
-  assert.ok(p.image.includes('default='));
+  assert.equal(p.image, 'https://irisjobs.live/og/job/a%20b.jpg');
 });
 
 test('job image: handles long titles, accents, odd characters and missing logos', async () => {
@@ -101,4 +100,31 @@ test('job image: handles long titles, accents, odd characters and missing logos'
   assert.ok(!long.includes('<b>'));
   assert.ok(jobSvg({ title: '', company_name: '' }, null).includes('</svg>'));
   assert.ok(jobSvg({ title: 'नमस्ते 你好', company_name: 'Zepto' }, 'data:image/png;base64,AA').includes('data:image/png;base64,AA'));
+});
+
+test('job images are crawlable: same domain, a .jpg path, no query string, outside /api/', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { previewFor } = await import('../../functions/job/[id].js');
+  const image = new URL(previewFor({ title: 'A', company_name: 'B' }, 'https://irisjobs.live', 'job-1').image);
+  assert.equal(image.host, 'irisjobs.live');
+  assert.equal(image.search, '');
+  assert.ok(image.pathname.endsWith('.jpg'));
+  const blocked = [...readFileSync('public/robots.txt', 'utf8').matchAll(/^Disallow:\s*(\S+)/gm)].map(m => m[1]);
+  assert.ok(blocked.length > 0);
+  for (const rule of blocked) assert.ok(!image.pathname.startsWith(rule), rule);
+});
+
+test('every page shares one preview image, including on X', async () => {
+  const { readFileSync, readdirSync } = await import('node:fs');
+  const pages = ['public/index.html', 'public/404.html', 'app/index.html', 'public/jobs/index.html', 'public/love/index.html', 'public/about/index.html', 'public/mission/index.html', 'public/whatsapp/index.html', 'public/credits/index.html', 'public/tinder-for-jobs/index.html', 'public/blog/index.html',
+    ...readdirSync('public/blog', { withFileTypes: true }).filter(d => d.isDirectory() && d.name !== 'authors').map(d => `public/blog/${d.name}/index.html`)];
+  for (const f of pages) {
+    const h = readFileSync(f, 'utf8');
+    for (const re of [/property="og:image" content="([^"]+)"/, /name="twitter:image" content="([^"]+)"/]) {
+      const m = h.match(re);
+      assert.ok(m, `${f} is missing ${re}`);
+      assert.match(m[1], /^https:\/\/irisjobs\.live\/media\/iris-og\.jpg\?v=\d+$/, f);
+    }
+    assert.match(h, /name="twitter:card" content="summary_large_image"/, f);
+  }
 });

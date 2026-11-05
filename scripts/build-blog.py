@@ -324,7 +324,7 @@ def page(title, description, url, image, body, kind="website", extra_head=""):
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{e(title)}">
   <meta name="twitter:description" content="{e(description)}">
-  <meta name="twitter:image" content="{e(image)}">
+  <meta name="twitter:image" content="{OG_IMAGE}">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">{extra_head}
   <link rel="alternate" type="application/rss+xml" title="Iris Blog" href="{SITE}/blog/rss.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
