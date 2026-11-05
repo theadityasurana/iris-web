@@ -43,6 +43,10 @@ OUT = ROOT / "public" / "blog"
 SITE = "https://irisjobs.live"
 ASSETS = SITE   # absolute host for link-preview images
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).parent))
+from site_parts import ASK_SECTION as SHARED_ASK, BODY_SCRIPTS, FOOTER as SHARED_FOOTER, HEAD_ASSETS, OG_IMAGE
+
 APP_STORE = "https://apps.apple.com/in/app/nextquark/id6761863089"
 PLAY_STORE = "https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke"
 
@@ -189,7 +193,10 @@ a { color:inherit; text-decoration:none; }
 .table-wrap table { width:100%; border-collapse:collapse; font-size:15px; }
 .table-wrap th, .table-wrap td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
 .table-wrap th { font-weight:600; }
-.post-cover img { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:22px; box-shadow:inset 0 0 0 1px var(--line); display:block; }
+.post-shot { margin:28px 0; }
+.post-shot img { width:100%; height:auto; border-radius:14px; box-shadow:inset 0 0 0 1px var(--line), 0 18px 44px rgba(58,48,30,.14); }
+.post-shot figcaption { margin-top:10px; font-size:.86rem; color:var(--muted); text-align:center; }
+.post-cover img { width:100%; height:auto; aspect-ratio:auto; object-fit:contain; border-radius:22px; box-shadow:inset 0 0 0 1px var(--line); display:block; }
 .prose { max-width:720px; margin:0 auto; padding:36px 20px 24px; font-size:1.08rem; line-height:1.7; color:#27272a; }
 .prose > * + * { margin-top:1.1em; }
 .prose h2 { margin-top:1.9em; font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; line-height:1.2; color:var(--ink); }
@@ -270,26 +277,7 @@ NAV = f"""<nav class="nav">
   <div class="nav-right"><a class="nav-link" href="/app/sign-in">Sign in</a><a class="nav-link on" href="/blog/">Blog</a><a class="pill store-link" href="{APP_STORE}">Download {ARROW}</a></div>
 </nav>"""
 
-FOOTER = """<footer class="footer">
-  <div class="footer-top">
-    <a class="footer-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
-    <p class="footer-tag">Tinder for jobs</p>
-  </div>
-  <div class="footer-bar">
-    <nav class="legal" aria-label="Legal">
-      <span>© <span class="year">2026</span> Iris</span>
-      <a href="/blog/">Blog</a>
-      <a href="/credits/">Credits</a>
-      <a href="https://nextquark.framer.website/terms" target="_blank" rel="noopener">Terms<span class="long"> of Service</span></a>
-      <a href="https://nextquark.framer.website/privacy" target="_blank" rel="noopener">Privacy<span class="long"> Policy</span></a>
-    </nav>
-    <nav class="socials" aria-label="Iris on social media">
-      <a href="https://www.instagram.com/irisjobs.live/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg></a>
-      <a href="https://x.com/irisjobs_live" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3zm-1.08 16.17h1.7L7.4 4.74H5.58l11.09 14.43z"/></svg></a>
-      <a href="https://www.linkedin.com/company/tryiris/about/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3v-11zm6.5 0h3.8v1.5h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.46h-4v-4.84c0-1.16-.02-2.64-1.61-2.64-1.61 0-1.86 1.26-1.86 2.56v4.92h-4v-11z"/></svg></a>
-    </nav>
-  </div>
-</footer>"""
+FOOTER = SHARED_ASK + SHARED_FOOTER
 
 # Download buttons go straight to the right store on phones.
 SCRIPT = f"""<script>
@@ -332,7 +320,7 @@ def page(title, description, url, image, body, kind="website", extra_head=""):
   <meta property="og:title" content="{e(title)}">
   <meta property="og:description" content="{e(description)}">
   <meta property="og:url" content="{e(url)}">
-  <meta property="og:image" content="{e(image)}">
+  <meta property="og:image" content="{OG_IMAGE}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{e(title)}">
   <meta name="twitter:description" content="{e(description)}">
@@ -342,6 +330,7 @@ def page(title, description, url, image, body, kind="website", extra_head=""):
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+  {HEAD_ASSETS}
   <style>{CSS}</style>
 </head>
 <body>
@@ -349,9 +338,43 @@ def page(title, description, url, image, body, kind="website", extra_head=""):
 {body}
 {FOOTER}
 {SCRIPT}
+{BODY_SCRIPTS}
 </body>
 </html>
 """
+
+
+COVER_ART = ["about", "authorization", "compliance", "details", "experience", "final", "goal", "preferences", "roles"]
+SCREENS = [
+    ("home", "The Iris web dashboard, with job matches ranked by fit"),
+    ("jobs", "Swiping through a job card next to its full details in Iris"),
+    ("applications", "The Iris applications table, showing live status on each application"),
+    ("browse", "Browsing open roles on Iris with search and filters"),
+]
+
+
+def _pick(slug, n):
+    return sum(ord(c) for c in slug) % n
+
+
+def add_images(p):
+    """Every post gets a cover for its card and page, and one product image in the article."""
+    if not p.get("cover"):
+        if p.get("category") in ("Comparisons", "Best tools"):
+            shot, alt = SCREENS[_pick(p["slug"], len(SCREENS))]
+            p["cover"], p["cover_alt"] = f"/media/web/{shot}.webp", alt
+        else:
+            art = COVER_ART[_pick(p["slug"], len(COVER_ART))]
+            p["cover"], p["cover_alt"] = f"/media/onboarding/{art}.webp", "A painted landscape in warm evening light"
+    shot, alt = SCREENS[_pick(p["slug"] + "x", len(SCREENS))]
+    figure = f'<figure class="post-shot"><img src="/media/web/{shot}.webp" alt="{html.escape(alt)}" width="1600" height="1000" loading="lazy"><figcaption>{html.escape(alt)}.</figcaption></figure>'
+    parts = p["body"].split("</h2>", 2)
+    if len(parts) == 3:
+        head, rest = parts[2].split("</p>", 1) if "</p>" in parts[2] else (parts[2], "")
+        p["body"] = parts[0] + "</h2>" + parts[1] + "</h2>" + head + "</p>" + figure + rest
+    else:
+        p["body"] += figure
+    return p
 
 
 def card(p):
@@ -406,7 +429,7 @@ def sections(posts):
 
 
 def main():
-    posts = sorted((read_post(f) for f in SRC.glob("*.md")), key=lambda p: (p["date_obj"], p["title"]), reverse=True)
+    posts = sorted((add_images(read_post(f)) for f in SRC.glob("*.md")), key=lambda p: (p["date_obj"], p["title"]), reverse=True)
     if not posts:
         raise SystemExit("no posts in content/blog")
     OUT.mkdir(parents=True, exist_ok=True)
@@ -425,7 +448,7 @@ def main():
     }
     (OUT / "index.html").write_text(page(
         "Blog: Job Search Tips & AI Job Applications | Iris", "Practical job search advice from the team behind Iris: ATS-friendly resumes, choosing which jobs to apply to, and applying with AI.",
-        f"{SITE}/blog/", f"{ASSETS}/media/iris-share.jpg", index_body, extra_head=jsonld(blog_ld)))
+        f"{SITE}/blog/", OG_IMAGE, index_body, extra_head=jsonld(blog_ld)))
 
     e = html.escape
     for p in posts:
@@ -496,7 +519,7 @@ def write_simple_pages():
     team.mkdir(parents=True, exist_ok=True)
     (team / "index.html").write_text(page(
         "The Iris Team: Who Writes the Iris Blog", "Who writes the Iris blog, how we research job search advice, and how we handle claims about Iris and other tools.",
-        f"{SITE}{AUTHOR_URL}", f"{ASSETS}/yoiris.jpeg",
+        f"{SITE}{AUTHOR_URL}", OG_IMAGE,
         f"""<main class="simple-page"><nav class="crumbs" aria-label="Breadcrumb"><a href="/">Iris</a><span>/</span><a href="/blog/">Blog</a></nav>
 <h1>The Iris team</h1>
 <p>{AUTHOR_BIO}</p>
@@ -512,7 +535,7 @@ def write_simple_pages():
     d.mkdir(exist_ok=True)
     (d / "index.html").write_text(page(
         "Image and Video Credits | Iris", "Credits and licences for the photographs and video used on the Iris website.",
-        f"{SITE}/credits/", f"{ASSETS}/yoiris.jpeg",
+        f"{SITE}/credits/", OG_IMAGE,
         f"""<main class="simple-page"><h1>Image and video credits</h1>
 <p>Photographs used in the Iris web app come from Wikimedia Commons under the licences below.</p><ul>{items}</ul>
 <p>The sky video on the sign-in page is from <a href="https://mixkit.co/free-stock-video/clouds/" rel="nofollow noopener">Mixkit</a> under the Mixkit Stock Video Free License.</p></main>"""))
@@ -521,7 +544,7 @@ def write_simple_pages():
 def write_discovery_files(posts):
     pub = ROOT / "public"
     today = dt.date.today().isoformat()
-    urls = [(SITE + "/", today), (SITE + "/blog/", max(p["updated"] for p in posts)), (SITE + AUTHOR_URL, today), (SITE + "/credits/", today), (SITE + "/jobs/", today), (SITE + "/tinder-for-jobs/", today)]
+    urls = [(SITE + "/", today), (SITE + "/blog/", max(p["updated"] for p in posts)), (SITE + AUTHOR_URL, today), (SITE + "/credits/", today), (SITE + "/jobs/", today), (SITE + "/tinder-for-jobs/", today), (SITE + "/love/", today), (SITE + "/about/", today), (SITE + "/mission/", today), (SITE + "/whatsapp/", today)]
     urls += [(f"{SITE}/blog/{p['slug']}/", p["updated"]) for p in posts]
     (pub / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

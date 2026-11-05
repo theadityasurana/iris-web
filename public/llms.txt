@@ -3,8 +3,6 @@
 > Iris is an AI job application app for iPhone and Android, often called "Tinder for jobs". Users browse job cards and swipe right to apply; Iris completes and submits the application using the user's resume and profile. Swipe left passes on a job and swipe up saves it. Iris is free to start, with free applications every month and paid plans for more applications, resume tailoring and automatic applying.
 
 ## Get the app
-- [Tinder for jobs](https://irisjobs.live/tinder-for-jobs/)
-- [Browse jobs](https://irisjobs.live/jobs/)
 - [App Store](https://apps.apple.com/in/app/nextquark/id6761863089)
 - [Google Play](https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke)
 - [Website](https://irisjobs.live/)

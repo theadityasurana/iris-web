@@ -106,7 +106,7 @@ export default function BrowseJobs() {
       <header className="bj-hero">
         <div className="t-overline muted">Browse all jobs</div>
         <h1 className="t-hero">Find a role. <em>Iris applies.</em></h1>
-        <p className="soft">Fresh roles from company career pages. Search everything, or start with today’s picks.</p>
+        <p className="soft">Fresh roles from company career pages. Search everything, or start with top companies hiring now.</p>
         <form className="bj-search" onSubmit={submit} role="search">
           <div className="bj-field"><Search size={17} /><input value={draftQ} onChange={e => setDraftQ(e.target.value)} maxLength={60} placeholder="Job title or company" aria-label="Job title or company" /></div>
           <div className="bj-field bj-loc"><MapPin size={17} /><input value={draftLoc} onChange={e => setDraftLoc(e.target.value)} maxLength={40} placeholder="City or country" aria-label="City or country" /></div>
@@ -125,7 +125,7 @@ export default function BrowseJobs() {
       </header>
 
       <div className="bj-rule">
-        <span className="t-caption muted">{filtered ? 'Your results' : 'Today’s 10 picks'}</span>
+        <span className="t-caption muted">{filtered ? 'Your results' : 'Top companies hiring now'}</span>
         <hr />
         {filtered && <button className="btn ghost sm" onClick={clear}><X />Clear all</button>}
       </div>

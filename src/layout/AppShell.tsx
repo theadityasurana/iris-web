@@ -2,7 +2,7 @@ import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-do
 import { useEffect, useState, type ComponentType } from 'react';
 import {
   Home, BriefcaseBusiness, Send, Mail, Sparkles, User, Bookmark, CreditCard, Settings, LifeBuoy, Gift,
-  PanelLeft, ChevronLeft, ChevronRight, ClipboardList, Menu, X, Moon, Sun, LogOut, Compass, Plug,
+  PanelLeft, ChevronLeft, ChevronRight, ClipboardList, Menu, X, Moon, Sun, LogOut, Compass, Plug, FileText,
 } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useUnreadMail } from '@web/lib/queries';
@@ -23,6 +23,7 @@ const WORK: NavEntry[] = [
 ];
 const YOU: NavEntry[] = [
   { to: '/app/profile', label: 'Profile', icon: User },
+  { to: '/app/resumes', label: 'Resume manager', icon: FileText },
   { to: '/app/saved', label: 'Saved jobs', icon: Bookmark },
   { to: '/app/integrations', label: 'Integrations', icon: Plug },
 ];
@@ -49,6 +50,7 @@ const TITLES: [RegExp, string][] = [
   [/^\/app\/tracker/, 'Tracker'],
   [/^\/app\/inbox/, 'Inbox'],
   [/^\/app\/iris/, 'Iris auto-apply'],
+  [/^\/app\/resumes/, 'Resume manager'],
   [/^\/app\/profile/, 'Profile'],
   [/^\/app\/saved/, 'Saved jobs'],
   [/^\/app\/settings/, 'Account'],

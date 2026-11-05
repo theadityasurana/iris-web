@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { atsOf, isFixed, normalize, rpcParams, toCard, trimRows } from '../../functions/api/jobs.js';
+import { atsOf, bestRole, isFixed, normalize, rpcParams, TOP_COMPANIES, toCard, topCompanyFor, trimRows } from '../../functions/api/jobs.js';
 
 const f = qs => normalize(`https://x/api/jobs?${qs}`);
 
@@ -67,4 +67,28 @@ test('cards', () => {
   assert.equal(c.experience, null);
   assert.equal(c.salary, null);
   assert.deepEqual(c.skills, ['Go', 'Rust']);
+});
+
+test('top companies: exact searches skip the slow text search', () => {
+  assert.ok(TOP_COMPANIES.length >= 10);
+  assert.equal(topCompanyFor(f('q=OpenAI')), 'OpenAI');
+  assert.equal(topCompanyFor(f('q=spacex')), 'Spacex');
+  assert.equal(topCompanyFor(f('q=OpenAI&mode=remote')), null);
+  assert.equal(topCompanyFor(f('q=open')), null);
+});
+
+test('top companies: prefers a core role and tidies the name', () => {
+  assert.equal(bestRole([{ title: 'Accountant' }, { title: 'Software Engineer' }]).title, 'Software Engineer');
+  assert.equal(bestRole([{ title: 'Accounting Analytics Engineer' }, { title: 'Hardware Engineer' }]).title, 'Hardware Engineer');
+  assert.equal(bestRole([{ title: 'Accountant' }]).title, 'Accountant');
+  assert.equal(bestRole([]), null);
+  assert.equal(toCard({ id: '1', title: 'A', company_name: 'Spacex' }).company, 'SpaceX');
+});
+
+test('job link previews use the job, and strip markup', async () => {
+  const { previewFor } = await import('../../functions/job/[id].js');
+  const p = previewFor({ title: 'Engineer', company_name: 'Stripe', location: 'Pune', type: 'Full-time', description: '<p>Build <b>things</b>.</p>' }, 'https://irisjobs.live', 'a b');
+  assert.equal(p.title, 'Engineer at Stripe | Apply in one swipe on Iris');
+  assert.equal(p.description, 'Pune · Full-time. Build things .');
+  assert.equal(p.image, 'https://irisjobs.live/api/og/job/a%20b');
 });

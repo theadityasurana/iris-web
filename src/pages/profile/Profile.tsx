@@ -85,7 +85,7 @@ export default function Profile() {
 
       <div className="p-lead">
         <p className="soft">Your profile is what Iris knows about you, and how it applies on your behalf.</p>
-        <Link to="/app/profile/resumes" className="btn"><FileText />Import from resume</Link>
+        <Link to="/app/resumes" className="btn"><FileText />Import from resume</Link>
       </div>
 
       <div className="p-layout">
@@ -111,7 +111,7 @@ export default function Profile() {
             <h2 className="p-group-title">What you gave us</h2>
             <div className="p-columns">
               <div className="p-col">
-                <Card title="Resume" sub="The one marked default is used to apply." edit="/app/profile/resumes">
+                <Card title="Resume" sub="The one marked default is used to apply." edit="/app/resumes">
                   {profile.resumeUrl
                     ? <a href={profile.resumeUrl} target="_blank" rel="noreferrer" className="row gap-8 t-callout"><FileText size={16} />View your resume<ExternalLink size={13} /></a>
                     : <p className="t-callout muted">No resume yet.</p>}

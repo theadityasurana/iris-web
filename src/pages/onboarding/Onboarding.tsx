@@ -12,6 +12,8 @@ import {
 import { useAuth } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 import { Avatar, Logo } from '@web/ui/bits';
+import { ResumePreview } from '@web/ui/ResumePreview';
+import { pathFromUrl } from '@web/lib/resumes';
 import { supabase } from '@/lib/supabase';
 import { defaultOnboardingData, type OnboardingData } from '@/types/onboarding';
 import { ROLE_CATEGORIES, CATEGORY_ROLES } from '@/constants/roles';
@@ -115,17 +117,19 @@ function StepResume({ data, update, onSkipResume, onBusy }: { data: OnboardingDa
   const [over, setOver] = useState(false);
   const [parsing, setParsing] = useState(false);
   const [fileName, setFileName] = useState('');
+  const [picked, setPicked] = useState<File | null>(null);
+  const savedPath = pathFromUrl(data.resumeUri);
 
   const handle = async (file?: File | null) => {
     if (!file) return;
     if (file.size > MAX_RESUME_BYTES) return toast('That file is over 5 MB. Please upload a smaller one.', 'error');
     if (!/\.(pdf|docx)$/i.test(file.name)) return toast('Please upload a PDF or DOCX file.', 'error');
-    setParsing(true); onBusy(true); setFileName(file.name);
+    setParsing(true); onBusy(true); setFileName(file.name); setPicked(file);
     const objectUrl = URL.createObjectURL(file);
     try {
       const parsePromise = extractAndParsePdf(objectUrl);
       const url = await uploadResume(file);
-      if (!url) { parsePromise.catch(() => {}); toast('Could not upload your resume. Please try again.', 'error'); setFileName(''); return; }
+      if (!url) { parsePromise.catch(() => {}); toast('Could not upload your resume. Please try again.', 'error'); setFileName(''); setPicked(null); return; }
       let parsed: Record<string, any> = {};
       const result = await parsePromise.catch(() => null);
       if (result?.geminiData && result.method !== 'regex-fallback') parsed = result.geminiData;
@@ -163,6 +167,7 @@ function StepResume({ data, update, onSkipResume, onBusy }: { data: OnboardingDa
             <button type="button" className="t-caption link" style={{ marginTop: 10 }} onClick={onSkipResume}>I'll add it later</button>
           </>
         )}
+        {(picked || savedPath) && <div className="ob-resume-preview"><ResumePreview file={picked} path={picked ? null : savedPath} fileName={picked?.name ?? savedPath ?? ''} /></div>}
       </Block>
       <Block label="What describes you best?">
         <div className="ob-types">

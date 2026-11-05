@@ -58,8 +58,9 @@ def scene(name, w=2400, h=1350, seed=11):
     sky = mix(sky, np.ones((h, w, 3)) * hex3(P['glow']), 0.75 * np.exp(-(d / 0.3) ** 2))
     sky = mix(sky, np.ones((h, w, 3)) * hex3(P['lit']), 0.9 * np.exp(-(d / 0.1) ** 2))
     # Clouds: banks of overlapping puffs, each lit from the sun. Heavier at the sides so the middle stays calm for type.
-    layer = Image.new('RGBA', (w, h), (0, 0, 0, 0)); ld = ImageDraw.Draw(layer, 'RGBA')
     shade, lit, glow = hex3(P['shade']) * 255, hex3(P['lit']) * 255, hex3(P['glow']) * 255
+    # Starts cloud-coloured but transparent, so blurring the edges can't pull in a dark rim.
+    layer = Image.new('RGBA', (w, h), tuple(int(v) for v in lit) + (0,)); ld = ImageDraw.Draw(layer, 'RGBA')
     banks = [(.05, .30, .24, .26), (.95, .28, .22, .30), (.22, .50, .17, .07), (.80, .52, .17, .07), (.30, .09, .10, .05), (.70, .07, .12, .05)]
     for cx, cy, sw, sh in banks:
         n = int(70 * sw / .2)
@@ -105,7 +106,7 @@ def scene(name, w=2400, h=1350, seed=11):
     return (np.clip(img, 0, 1) * 255).astype(np.uint8), rng, field_line
 
 
-def strokes(src, rng, passes, flow_scale=5):
+def strokes(src, rng, passes, flow_scale=5, edge_at=2.2):
     """Stroke-based rendering: lays short, oriented dabs of the source's colours."""
     h, w = src.shape[:2]
     a = fbm(h // 4, w // 4, rng, flow_scale, 3)
@@ -123,7 +124,7 @@ def strokes(src, rng, passes, flow_scale=5):
         for py, px in pts:
             py = max(0, py)
             # Follow edges where there are edges, drift with the flow elsewhere.
-            edge = mag[py, px] > 2.2
+            edge = mag[py, px] > edge_at
             ang = math.atan2(gx[py, px], -gy[py, px]) if edge else a[py, px]
             ln = length * (0.6 if edge else 1) * (0.7 + rng.random() * 0.6)
             c = smooth_src[py, px] + rng.normal(0, 3.5, 3)
@@ -193,7 +194,7 @@ if sys.argv[1] == 'scene':
     name, out = sys.argv[2], sys.argv[3]
     base, rng, line = scene(name)
     base = flowers(base, rng, line, PALETTES[name])
-    painted = strokes(base, rng, [(30, 80, 24), (16, 52, 13), (8, 26, 8)], flow_scale=3)
+    painted = strokes(base, rng, [(30, 80, 24), (16, 52, 13), (8, 26, 8)], flow_scale=3, edge_at=7)
     Image.fromarray(grade(painted)).resize((2000, 1125), Image.LANCZOS).save(out, 'WEBP', quality=80, method=6)
 else:
     src, out = sys.argv[2], sys.argv[3]

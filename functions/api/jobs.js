@@ -17,6 +17,34 @@ const FIXED_TTL = 3600;
 const SEARCH_TTL = 300;
 const COLUMNS = 'id,title,company_name,company_website,location,type,experience,salary_range,posted_at,skills,portal_url';
 
+/** The fixed list on /jobs, one role from each. Names match the database exactly. */
+export const TOP_COMPANIES = ['Anthropic', 'OpenAI', 'Spacex', 'Neuralink', 'Speechify', 'Perplexity', 'ElevenLabs', 'Stripe', 'Figma', 'Notion', 'Duolingo', 'Ramp'];
+const DISPLAY_NAME = { Spacex: 'SpaceX' };
+const BEST_ROLE = /software engineer|machine learning|ml engineer|research (engineer|scientist)|technical staff|product (manager|designer)/i;
+const GOOD_ROLE = /engineer|scientist|designer|developer/i;
+const NOT_CORE = /account|finance|recruit|payroll|facilit|sales|legal/i;
+const headers = { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' };
+
+/** Newest open roles at one company. Served by the (company_name, created_at) index, so it is cheap. */
+async function companyRows(name, limit, offset = 0) {
+  const q = new URLSearchParams({ select: COLUMNS, company_name: `eq.${name}`, or: '(status.is.null,status.neq.closed)', order: 'created_at.desc', limit: String(limit), offset: String(offset) });
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/jobs?${q}`, { headers, signal: AbortSignal.timeout(8_000) });
+  if (!res.ok) throw new Error(`jobs ${res.status}`);
+  return res.json();
+}
+
+/** Prefers engineering, research and product roles, so the list reads well. */
+export const bestRole = rows => {
+  const core = rows.filter(r => !NOT_CORE.test(r.title ?? ''));
+  return core.find(r => BEST_ROLE.test(r.title)) ?? core.find(r => GOOD_ROLE.test(r.title)) ?? core[0] ?? rows[0] ?? null;
+};
+
+/** A search for exactly one top company, with no other filters, skips the slow text search. */
+export function topCompanyFor(f) {
+  if (!f.q || f.loc || f.level || f.mode || f.type || f.days) return null;
+  return TOP_COMPANIES.find(c => c.toLowerCase() === f.q) ?? null;
+}
+
 const LEVELS = {
   intern: { exact: ['Internship'], titles: ['intern', 'internship', 'trainee', 'apprentice'] },
   entry: { exact: ['Entry Level'], titles: ['junior', 'graduate', 'entry level', 'associate'] },
@@ -90,7 +118,7 @@ export function toCard(r) {
   return {
     id: r.id,
     title: (r.title || '').trim() || 'Open role',
-    company: (r.company_name || '').trim() || 'Company',
+    company: DISPLAY_NAME[r.company_name] ?? ((r.company_name || '').trim() || 'Company'),
     website: r.company_website || null,
     location: (r.location || '').trim(),
     type: r.type || null,
@@ -113,24 +141,36 @@ export async function onRequestGet({ request, waitUntil }) {
 
   const search = params => fetch(`${SUPABASE_URL}/rest/v1/rpc/search_jobs?select=${COLUMNS}`, {
     method: 'POST',
-    headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(params),
     signal: AbortSignal.timeout(12_000),
   });
 
   let rows;
+  let full;
   try {
-    const params = rpcParams(filters);
-    let res = await search(params);
-    // A wide filter timed out: answer once from the last week instead of failing.
-    if (res.status === 500 && !filters.q) res = await search({ ...params, p_posted_after: new Date(Date.now() - DEFAULT_WINDOW_DAYS * 864e5).toISOString() });
-    if (!res.ok) throw new Error(`search_jobs ${res.status}`);
-    rows = await res.json();
+    const company = topCompanyFor(filters);
+    if (fixed) {
+      const lists = await Promise.allSettled(TOP_COMPANIES.map(c => companyRows(c, 20)));
+      rows = lists.map(l => (l.status === 'fulfilled' ? bestRole(l.value) : null)).filter(Boolean).slice(0, PAGE);
+      if (!rows.length) throw new Error('no top company roles');
+      full = false;
+    } else if (company) {
+      rows = await companyRows(company, PAGE, filters.offset);
+      full = rows.length === PAGE;
+    } else {
+      const params = rpcParams(filters);
+      let res = await search(params);
+      // A wide search timed out: answer once from the last week instead of failing.
+      if (res.status === 500) res = await search({ ...params, p_posted_after: new Date(Date.now() - DEFAULT_WINDOW_DAYS * 864e5).toISOString() });
+      if (!res.ok) throw new Error(`search_jobs ${res.status}`);
+      rows = await res.json();
+      full = rows.length === params.p_limit;
+    }
   } catch (e) {
     console.error('jobs search failed', e);
     return new Response(JSON.stringify({ error: 'Jobs are busy right now. Please try again.' }), { status: 502, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
   }
-  const full = rows.length === rpcParams(filters).p_limit;
   const body = JSON.stringify({ jobs: trimRows(rows, filters).map(toCard), hasMore: full && filters.offset < MAX_OFFSET, fixed });
   const response = new Response(body, { headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=60, s-maxage=${ttl}` } });
   if (cache) { const put = cache.put(key, response.clone()); if (waitUntil) waitUntil(put); else await put; }

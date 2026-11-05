@@ -13,7 +13,7 @@
   <meta property="og:title" content="Why Job Searching Feels Broken &amp; How AI Auto-Apply Helps">
   <meta property="og:description" content="Job hunting is exhausting because each application takes so long that people apply to too few roles. Here&#x27;s how AI auto-apply changes the maths.">
   <meta property="og:url" content="https://irisjobs.live/blog/why-job-search-feels-broken/">
-  <meta property="og:image" content="https://irisjobs.live/media/blog/why-job-search-feels-broken.webp">
+  <meta property="og:image" content="https://irisjobs.live/media/iris-og.jpg?v=1">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Why Job Searching Feels Broken &amp; How AI Auto-Apply Helps">
   <meta name="twitter:description" content="Job hunting is exhausting because each application takes so long that people apply to too few roles. Here&#x27;s how AI auto-apply changes the maths.">
@@ -30,6 +30,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/media/site.css?v=1">
   <style>
 :root { --ink:#23201b; --ink-2:#4e4a41; --muted:#797366; --line:#e8e2d7; }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
@@ -71,7 +72,10 @@ a { color:inherit; text-decoration:none; }
 .table-wrap table { width:100%; border-collapse:collapse; font-size:15px; }
 .table-wrap th, .table-wrap td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
 .table-wrap th { font-weight:600; }
-.post-cover img { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:22px; box-shadow:inset 0 0 0 1px var(--line); display:block; }
+.post-shot { margin:28px 0; }
+.post-shot img { width:100%; height:auto; border-radius:14px; box-shadow:inset 0 0 0 1px var(--line), 0 18px 44px rgba(58,48,30,.14); }
+.post-shot figcaption { margin-top:10px; font-size:.86rem; color:var(--muted); text-align:center; }
+.post-cover img { width:100%; height:auto; aspect-ratio:auto; object-fit:contain; border-radius:22px; box-shadow:inset 0 0 0 1px var(--line); display:block; }
 .prose { max-width:720px; margin:0 auto; padding:36px 20px 24px; font-size:1.08rem; line-height:1.7; color:#27272a; }
 .prose > * + * { margin-top:1.1em; }
 .prose h2 { margin-top:1.9em; font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; line-height:1.2; color:var(--ink); }
@@ -163,7 +167,7 @@ h1, h2, h3, .blog-head h1 { font-family:'EB Garamond',Georgia,serif; font-weight
 <p>Multiply that by the number of applications a typical search needs and you have a part-time job that pays nothing until it suddenly pays off. So people do the rational thing: they apply to fewer roles, and they get pickier about which ones are "worth the effort".</p>
 <p>That's exactly backwards.</p>
 <h2>Why does applying to fewer jobs hurt your chances?</h2>
-<p>Hiring is noisy. A strong candidate gets passed over because the recruiter was out that week, the role was quietly filled internally, or the posting got hundreds of applicants in two days. None of that has anything to do with you.</p>
+<p>Hiring is noisy. A strong candidate gets passed over because the recruiter was out that week, the role was quietly filled internally, or the posting got hundreds of applicants in two days. None of that has anything to do with you.</p><figure class="post-shot"><img src="/media/web/jobs.webp" alt="Swiping through a job card next to its full details in Iris" width="1600" height="1000" loading="lazy"><figcaption>Swiping through a job card next to its full details in Iris.</figcaption></figure>
 <p>When each application is expensive, every one of those random misses feels personal, and the search drags on. When each application is cheap, the randomness evens out. You stop betting everything on three "perfect" roles and give yourself enough chances for luck to work in your favour.</p>
 <h2>What changes when applying takes one swipe?</h2>
 <p><a href="/blog/introducing-iris/">Iris</a> drops the cost of an application to roughly the time it takes to read a job card and decide. That changes how a search feels:</p>
@@ -202,25 +206,13 @@ h1, h2, h3, .blog-head h1 { font-family:'EB Garamond',Georgia,serif; font-weight
     <a href="/blog/ats-friendly-resume/"><h2>How to write an ATS-friendly resume that applicant tracking systems can read</h2></a>
     <p>Before a recruiter sees your resume, software usually reads it first. A few formatting choices decide whether it reads it correctly.</p>
   </article></div></section>
-<footer class="footer">
-  <div class="footer-top">
-    <a class="footer-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
-    <p class="footer-tag">Tinder for jobs</p>
+<section class="sf-ask" aria-label="Ask an AI about Iris"><h2>Still curious? Ask your favorite AI about Iris.</h2><div class="sf-ask-chips"><a href="https://chatgpt.com/?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F&amp;hints=search" target="_blank" rel="noopener nofollow"><img src="/media/llm/chatgpt.png" alt="ChatGPT" width="22" height="22" loading="lazy">ChatGPT</a><a href="https://claude.ai/new?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow"><img src="/media/llm/claude.png" alt="Claude" width="22" height="22" loading="lazy">Claude</a><a href="https://www.perplexity.ai/search?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow"><img src="/media/llm/perplexity.png" alt="Perplexity" width="22" height="22" loading="lazy">Perplexity</a><a href="https://www.google.com/search?udm=50&amp;q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow"><img src="/media/llm/gemini.png" alt="Gemini" width="22" height="22" loading="lazy">Gemini</a><a href="https://grok.com/?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow"><img src="/media/llm/grok.png" alt="Grok" width="22" height="22" loading="lazy">Grok</a></div></section><footer class="sf"><div class="sf-cols"><nav aria-label="Product"><h3>Product</h3><a href="/#how">How it works</a><a href="/jobs/">Browse jobs</a><a href="/#pricing">Pricing</a><a href="/love/">Wall of love</a><a href="https://irisjobs.live/app/sign-up">Continue on web</a><a href="/whatsapp/">WhatsApp</a></nav><nav aria-label="Company"><h3>Company</h3><a href="/about/">About us</a><a href="/mission/">Our mission</a><a href="/blog/">Blog</a><a href="/tinder-for-jobs/">Tinder for jobs</a></nav><nav aria-label="Get the app"><h3>Get the app</h3><a href="https://apps.apple.com/in/app/nextquark/id6761863089" target="_blank" rel="noopener">App Store</a><a href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener">Google Play</a></nav><nav aria-label="Social"><h3>Social</h3><a href="https://www.instagram.com/irisjobs.live/">Instagram</a><a href="https://x.com/irisjobs_live" target="_blank" rel="noopener">X</a><a href="https://www.linkedin.com/company/tryiris/about/" target="_blank" rel="noopener">LinkedIn</a></nav></div>
+  <div class="sf-stage" aria-hidden="true">
+    <div class="sf-string"></div>
+    <div class="sf-charm"><img src="/logo.webp" alt="Iris" width="96" height="96" loading="lazy"></div>
+    <div class="sf-word" data-word="Iris"><b>Iris</b></div>
   </div>
-  <div class="footer-bar">
-    <nav class="legal" aria-label="Legal">
-      <span>© <span class="year">2026</span> Iris</span>
-      <a href="/blog/">Blog</a>
-      <a href="/credits/">Credits</a>
-      <a href="https://nextquark.framer.website/terms" target="_blank" rel="noopener">Terms<span class="long"> of Service</span></a>
-      <a href="https://nextquark.framer.website/privacy" target="_blank" rel="noopener">Privacy<span class="long"> Policy</span></a>
-    </nav>
-    <nav class="socials" aria-label="Iris on social media">
-      <a href="https://www.instagram.com/irisjobs.live/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg></a>
-      <a href="https://x.com/irisjobs_live" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3zm-1.08 16.17h1.7L7.4 4.74H5.58l11.09 14.43z"/></svg></a>
-      <a href="https://www.linkedin.com/company/tryiris/about/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3v-11zm6.5 0h3.8v1.5h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.46h-4v-4.84c0-1.16-.02-2.64-1.61-2.64-1.61 0-1.86 1.26-1.86 2.56v4.92h-4v-11z"/></svg></a>
-    </nav>
-  </div>
+  <div class="sf-bar"><span>© <span id="year" class="year">2026</span> Iris</span><nav aria-label="Legal"><a href="https://nextquark.framer.website/terms" target="_blank" rel="noopener">Terms</a><a href="https://nextquark.framer.website/privacy" target="_blank" rel="noopener">Privacy</a></nav></div>
 </footer>
 <script>
   (function () {
@@ -230,5 +222,6 @@ h1, h2, h3, .blog-head h1 { font-family:'EB Garamond',Georgia,serif; font-weight
     document.querySelectorAll('.year').forEach(function (y) { y.textContent = new Date().getFullYear(); });
   })();
 </script>
+<script src="/media/lenis.min.js" defer></script><script src="/media/site.js?v=1" defer></script>
 </body>
 </html>

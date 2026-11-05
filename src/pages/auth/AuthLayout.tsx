@@ -21,6 +21,13 @@ export function AuthLayout({ title, subtitle, children, footer }: { title: strin
           <div style={{ marginTop: 28 }}>{children}</div>
         </div>
         {footer && <div className="auth-foot t-callout muted">{footer}</div>}
+        <div className="auth-stores">
+          <span className="t-overline muted">Or get the app</span>
+          <div>
+            <a href="https://apps.apple.com/in/app/nextquark/id6761863089" target="_blank" rel="noopener" className="btn outline"><AppleMark />Download on iOS</a>
+            <a href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener" className="btn outline"><PlayMark />Get it on Google Play</a>
+          </div>
+        </div>
       </div>
       <aside className="auth-aside" aria-hidden="true">
         <video src="/media/auth-clouds.mp4" autoPlay muted loop playsInline preload="metadata" poster="/media/auth-clouds-poster.webp" />
@@ -32,6 +39,10 @@ export function AuthLayout({ title, subtitle, children, footer }: { title: strin
     </div>
   );
 }
+
+const PlayMark = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.6 2.2 13.4 12 3.6 21.8c-.36-.2-.6-.6-.6-1.06V3.26c0-.46.24-.86.6-1.06zm13.1 6.5-3.3 3.3 3.3 3.3 3.72-2.12c.73-.42.73-1.47 0-1.88L16.7 8.7zM4.63 2.19 16.7 8.7 13.4 12 3.6 2.2c.3-.17.68-.2 1.03-.01zM16.7 15.3 4.63 21.81c-.35.19-.73.16-1.03-.01L13.4 12l3.3 3.3z" /></svg>
+);
 
 const GoogleMark = () => (
   <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">

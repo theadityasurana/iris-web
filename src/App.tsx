@@ -103,7 +103,8 @@ export function App() {
           <Route path="/app/iris/report" element={<IrisReport />} />
           <Route path="/app/profile" element={<Profile />} />
           <Route path="/app/profile/edit/:section" element={<EditSection />} />
-          <Route path="/app/profile/resumes" element={<Resumes />} />
+          <Route path="/app/resumes" element={<Resumes />} />
+          <Route path="/app/profile/resumes" element={<Navigate to="/app/resumes" replace />} />
           <Route path="/app/profile/preview" element={<ProfilePreview />} />
           <Route path="/app/plans" element={<Plans />} />
           <Route path="/app/free-credits" element={<FreeCredits />} />
