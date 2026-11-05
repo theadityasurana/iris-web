@@ -5,3 +5,4 @@ dist/
 .DS_Store
 .wrangler/
 supabase/.temp/
+__pycache__/

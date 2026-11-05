@@ -40,7 +40,7 @@ export function jobCardHtml(job, origin) {
 export async function onRequestGet({ params, request, waitUntil }) {
   const id = String(params.id || '').replace(/\.png$/, '');
   const cache = typeof caches !== 'undefined' ? caches.default : null;
-  const key = new Request(new URL(request.url).origin + `/api/og/job/${encodeURIComponent(id)}`);
+  const key = new Request(new URL(request.url).origin + `/api/og/job/v2/${encodeURIComponent(id)}`);
   const hit = await cache?.match(key);
   if (hit) return hit;
   try {
