@@ -6,14 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && node scripts/build-dist.mjs",
+    "build:blog": "python3 scripts/build-blog.py",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "node --test scripts/tests/*.test.mjs",
+    "audit:seo": "node scripts/seo-audit.mjs",
     "deploy": "bun run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.97.0",
+    "@tanstack/query-sync-storage-persister": "^5.83.0",
     "@tanstack/react-query": "^5.83.0",
-    "livekit-client": "~2.20.0",
+    "@tanstack/react-query-persist-client": "^5.83.0",
     "lucide-react": "0.475.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",

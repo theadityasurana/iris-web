@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Copy, Mic, Video, Calendar, ExternalLink, MonitorPlay, SearchX, FileText, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Copy, Video, Calendar, ExternalLink, MonitorPlay, SearchX, FileText, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 import { Modal } from '@web/ui/Modal';
@@ -104,10 +104,6 @@ export default function ApplicationDetails() {
           </div>
           {!submitted && <span className="badge red" style={{ marginLeft: 'auto' }}>Live</span>}
         </button>
-        <Link className="action-card" to={`/app/interviews?role=${encodeURIComponent(data.job.jobTitle)}&company=${encodeURIComponent(data.job.companyName)}`}>
-          <Mic />
-          <div><div className="t-sub">Mock interview</div><div className="t-caption muted">Practise for this role</div></div>
-        </Link>
         <Link className="action-card" to={`/app/jobs/${raw.job_id}?hideApply=true`}>
           <FileText />
           <div><div className="t-sub">Job description</div><div className="t-caption muted">The full posting</div></div>

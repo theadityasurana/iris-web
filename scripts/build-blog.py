@@ -41,7 +41,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "content" / "blog"
 OUT = ROOT / "public" / "blog"
 SITE = "https://irisjobs.live"
-ASSETS = "https://nextquark.in"   # absolute host for link-preview images
+ASSETS = SITE   # absolute host for link-preview images
 
 APP_STORE = "https://apps.apple.com/in/app/nextquark/id6761863089"
 PLAY_STORE = "https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke"
@@ -149,10 +149,10 @@ def read_post(path):
 # ── Page shell (same nav, type and footer as the landing page) ───────────────
 
 CSS = """
-:root { --ink:#0a0a0a; --ink-2:#3f3f46; --muted:#71717a; --line:rgba(10,10,10,0.08); }
+:root { --ink:#23201b; --ink-2:#4e4a41; --muted:#797366; --line:#e8e2d7; }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
-html, body { background:#fff; }
-body { font-family:'Inter Tight',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color:var(--ink); }
+html, body { background:#f8f5ef; }
+body { font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; color:var(--ink); }
 a { color:inherit; text-decoration:none; }
 .nav { max-width:1160px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:18px 20px; }
 .nav-brand { display:flex; align-items:center; gap:11px; font-weight:800; font-size:1.45rem; letter-spacing:-0.03em; }
@@ -239,22 +239,47 @@ a { color:inherit; text-decoration:none; }
 }
 """
 
+CSS += """
+h1, h2, h3, .blog-head h1 { font-family:'EB Garamond',Georgia,serif; font-weight:500; letter-spacing:-0.012em; }
+.nav-brand { font-family:'EB Garamond',Georgia,serif; font-weight:500; letter-spacing:-0.01em; }
+.nav-brand img, .footer-brand img { border-radius:0; object-fit:contain; }
+.blog-head h1 { line-height:1.04; }
+.pill { background:var(--ink); color:#fffdf9; }
+.crumbs { display:flex; flex-wrap:wrap; gap:6px; font-size:0.84rem; color:var(--muted); margin-bottom:18px; }
+.crumbs a:hover { color:var(--ink); text-decoration:underline; }
+.cat-nav { max-width:1160px; margin:18px auto 0; padding:0 20px; display:flex; flex-wrap:wrap; gap:8px; }
+.cat-nav a { padding:7px 14px; border-radius:999px; box-shadow:inset 0 0 0 1px #d8d1c4; font-size:0.88rem; color:var(--ink-2); background:#fffdf9; }
+.cat-nav a:hover { color:var(--ink); box-shadow:inset 0 0 0 1px var(--muted); }
+.cat-head { scroll-margin-top:16px; }
+.author-box { max-width:720px; margin:32px auto 0; padding:22px 24px; border-radius:20px; background:#fffdf9; box-shadow:inset 0 0 0 1px var(--line); display:flex; gap:16px; align-items:flex-start; }
+.author-box img { flex-shrink:0; }
+.author-box b { display:block; font-size:1rem; }
+.author-box p { margin-top:4px; font-size:0.92rem; color:var(--ink-2); line-height:1.5; }
+.author-box a { text-decoration:underline; text-underline-offset:2px; }
+.simple-page { max-width:720px; margin:0 auto; padding:48px 20px 72px; }
+.simple-page h1 { font-size:clamp(2.2rem,6vw,3.2rem); line-height:1.08; }
+.simple-page p, .simple-page li { margin-top:14px; line-height:1.65; color:var(--ink-2); }
+.simple-page ul { margin-top:12px; padding-left:20px; }
+.simple-page a { text-decoration:underline; text-underline-offset:2px; }
+"""
+
 ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
 
 NAV = f"""<nav class="nav">
-  <a class="nav-brand" href="/"><img src="/logo.png" alt=""><span>Iris</span></a>
-  <div class="nav-right"><a class="nav-link on" href="/blog/">Blog</a><a class="pill store-link" href="{APP_STORE}">Download {ARROW}</a></div>
+  <a class="nav-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
+  <div class="nav-right"><a class="nav-link" href="/app/sign-in">Sign in</a><a class="nav-link on" href="/blog/">Blog</a><a class="pill store-link" href="{APP_STORE}">Download {ARROW}</a></div>
 </nav>"""
 
 FOOTER = """<footer class="footer">
   <div class="footer-top">
-    <a class="footer-brand" href="/"><img src="/logo.png" alt=""><span>Iris</span></a>
+    <a class="footer-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
     <p class="footer-tag">Tinder for jobs</p>
   </div>
   <div class="footer-bar">
     <nav class="legal" aria-label="Legal">
       <span>© <span class="year">2026</span> Iris</span>
       <a href="/blog/">Blog</a>
+      <a href="/credits/">Credits</a>
       <a href="https://nextquark.framer.website/terms" target="_blank" rel="noopener">Terms<span class="long"> of Service</span></a>
       <a href="https://nextquark.framer.website/privacy" target="_blank" rel="noopener">Privacy<span class="long"> Policy</span></a>
     </nav>
@@ -300,7 +325,8 @@ def page(title, description, url, image, body, kind="website", extra_head=""):
   <title>{e(title)}</title>
   <meta name="description" content="{e(description)}">
   <link rel="canonical" href="{e(url)}">
-  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="icon" type="image/png" href="/favicon-48.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
   <meta property="og:type" content="{kind}">
   <meta property="og:site_name" content="Iris">
   <meta property="og:title" content="{e(title)}">
@@ -315,7 +341,7 @@ def page(title, description, url, image, body, kind="website", extra_head=""):
   <link rel="alternate" type="application/rss+xml" title="Iris Blog" href="{SITE}/blog/rss.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
   <style>{CSS}</style>
 </head>
 <body>
@@ -342,7 +368,26 @@ def card(p):
   </article>"""
 
 
-CATEGORY_ORDER = ["Guides", "Best tools", "Comparisons"]
+CATEGORY_ORDER = ["Guides", "Resumes", "Applications", "Interviews", "Career changes", "Students", "Best tools", "Comparisons"]
+
+
+def cat_id(name):
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+def related(p, posts, n=3):
+    """Same category first, then newest, so every post links to its neighbours."""
+    same = [o for o in posts if o["slug"] != p["slug"] and o.get("category") == p.get("category")]
+    # Rotate through the category so inbound links spread across all posts, not just the newest.
+    if same:
+        i = sorted(o["slug"] for o in posts).index(p["slug"]) % len(same)
+        same = same[i:] + same[:i]
+    rest = [o for o in posts if o["slug"] != p["slug"] and o not in same]
+    return (same + rest)[:n]
+
+
+AUTHOR_URL = "/blog/authors/iris-team/"
+AUTHOR_BIO = "The people who build Iris, the swipe-to-apply job app. We write about job searching from what we see building application automation."
 
 
 def sections(posts):
@@ -355,7 +400,7 @@ def sections(posts):
     for k in order:
         if k not in groups:
             continue
-        head = f'<h2 class="cat-head">{html.escape(k)}</h2>' if k else ""
+        head = f'<h2 class="cat-head" id="{cat_id(k)}">{html.escape(k)}</h2>' if k else ""
         out.append(f'{head}<section class="grid">{"".join(card(p) for p in groups[k])}</section>')
     return "\n".join(out)
 
@@ -370,6 +415,7 @@ def main():
   <h1>The Iris Blog</h1>
   <p>Notes on job hunting, hiring, and what AI is changing about both.</p>
 </header>
+<nav class="cat-nav" aria-label="Blog topics">{"".join(f'<a href="#{cat_id(c)}">{html.escape(c)}</a>' for c in CATEGORY_ORDER if any(p.get("category") == c for p in posts))}</nav>
 {sections(posts)}"""
     blog_ld = {
         "@context": "https://schema.org", "@type": "Blog", "name": "The Iris Blog", "url": f"{SITE}/blog/",
@@ -383,13 +429,13 @@ def main():
 
     e = html.escape
     for p in posts:
-        others = [o for o in posts if o["slug"] != p["slug"]][:3]
+        others = related(p, posts)
         cover = p.get("cover") or "/media/iris-share.jpg"
         body = f"""<article>
   <header class="post">
-    <a class="back" href="/blog/">← All posts</a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Iris</a><span>/</span><a href="/blog/">Blog</a>{f'<span>/</span><a href="/blog/#{cat_id(p["category"])}">{e(p["category"])}</a>' if p.get("category") else ''}</nav>
     <h1>{e(p['title'])}</h1>
-    <div class="meta"><span>{e(p['author'])}</span><span>·</span><time datetime="{p['date']}">{p['date_human']}</time><span>·</span><span>{p['read']}</span></div>
+    <div class="meta"><a href="{AUTHOR_URL}">{e(p['author'])}</a><span>·</span><time datetime="{p['date']}">{p['date_human']}</time><span>·</span><span>{p['read']}</span></div>
   </header>
   {f'<figure class="post-cover"><img src="{e(p["cover"])}" alt="{e(p.get("cover_alt") or p["title"])}" width="1200" height="750"></figure>' if p.get("cover") else ''}
   {f'<section class="tldr" aria-label="Summary"><div><b>In short</b>{e(p["tldr"])}</div></section>' if p.get("tldr") else ''}
@@ -397,6 +443,7 @@ def main():
 {p['body']}
   </div>
 </article>
+<aside class="author-box"><img src="/logo.webp" alt="Iris logo" width="44" height="44" loading="lazy"><div><b>Written by {e(p['author'])}</b><p>{AUTHOR_BIO} <a href="{AUTHOR_URL}">About the team</a></p></div></aside>
 <aside class="cta-box"><div class="cta-inner">
   <b>Apply to your next job with one swipe.</b>
   <span>Iris is free to try on iPhone and Android.</span>
@@ -409,7 +456,7 @@ def main():
             "@context": "https://schema.org", "@type": "BlogPosting",
             "headline": p["title"], "description": p["description"], "image": [image],
             "datePublished": p["date"], "dateModified": p["updated"],
-            "author": {"@type": "Organization", "name": p["author"], "url": SITE},
+            "author": {"@type": "Organization", "name": p["author"], "url": SITE + AUTHOR_URL},
             "publisher": ORG, "mainEntityOfPage": {"@type": "WebPage", "@id": url},
             "keywords": p.get("keywords", ""), "inLanguage": "en",
             "about": {"@type": "MobileApplication", "name": "Iris", "operatingSystem": "iOS, Android",
@@ -431,8 +478,10 @@ def main():
         (d / "index.html").write_text(page(
             seo_title(p["seo_title"]), p["description"], url, image, body, kind="article", extra_head=head))
 
+    write_simple_pages()
+
     # Remove pages for posts that were deleted from content/blog.
-    keep = {p["slug"] for p in posts}
+    keep = {p["slug"] for p in posts} | {"authors"}
     for d in OUT.iterdir():
         if d.is_dir() and d.name not in keep and (d / "index.html").exists():
             (d / "index.html").unlink()
@@ -441,14 +490,42 @@ def main():
     print(f"built {len(posts)} posts → public/blog/ (+ sitemap.xml, robots.txt, llms.txt, rss.xml)")
 
 
+def write_simple_pages():
+    e = html.escape
+    team = OUT / "authors" / "iris-team"
+    team.mkdir(parents=True, exist_ok=True)
+    (team / "index.html").write_text(page(
+        "The Iris Team: Who Writes the Iris Blog", "Who writes the Iris blog, how we research job search advice, and how we handle claims about Iris and other tools.",
+        f"{SITE}{AUTHOR_URL}", f"{ASSETS}/yoiris.jpeg",
+        f"""<main class="simple-page"><nav class="crumbs" aria-label="Breadcrumb"><a href="/">Iris</a><span>/</span><a href="/blog/">Blog</a></nav>
+<h1>The Iris team</h1>
+<p>{AUTHOR_BIO}</p>
+<h2>How we write</h2>
+<ul><li>We describe Iris as it works today, including its limits.</li><li>We link to sources for outside facts and avoid statistics we cannot trace.</li><li>Comparisons reflect what each company publishes. Features and prices change, so check their site before deciding.</li><li>We are the makers of Iris, so our comparisons are not neutral. We say so.</li></ul>
+<h2>Contact</h2>
+<p>Found a mistake? Email <a href="mailto:support@nextquark.com">support@nextquark.com</a> and we will fix it.</p></main>""",
+        extra_head=jsonld({"@context": "https://schema.org", "@type": "Organization", "name": "The Iris Team", "url": SITE + AUTHOR_URL, "parentOrganization": ORG})))
+    credits = json.loads((ROOT / "docs" / "image-credits.json").read_text())
+    items = "".join(
+        f'<li><a href="{e(c["page"])}" rel="nofollow noopener">{e(c["title"])}</a> by {e(c["artist"] or "unknown")}, {e(c["license"])}. Cropped and resized.</li>' for c in credits)
+    d = ROOT / "public" / "credits"
+    d.mkdir(exist_ok=True)
+    (d / "index.html").write_text(page(
+        "Image and Video Credits | Iris", "Credits and licences for the photographs and video used on the Iris website.",
+        f"{SITE}/credits/", f"{ASSETS}/yoiris.jpeg",
+        f"""<main class="simple-page"><h1>Image and video credits</h1>
+<p>Photographs used in the Iris web app come from Wikimedia Commons under the licences below.</p><ul>{items}</ul>
+<p>The sky video on the sign-in page is from <a href="https://mixkit.co/free-stock-video/clouds/" rel="nofollow noopener">Mixkit</a> under the Mixkit Stock Video Free License.</p></main>"""))
+
+
 def write_discovery_files(posts):
     pub = ROOT / "public"
     today = dt.date.today().isoformat()
-    urls = [(SITE + "/", today, "1.0"), (SITE + "/blog/", posts[0]["updated"], "0.8")]
-    urls += [(f"{SITE}/blog/{p['slug']}/", p["updated"], "0.7") for p in posts]
+    urls = [(SITE + "/", today), (SITE + "/blog/", max(p["updated"] for p in posts)), (SITE + AUTHOR_URL, today), (SITE + "/credits/", today)]
+    urls += [(f"{SITE}/blog/{p['slug']}/", p["updated"]) for p in posts]
     (pub / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        + "".join(f"  <url><loc>{u}</loc><lastmod>{d}</lastmod><priority>{pr}</priority></url>\n" for u, d, pr in urls)
+        + "".join(f"  <url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls)
         + "</urlset>\n")
 
     # Search engines and AI answer engines are all welcome. Share links (/job, /invite) stay crawlable

@@ -1,21 +1,24 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { persistOptions, queryClient } from '@web/lib/cache';
 import { AuthProvider } from '@web/auth/AuthProvider';
 import { ToastProvider } from '@web/ui/Toast';
 import { App } from '@web/App';
 import '@web/styles/app.css';
+import '@web/styles/onboarding.css';
+import '@web/styles/pages.css';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: 1, refetchOnWindowFocus: false, staleTime: 30_000 },
-  },
-});
+// Apply the saved theme before first paint. "System" is the absence of a saved value.
+try {
+  const theme = localStorage.getItem('iris-theme');
+  if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
+} catch { /* private mode */ }
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
       <BrowserRouter>
         <ToastProvider>
           <AuthProvider>
@@ -23,6 +26,6 @@ createRoot(document.getElementById('root')!).render(
           </AuthProvider>
         </ToastProvider>
       </BrowserRouter>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   </StrictMode>,
 );

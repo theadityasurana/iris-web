@@ -1,11 +1,11 @@
 ---
 title: Iris vs Jobright: which is better for applying to jobs in 2026?
-seo_title: Iris vs Jobright (2026): Features, Pricing & Which to Choose
+seo_title: Iris vs Jobright (2026): Features and Pricing
 description: Iris vs Jobright compared: how each one applies, tracking, interview prep and price, and which kind of job seeker each suits best.
 keywords: Iris vs Jobright, Jobright alternative, Jobright review, AI job application app, auto apply jobs
 category: Comparisons
 excerpt: Jobright is an AI job-matching copilot. Iris is a swipe-to-apply app that submits real applications on company career pages. Here's how they differ.
-tldr: Jobright is an AI job-matching copilot, best for discovering roles that match a resume. Iris turns a right swipe into a submitted application on the company's own careers page, tracks every application, scores your fit and ATS match, and can apply for you overnight. Pick Jobright if you are one of people who want recommendations and will apply themselves; pick Iris if you want to choose each job yourself in seconds and have the application done for you.
+tldr: Jobright is an AI job-matching copilot, best for discovering roles that match a resume. Iris turns a right swipe into a submitted application on the company's own careers page, tracks every application, scores your fit and ATS match, and can apply for you overnight. Pick Jobright if you want recommendations and will apply themselves; pick Iris if you want to choose each job yourself in seconds and have the application done for you.
 date: 2026-11-03
 author: Team Iris
 generated: true

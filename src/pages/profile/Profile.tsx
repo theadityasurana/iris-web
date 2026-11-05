@@ -1,300 +1,184 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { Camera, Eye, FileText, Gift, MapPin, Phone, Linkedin, Github, ExternalLink, Pencil } from 'lucide-react';
+import { Camera, ExternalLink, FileText, Pencil } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
-import { useSubscription } from '@web/lib/queries';
 import { useToast } from '@web/ui/Toast';
-import { Avatar, CompanyLogo, formatDate } from '@web/ui/bits';
-import { getReferralStats } from '@/lib/referral';
-import { useQuery } from '@tanstack/react-query';
+import { Avatar, formatDate } from '@web/ui/bits';
 
-function EditBtn({ to }: { to: string }) {
+const SECTIONS = [
+  { id: 'chasing', label: "What you're chasing" },
+  { id: 'gave', label: 'What you gave us' },
+  { id: 'answers', label: 'How we answer on your behalf' },
+];
+const OPT_LABEL: Record<string, string> = { off: 'Off', honest: 'Honest', aggressive: 'Aggressive' };
+
+function Card({ title, sub, edit, children, id }: { title: string; sub?: string; edit?: string; children: ReactNode; id?: string }) {
   return (
-    <Link to={to} className="btn ghost sm" style={{ gap: 5 }}>
-      <Pencil size={13} />Edit
-    </Link>
+    <section className="p-card" id={id}>
+      <header className="p-card-head">
+        <div className="grow"><h3 className="p-card-title">{title}</h3>{sub && <p className="t-callout muted">{sub}</p>}</div>
+        {edit && <Link to={edit} className="icon-btn boxed-round" aria-label={`Edit ${title}`}><Pencil size={15} /></Link>}
+      </header>
+      {children}
+    </section>
   );
 }
 
-function SectionCard({ title, editTo, children, empty }: { title: string; editTo: string; children?: React.ReactNode; empty?: string }) {
+function Fact({ label, value, chips }: { label: string; value?: ReactNode; chips?: string[] }) {
   return (
-    <div className="card pad profile-section">
-      <div className="row between" style={{ marginBottom: children ? 16 : 0 }}>
-        <span className="t-sub">{title}</span>
-        <EditBtn to={editTo} />
-      </div>
-      {children ?? (empty && <p className="t-callout muted">{empty}</p>)}
+    <div className="p-fact">
+      <span className="t-overline muted">{label}</span>
+      {chips && chips.length > 0
+        ? <div className="chips">{chips.map(c => <span key={c} className="chip static">{c}</span>)}</div>
+        : value ? <span>{value}</span> : <em className="muted">Not set</em>}
     </div>
   );
 }
 
 export default function Profile() {
-  const { profile, profileRow, userId, uploadAvatar } = useAuth();
-  const { data: sub } = useSubscription();
-  const showToast = useToast();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const { profile, profileRow, email, uploadAvatar } = useAuth();
+  const toast = useToast();
+  const file = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [active, setActive] = useState(SECTIONS[0].id);
 
-  const { data: referral } = useQuery({
-    queryKey: ['referral-stats', userId],
-    queryFn: () => getReferralStats(userId!),
-    enabled: !!userId,
-  });
-
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    const result = await uploadAvatar(file);
-    setUploading(false);
-    if (result) showToast('Photo updated');
-    else showToast('Upload failed', 'error');
-  };
+  useEffect(() => {
+    const obs = new IntersectionObserver(es => {
+      const hit = es.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (hit) setActive(hit.target.id);
+    }, { rootMargin: '-90px 0px -65% 0px' });
+    SECTIONS.forEach(s => { const el = document.getElementById(s.id); if (el) obs.observe(el); });
+    return () => obs.disconnect();
+  }, []);
 
   if (!profile) return null;
-
+  const onAvatar = async (e: ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setUploading(true);
+    const ok = await uploadAvatar(f);
+    setUploading(false);
+    toast(ok ? 'Photo updated' : 'Upload failed', ok ? 'ok' : 'error');
+  };
   const completion = profile.profileCompletion ?? 0;
+  const joined = formatDate(profileRow?.created_at, { day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
-    <div className="page profile-page">
-      <div className="profile-layout">
-        {/* ── Left column: identity ── */}
-        <aside className="profile-aside">
-          {/* Avatar + name */}
-          <div className="card pad" style={{ textAlign: 'center' }}>
-            <div style={{ position: 'relative', display: 'inline-block', marginBottom: 12 }}>
-              <Avatar src={profile.avatar} name={profile.name} size="xl" />
-              <button
-                onClick={() => fileRef.current?.click()}
-                disabled={uploading}
-                className="avatar-edit-btn"
-                aria-label="Change photo"
-              >
-                {uploading ? <span className="spinner" style={{ width: 12, height: 12 }} /> : <Camera size={13} />}
-              </button>
-              <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAvatarChange} />
-            </div>
-            <div className="t-heading" style={{ marginBottom: 4 }}>{profile.name}</div>
-            {profile.headline && <div className="t-callout muted" style={{ marginBottom: 6 }}>{profile.headline}</div>}
-            {profile.location && (
-              <div className="row gap-4" style={{ justifyContent: 'center', color: 'var(--ink-3)' }}>
-                <MapPin size={13} /><span className="t-caption">{profile.location}</span>
+    <div className="page wide">
+      <section className="p-hero">
+        <div className="p-avatar">
+          <Avatar src={profile.avatar} name={profile.name} size="lg" />
+          <button className="avatar-edit-btn" onClick={() => file.current?.click()} disabled={uploading} aria-label="Change photo">{uploading ? <span className="spinner" style={{ width: 12, height: 12 }} /> : <Camera size={13} />}</button>
+          <input ref={file} type="file" accept="image/*" hidden onChange={onAvatar} />
+        </div>
+        <div className="grow">
+          <h1 className="p-name">{profile.name}</h1>
+          <p className="t-callout soft ellipsis">{[email, profile.phone].filter(Boolean).join(' · ')}</p>
+          <div className="row gap-16 wrap" style={{ marginTop: 6 }}>
+            <span className="t-callout" style={{ color: 'var(--ok)' }}>{completion}% complete</span>
+            <Link to="/app/profile/edit/basic-info" className="t-callout soft row gap-4"><Pencil size={13} />Edit</Link>
+            <Link to="/app/profile/preview" className="t-callout soft">Preview</Link>
+          </div>
+        </div>
+        {joined && <div className="t-callout muted p-since">Member since {joined}</div>}
+      </section>
+
+      <div className="p-lead">
+        <p className="soft">Your profile is what Iris knows about you, and how it applies on your behalf.</p>
+        <Link to="/app/profile/resumes" className="btn"><FileText />Import from resume</Link>
+      </div>
+
+      <div className="p-layout">
+        <nav className="p-nav" aria-label="On this page">
+          <div className="t-overline muted">On this page</div>
+          {SECTIONS.map(s => <a key={s.id} href={`#${s.id}`} className={active === s.id ? 'on' : ''}>{s.label}</a>)}
+        </nav>
+
+        <div className="p-main">
+          <div id="chasing" className="p-group">
+            <h2 className="p-group-title">What you're chasing</h2>
+            <Card title="Your preferences" sub="These are what we match against." edit="/app/profile/edit/desiredroles">
+              <div className="p-facts">
+                <Fact label="Titles" chips={profile.desiredRoles} />
+                <Fact label="Locations" chips={[profile.location, ...(profile.preferredCities ?? [])].filter((c): c is string => !!c)} />
+                <Fact label="Work mode" chips={profile.workModePreferences} />
+                <Fact label="Job type" chips={profile.jobPreferences} />
               </div>
-            )}
-            <div className="row gap-8" style={{ marginTop: 14, justifyContent: 'center' }}>
-              <Link to="/app/profile/preview" className="btn outline sm"><Eye size={13} />Preview</Link>
-              <Link to="/app/profile/resumes" className="btn outline sm"><FileText size={13} />Resume</Link>
+            </Card>
+          </div>
+
+          <div id="gave" className="p-group">
+            <h2 className="p-group-title">What you gave us</h2>
+            <div className="p-columns">
+              <div className="p-col">
+                <Card title="Resume" sub="The one marked default is used to apply." edit="/app/profile/resumes">
+                  {profile.resumeUrl
+                    ? <a href={profile.resumeUrl} target="_blank" rel="noreferrer" className="row gap-8 t-callout"><FileText size={16} />View your resume<ExternalLink size={13} /></a>
+                    : <p className="t-callout muted">No resume yet.</p>}
+                </Card>
+                <Card title="Professional summary" sub="The paragraph used when a form asks about you." edit="/app/profile/edit/bio">
+                  {profile.bio ? <p className="prose">{profile.bio}</p> : <em className="t-callout muted">A short blurb about you</em>}
+                </Card>
+                <div className="p-subhead"><div><h3 className="p-card-title">Work experience</h3><p className="t-caption muted">Past roles, by recency</p></div><Link to="/app/profile/edit/experience" className="btn sm">Edit</Link></div>
+                {(profile.experience ?? []).length === 0 && <p className="t-callout muted">No experience added yet.</p>}
+                {profile.experience?.map((e, i) => (
+                  <article key={e.id ?? i} className="p-card">
+                    <h4 className="p-entry">{e.title} <span className="muted">· {e.company}</span></h4>
+                    <p className="t-caption muted">{[e.employmentType, e.jobLocation].filter(Boolean).join(' · ')}{(e.startDate || e.endDate) && ` · ${e.startDate ?? ''} – ${e.isCurrent ? 'present' : e.endDate ?? ''}`}</p>
+                    {e.description && <p className="prose t-callout" style={{ marginTop: 10 }}>{e.description}</p>}
+                  </article>
+                ))}
+                <div className="p-subhead"><h3 className="p-card-title">Education</h3><Link to="/app/profile/edit/education" className="btn sm">Edit</Link></div>
+                {(profile.education ?? []).length === 0 && <p className="t-callout muted">No education added yet.</p>}
+                {profile.education?.map((e, i) => (
+                  <article key={e.id ?? i} className="p-card">
+                    <h4 className="p-entry">{e.degree}{e.field && <span className="muted">, {e.field}</span>}</h4>
+                    <p className="t-callout soft">{e.institution}</p>
+                    {(e.startDate || e.endDate) && <p className="t-caption muted">{e.startDate} – {e.endDate}</p>}
+                  </article>
+                ))}
+                <div className="p-subhead"><h3 className="p-card-title">Projects</h3><Link to="/app/profile/edit/projects" className="btn sm">Edit</Link></div>
+                {(profile.projects ?? []).length === 0 && <p className="t-callout muted">No projects added yet.</p>}
+                {profile.projects?.map((p, i) => (
+                  <article key={p.id ?? i} className="p-card">
+                    <h4 className="p-entry">{p.title}</h4>
+                    {p.organization && <p className="t-caption muted">{p.organization}{p.date ? ` · ${p.date}` : ''}</p>}
+                    {p.bullets?.length > 0 && <ul className="bullets">{p.bullets.map((b, j) => <li key={j}>{b}</li>)}</ul>}
+                  </article>
+                ))}
+                <Card title="Certifications" edit="/app/profile/edit/certifications">
+                  {(profile.certifications ?? []).length ? profile.certifications!.map((c, i) => <p key={c.id ?? i} className="t-callout">{c.name}{c.issuingOrganization && <span className="muted"> · {c.issuingOrganization}</span>}</p>) : <p className="t-callout muted">None added yet.</p>}
+                </Card>
+                <Card title="Achievements" edit="/app/profile/edit/achievements">
+                  {(profile.achievements ?? []).length ? profile.achievements!.map((a, i) => <p key={a.id ?? i} className="t-callout">{a.title}{a.issuer && <span className="muted"> · {a.issuer}</span>}</p>) : <p className="t-callout muted">None added yet.</p>}
+                </Card>
+              </div>
+              <div className="p-col">
+                <Card title="Skills" sub="Starred skills are the ones recruiters see first." edit="/app/profile/edit/topskills">
+                  {(profile.skills ?? []).length
+                    ? <div className="chips">{profile.skills!.map(s => <span key={s} className={`chip static ${profile.topSkills?.includes(s) ? 'top-skill' : ''}`}>{s}</span>)}</div>
+                    : <p className="t-callout muted">No skills added yet.</p>}
+                </Card>
+                <Card title="Links" edit="/app/profile/edit/contact">
+                  <div className="p-facts">
+                    <Fact label="LinkedIn" value={profile.linkedinUrl} />
+                    <Fact label="GitHub" value={profile.githubUrl} />
+                  </div>
+                </Card>
+              </div>
             </div>
           </div>
 
-          {/* Completion */}
-          <div className="card pad">
-            <div className="row between" style={{ marginBottom: 8 }}>
-              <span className="t-callout" style={{ fontWeight: 600 }}>Profile strength</span>
-              <span className="t-callout num" style={{ color: completion >= 80 ? 'var(--brand-ink)' : 'var(--ink-3)' }}>{completion}%</span>
-            </div>
-            <div className="meter"><span style={{ width: `${completion}%`, background: completion >= 80 ? 'var(--brand)' : 'var(--ink)' }} /></div>
+          <div id="answers" className="p-group">
+            <h2 className="p-group-title">How we answer on your behalf</h2>
+            <Card title="Application settings" sub="How Iris tailors and sends each application." edit="/app/settings?s=apply-settings">
+              <div className="p-facts">
+                <Fact label="Resume optimization" value={OPT_LABEL[profileRow?.resume_optimization_level ?? ''] ?? 'Honest'} />
+                <Fact label="Work authorization" value={profileRow?.work_authorization_status} />
+                <Fact label="Application email" value={profileRow?.proxy_email ?? profileRow?.email} />
+              </div>
+            </Card>
           </div>
-
-          {/* Plan */}
-          <Link to="/app/plans" className="card pad" style={{ display: 'block' }}>
-            <div className="row between">
-              <span className="t-callout muted">Plan</span>
-              <span className="t-callout" style={{ fontWeight: 600 }}>
-                {profileRow?.subscription_type ? profileRow.subscription_type.charAt(0).toUpperCase() + profileRow.subscription_type.slice(1) : 'Free'}
-              </span>
-            </div>
-            {profileRow?.applications_remaining != null && (
-              <div className="row between" style={{ marginTop: 6 }}>
-                <span className="t-caption muted">Credits left</span>
-                <span className="t-caption num">{profileRow.applications_remaining}</span>
-              </div>
-            )}
-          </Link>
-
-          {/* Contact */}
-          <SectionCard title="Contact" editTo="/app/profile/edit/contact">
-            <div className="stack gap-8">
-              {profile.phone && <div className="row gap-8 t-callout"><Phone size={14} style={{ color: 'var(--ink-3)', flexShrink: 0 }} />{profile.phone}</div>}
-              {profile.linkedinUrl && (
-                <a href={profile.linkedinUrl} target="_blank" rel="noopener" className="row gap-8 t-callout" style={{ color: 'var(--ink-2)' }}>
-                  <Linkedin size={14} style={{ color: 'var(--ink-3)', flexShrink: 0 }} />LinkedIn<ExternalLink size={11} style={{ marginLeft: 'auto', color: 'var(--ink-4)' }} />
-                </a>
-              )}
-              {profile.githubUrl && (
-                <a href={profile.githubUrl} target="_blank" rel="noopener" className="row gap-8 t-callout" style={{ color: 'var(--ink-2)' }}>
-                  <Github size={14} style={{ color: 'var(--ink-3)', flexShrink: 0 }} />GitHub<ExternalLink size={11} style={{ marginLeft: 'auto', color: 'var(--ink-4)' }} />
-                </a>
-              )}
-              {!profile.phone && !profile.linkedinUrl && !profile.githubUrl && (
-                <p className="t-caption muted">No contact info added.</p>
-              )}
-            </div>
-          </SectionCard>
-
-          {/* Preferences */}
-          <SectionCard title="Job preferences" editTo="/app/profile/edit/jobtypeprefs">
-            <div className="stack gap-6">
-              {(profile.jobPreferences?.length ?? 0) > 0 && (
-                <div className="chips">{profile.jobPreferences!.map(p => <span key={p} className="chip static">{p}</span>)}</div>
-              )}
-              {(profile.workModePreferences?.length ?? 0) > 0 && (
-                <div className="chips">{profile.workModePreferences!.map(p => <span key={p} className="chip static">{p}</span>)}</div>
-              )}
-              {(profile.preferredCities?.length ?? 0) > 0 && (
-                <div className="chips">{profile.preferredCities!.slice(0, 4).map(c => <span key={c} className="chip static">{c}</span>)}</div>
-              )}
-              {!profile.jobPreferences?.length && !profile.workModePreferences?.length && (
-                <p className="t-caption muted">No preferences set.</p>
-              )}
-            </div>
-          </SectionCard>
-
-          {/* Referral */}
-          {referral?.referralCode && (
-            <div className="banner green">
-              <Gift size={16} />
-              <div className="grow">
-                <div className="t-caption" style={{ fontWeight: 600 }}>Referral code: {referral.referralCode}</div>
-                <div className="t-caption">Share to earn free credits</div>
-              </div>
-            </div>
-          )}
-        </aside>
-
-        {/* ── Right column: content ── */}
-        <div className="profile-main">
-          {/* Bio / headline */}
-          <SectionCard title="About" editTo="/app/profile/edit/bio" empty="No bio added yet.">
-            {profile.bio ? <p className="prose">{profile.bio}</p> : undefined}
-          </SectionCard>
-
-          {/* Skills */}
-          <SectionCard title="Skills" editTo="/app/profile/edit/topskills"
-            empty="No skills added yet.">
-            {(profile.skills?.length ?? 0) > 0 ? (
-              <div className="chips">
-                {profile.skills!.map(s => (
-                  <span key={s} className={`chip static ${profile.topSkills?.includes(s) ? 'top-skill' : ''}`}>{s}</span>
-                ))}
-              </div>
-            ) : undefined}
-          </SectionCard>
-
-          {/* Experience */}
-          <SectionCard title="Experience" editTo="/app/profile/edit/experience"
-            empty="No experience added yet.">
-            {(profile.experience?.length ?? 0) > 0 ? (
-              <div className="stack gap-16">
-                {profile.experience!.map((e, i) => (
-                  <div key={e.id ?? i} className={i > 0 ? 'profile-entry' : ''}>
-                    <div className="row gap-12" style={{ alignItems: 'flex-start' }}>
-                      <CompanyLogo name={e.company} size="sm" />
-                      <div className="grow">
-                        <div className="t-body" style={{ fontWeight: 600 }}>{e.title}</div>
-                        <div className="t-callout muted">{e.company}{e.employmentType ? ` · ${e.employmentType}` : ''}</div>
-                        <div className="t-caption muted" style={{ marginTop: 2 }}>
-                          {e.startDate} – {e.isCurrent ? 'Present' : (e.endDate ?? '')}
-                          {e.jobLocation ? ` · ${e.jobLocation}` : ''}
-                        </div>
-                        {e.description && <p className="t-callout" style={{ marginTop: 8, color: 'var(--ink-2)' }}>{e.description}</p>}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : undefined}
-          </SectionCard>
-
-          {/* Education */}
-          <SectionCard title="Education" editTo="/app/profile/edit/education"
-            empty="No education added yet.">
-            {(profile.education?.length ?? 0) > 0 ? (
-              <div className="stack gap-16">
-                {profile.education!.map((e, i) => (
-                  <div key={e.id ?? i} className={i > 0 ? 'profile-entry' : ''}>
-                    <div className="t-body" style={{ fontWeight: 600 }}>{e.institution}</div>
-                    <div className="t-callout muted">{e.degree}{e.field ? ` · ${e.field}` : ''}</div>
-                    {(e.startDate || e.endDate) && (
-                      <div className="t-caption muted">{e.startDate} – {e.endDate}</div>
-                    )}
-                    {e.description && <p className="t-callout" style={{ marginTop: 6, color: 'var(--ink-2)' }}>{e.description}</p>}
-                  </div>
-                ))}
-              </div>
-            ) : undefined}
-          </SectionCard>
-
-          {/* Achievements */}
-          <SectionCard title="Achievements" editTo="/app/profile/edit/achievements"
-            empty="No achievements added yet.">
-            {(profile.achievements?.length ?? 0) > 0 ? (
-              <div className="stack gap-12">
-                {profile.achievements!.map((a, i) => (
-                  <div key={a.id ?? i} className={i > 0 ? 'profile-entry' : ''}>
-                    <div className="t-body" style={{ fontWeight: 600 }}>{a.title}</div>
-                    {a.issuer && <div className="t-callout muted">{a.issuer}{a.date ? ` · ${a.date}` : ''}</div>}
-                    {a.description && <p className="t-callout" style={{ marginTop: 4, color: 'var(--ink-2)' }}>{a.description}</p>}
-                  </div>
-                ))}
-              </div>
-            ) : undefined}
-          </SectionCard>
-
-          {/* Certifications */}
-          <SectionCard title="Certifications" editTo="/app/profile/edit/certifications"
-            empty="No certifications added yet.">
-            {(profile.certifications?.length ?? 0) > 0 ? (
-              <div className="stack gap-12">
-                {profile.certifications!.map((c, i) => (
-                  <div key={c.id ?? i} className={i > 0 ? 'profile-entry' : ''}>
-                    <div className="row gap-8">
-                      <div className="grow">
-                        <div className="t-body" style={{ fontWeight: 600 }}>{c.name}</div>
-                        <div className="t-callout muted">{c.issuingOrganization}</div>
-                      </div>
-                      {c.credentialUrl && (
-                        <a href={c.credentialUrl} target="_blank" rel="noopener" className="btn ghost sm"><ExternalLink size={13} />View</a>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : undefined}
-          </SectionCard>
-
-          {/* Projects */}
-          <SectionCard title="Projects" editTo="/app/profile/edit/projects"
-            empty="No projects added yet.">
-            {(profile.projects?.length ?? 0) > 0 ? (
-              <div className="stack gap-16">
-                {profile.projects!.map((p, i) => (
-                  <div key={p.id ?? i} className={i > 0 ? 'profile-entry' : ''}>
-                    <div className="row gap-8">
-                      <div className="grow">
-                        <div className="t-body" style={{ fontWeight: 600 }}>{p.title}</div>
-                        {p.organization && <div className="t-callout muted">{p.organization}{p.date ? ` · ${p.date}` : ''}</div>}
-                      </div>
-                      {p.link && <a href={p.link} target="_blank" rel="noopener" className="btn ghost sm"><ExternalLink size={13} />View</a>}
-                    </div>
-                    {p.bullets?.length > 0 && (
-                      <ul className="bullets" style={{ marginTop: 8 }}>
-                        {p.bullets.map((b, j) => <li key={j}>{b}</li>)}
-                      </ul>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : undefined}
-          </SectionCard>
-
-          {/* Desired roles */}
-          <SectionCard title="Desired roles" editTo="/app/profile/edit/desiredroles"
-            empty="No desired roles set.">
-            {(profile.desiredRoles?.length ?? 0) > 0 ? (
-              <div className="chips">{profile.desiredRoles!.map(r => <span key={r} className="chip static">{r}</span>)}</div>
-            ) : undefined}
-          </SectionCard>
         </div>
       </div>
     </div>

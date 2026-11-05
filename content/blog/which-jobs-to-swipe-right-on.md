@@ -7,7 +7,7 @@ date: 2026-11-02
 updated: 2026-11-02
 author: Team Iris
 excerpt: When applying is effortless, the hard part becomes choosing. A simple way to decide in seconds, and avoid regretting your yeses.
-cover: /media/blog/which-jobs-to-swipe-right-on.jpg
+cover: /media/blog/which-jobs-to-swipe-right-on.webp
 cover_alt: The Iris app showing an InMobi Machine Learning Engineer job card next to the Iris logo
 tldr: Apply to a job when you'd accept an offer for it, the level is within one step of yours, you clearly meet the core requirements (not every nice-to-have), and your fit looks reasonable. Skip roles you'd turn down anyway, and save the maybes to review later.
 ---

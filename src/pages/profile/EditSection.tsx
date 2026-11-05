@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Plus, X, Check, Trash2 } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
-import { getRolesGroupedByCategory } from '@/constants/roles';
+import { ROLE_CATEGORIES, CATEGORY_ROLES } from '@/constants/roles';
 import type { WorkExperience, Education, Certification, Achievement, Project } from '@/types';
 
 const CITIES = ['San Francisco, CA','New York, NY','Seattle, WA','Austin, TX','Los Angeles, CA','Chicago, IL','Boston, MA','Denver, CO','Toronto, Canada','London, UK','Berlin, Germany','Bangalore, India','Mumbai, India','Singapore','Sydney, Australia'];
@@ -139,7 +139,7 @@ export default function EditSection() {
 
   // ── Desired roles ────────────────────────────────────────────────────────────
   if (section === 'desiredroles') {
-    const grouped = getRolesGroupedByCategory();
+    const grouped = Object.fromEntries(ROLE_CATEGORIES.map(c => [c.label, CATEGORY_ROLES[c.key] ?? []]));
     const allRoles = Object.values(grouped).flat();
     const filtered = roleQuery ? allRoles.filter(r => r.toLowerCase().includes(roleQuery.toLowerCase())) : [];
     const toggle = (r: string) => setDesiredRoles(p => p.includes(r) ? p.filter(x => x !== r) : [...p, r]);

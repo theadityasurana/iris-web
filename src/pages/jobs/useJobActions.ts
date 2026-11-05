@@ -7,6 +7,8 @@ import { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useEntitlements, useFreeSwipes } from '@web/lib/queries';
+import { useWebPlan, webPlanUsable } from '@web/lib/webBilling';
+import { supabase } from '@/lib/supabase';
 import { canApply } from '@/lib/entitlements';
 import { decrementApplicationCount } from '@/lib/subscription';
 import { useDailySwipe as consumeFreeSwipe } from '@/lib/daily-swipes';
@@ -23,14 +25,23 @@ export function useJobActions() {
   const [outOfCredits, setOutOfCredits] = useState(false);
 
   const freeLeft = free?.remaining ?? 0;
+  const { data: webPlan } = useWebPlan();
+  const webCredits = webPlanUsable(webPlan) ? webPlan.credits_remaining : 0;
 
   const apply = useCallback(async (job: Job): Promise<ApplyOutcome> => {
     if (!userId || !profile) return 'failed';
-    if (!canApply(entitlements, freeLeft)) { setOutOfCredits(true); return 'no-credits'; }
+    if (webCredits <= 0 && !canApply(entitlements, freeLeft)) { setOutOfCredits(true); return 'no-credits'; }
 
-    const charged = entitlements.usesCredits
-      ? await decrementApplicationCount(userId)
-      : await consumeFreeSwipe(userId);
+    // Website credits are spent first and live in their own table.
+    let charged = false;
+    if (webCredits > 0) {
+      const { data, error } = await supabase.rpc('consume_web_credit');
+      charged = !error && data === true;
+      qc.invalidateQueries({ queryKey: ['web-plan', userId] });
+    }
+    if (!charged && canApply(entitlements, freeLeft)) {
+      charged = entitlements.usesCredits ? await decrementApplicationCount(userId) : await consumeFreeSwipe(userId);
+    }
     qc.invalidateQueries({ queryKey: ['subscription-status', userId] });
     qc.invalidateQueries({ queryKey: ['daily-swipes', userId] });
     if (!charged) { setOutOfCredits(true); return 'no-credits'; }
@@ -40,7 +51,7 @@ export function useJobActions() {
     const ok = await addToLiveApplicationQueue(userId, job, profile);
     qc.invalidateQueries({ queryKey: ['user-applications', userId] });
     return ok ? 'applied' : 'failed';
-  }, [userId, profile, entitlements, freeLeft, addSwipedJobId, qc]);
+  }, [userId, profile, entitlements, freeLeft, webCredits, addSwipedJobId, qc]);
 
   const skip = useCallback((job: Job) => { addSwipedJobId(job.id); }, [addSwipedJobId]);
 

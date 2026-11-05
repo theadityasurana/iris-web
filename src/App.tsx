@@ -12,6 +12,9 @@ const ResetPassword = lazy(() => import('@web/pages/auth/ResetPassword'));
 const AuthCallback = lazy(() => import('@web/pages/auth/AuthCallback'));
 const Onboarding = lazy(() => import('@web/pages/onboarding/Onboarding'));
 
+const Home = lazy(() => import('@web/pages/home/Home'));
+const Search = lazy(() => import('@web/pages/jobs/Search'));
+const Tracker = lazy(() => import('@web/pages/applications/Tracker'));
 const Jobs = lazy(() => import('@web/pages/jobs/Jobs'));
 const JobDetailsPage = lazy(() => import('@web/pages/jobs/JobDetailsPage'));
 const SavedJobs = lazy(() => import('@web/pages/jobs/SavedJobs'));
@@ -22,9 +25,6 @@ const ApplicationLogs = lazy(() => import('@web/pages/applications/ApplicationLo
 const Inbox = lazy(() => import('@web/pages/inbox/Inbox'));
 const Iris = lazy(() => import('@web/pages/iris/Iris'));
 const IrisReport = lazy(() => import('@web/pages/iris/IrisReport'));
-const Interviews = lazy(() => import('@web/pages/interviews/Interviews'));
-const InterviewRoom = lazy(() => import('@web/pages/interviews/InterviewRoom'));
-const InterviewReport = lazy(() => import('@web/pages/interviews/InterviewReport'));
 const Profile = lazy(() => import('@web/pages/profile/Profile'));
 const EditSection = lazy(() => import('@web/pages/profile/EditSection'));
 const Resumes = lazy(() => import('@web/pages/profile/Resumes'));
@@ -51,7 +51,7 @@ function GuestOnly({ children }: { children: ReactNode }) {
   if (isLoading || (session && !profileRow)) return <PageLoader />;
   if (session) {
     const next = new URLSearchParams(location.search).get('next');
-    const safeNext = next && next.startsWith('/app/') ? next : '/app/jobs';
+    const safeNext = next && next.startsWith('/app/') ? next : '/app/home';
     return <Navigate to={isOnboardingComplete ? safeNext : '/app/onboarding'} replace />;
   }
   return <>{children}</>;
@@ -61,7 +61,7 @@ function OnboardingGate({ children }: { children: ReactNode }) {
   const { isLoading, session, isOnboardingComplete, profileRow } = useAuth();
   if (isLoading || (session && !profileRow)) return <PageLoader />;
   if (!session) return <Navigate to="/app/sign-in" replace />;
-  if (isOnboardingComplete) return <Navigate to="/app/jobs" replace />;
+  if (isOnboardingComplete) return <Navigate to="/app/home" replace />;
   return <>{children}</>;
 }
 
@@ -78,7 +78,10 @@ export function App() {
         <Route path="/app/onboarding" element={<OnboardingGate><Onboarding /></OnboardingGate>} />
 
         <Route element={<RequireUser><AppShell /></RequireUser>}>
+          <Route path="/app/home" element={<Home />} />
           <Route path="/app/jobs" element={<Jobs />} />
+          <Route path="/app/jobs/search" element={<Search />} />
+          <Route path="/app/tracker" element={<Tracker />} />
           <Route path="/app/jobs/:id" element={<JobDetailsPage />} />
           <Route path="/app/saved" element={<SavedJobs />} />
           <Route path="/app/companies/:name" element={<CompanyPage />} />
@@ -89,8 +92,6 @@ export function App() {
           <Route path="/app/inbox/:threadId" element={<Inbox />} />
           <Route path="/app/iris" element={<Iris />} />
           <Route path="/app/iris/report" element={<IrisReport />} />
-          <Route path="/app/interviews" element={<Interviews />} />
-          <Route path="/app/interviews/:sessionId" element={<InterviewReport />} />
           <Route path="/app/profile" element={<Profile />} />
           <Route path="/app/profile/edit/:section" element={<EditSection />} />
           <Route path="/app/profile/resumes" element={<Resumes />} />
@@ -101,11 +102,9 @@ export function App() {
           <Route path="/app/settings/inbox" element={<InboxSettingsPage />} />
           <Route path="/app/help" element={<Help />} />
         </Route>
-        {/* The interview room is full-screen, outside the shell. */}
-        <Route path="/app/interviews/room" element={<RequireUser><InterviewRoom /></RequireUser>} />
 
-        <Route path="/app" element={<Navigate to="/app/jobs" replace />} />
-        <Route path="*" element={<Navigate to="/app/jobs" replace />} />
+        <Route path="/app" element={<Navigate to="/app/home" replace />} />
+        <Route path="*" element={<Navigate to="/app/home" replace />} />
       </Routes>
     </Suspense>
   );

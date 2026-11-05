@@ -28,7 +28,6 @@ export function OutOfCredits({ open, onClose, entitlements, resetAt }: { open: b
       <ul className="bullets" style={{ marginTop: 0 }}>
         <li>75 to 500 applications a month</li>
         <li>Iris auto-apply works through your matches every morning</li>
-        <li>Mock interviews with a voice interviewer on Pro and Ultra</li>
       </ul>
     </Modal>
   );

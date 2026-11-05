@@ -32,7 +32,7 @@ export default function SavedJobs() {
   };
 
   return (
-    <div className="page narrow">
+    <div className="page">
       <div className="page-head">
         <div>
           <h1 className="t-title">Saved jobs</h1>

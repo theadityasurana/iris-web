@@ -25,8 +25,8 @@
      "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"url":"https://irisjobs.live/",
      "downloadUrl":["https://apps.apple.com/in/app/nextquark/id6761863089","https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke"]},
     {"@type":"WebSite","name":"Iris","url":"https://irisjobs.live/","publisher":{"@id":"https://irisjobs.live/#org"}}]}</script>
-  <link rel="icon" type="image/png" href="/logo.png">
-  <link rel="apple-touch-icon" href="/logo.png">
+  <link rel="icon" type="image/png" href="/favicon-48.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
   <meta property="og:title" content="Iris - Tinder for Jobs!">
   <meta property="og:description" content="Swipe right. AI applies to 100s of jobs in seconds. Over 2 million jobs globally. Try for free!">
   <!-- Link previews: a frame from the video as the image, plus the video itself for apps that play it inline.
@@ -48,7 +48,7 @@
   <meta name="twitter:title" content="Iris - Tinder for Jobs!">
   <meta name="twitter:description" content="Swipe right. AI applies to 100s of jobs in seconds. Over 2 million jobs globally. Try for free!">
   <meta name="twitter:image" content="https://irisjobs.live/yoiris.jpeg?v=2">
-  <link rel="preload" as="image" href="/media/iris-poster-1080.jpg">
+  <link rel="preload" as="image" href="/media/iris-poster-1080.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -233,7 +233,7 @@
   <main>
     <section class="hero" id="hero">
       <nav class="nav">
-        <a class="nav-brand" href="/"><img src="/logo.png" alt=""><span>Iris</span></a>
+        <a class="nav-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
         <div class="nav-right"><a class="nav-links" href="/blog/">Blog</a>
         <a class="nav-links" href="https://irisjobs.live/app/sign-in" style="margin-right:4px">Sign in</a>
         <a class="pill" id="nav-cta" href="#">Download
@@ -243,9 +243,9 @@
 
       <div class="stage">
         <div class="video-box">
-          <img src="/media/iris-poster-1080.jpg" alt="" aria-hidden="true">
-          <video id="hero-video" src="/media/iris-1080.mp4" poster="/media/iris-poster-1080.jpg"
-                 autoplay muted loop playsinline webkit-playsinline preload="auto"
+          <img src="/media/iris-poster-1080.webp" alt="The Iris app showing a job card" width="1920" height="1080">
+          <video id="hero-video" src="/media/iris-1080.mp4" poster="/media/iris-poster-1080.webp"
+                 autoplay muted loop playsinline webkit-playsinline preload="metadata"
                  disablepictureinpicture disableremoteplayback aria-label="Iris app demo"></video>
         </div>
 
@@ -257,7 +257,7 @@
           </div>
           <div class="actions-col">
             <div class="ctas" id="actions"></div>
-            <div class="qr" id="qr"><img src="/media/qr.png?v=2" alt="QR code: scan with your phone camera to get Iris"><span>Scan to get the app</span></div>
+            <div class="qr" id="qr"><img src="/media/qr.png?v=2" alt="QR code: scan with your phone camera to get Iris" width="160" height="160" loading="lazy"><span>Scan to get the app</span></div>
             <p class="countdown" id="countdown"></p>
             <a id="open-now" href="#" class="pill" style="display:none;margin-top:8px">Open Now
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -287,7 +287,7 @@
 
   <footer class="footer">
     <div class="footer-top">
-      <a class="footer-brand" href="/"><img src="/logo.png" alt=""><span>Iris</span></a>
+      <a class="footer-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
       <p class="footer-tag">Tinder for jobs</p>
     </div>
     <div class="footer-bar">
@@ -527,7 +527,7 @@
       var img = logoUrl(job.company_name, null, job.company_website);
       var initial = esc((job.company_initial || job.company_name || 'N').charAt(0).toUpperCase());
       return '<div class="job">' +
-        '<img class="co-logo" src="' + esc(img) + '" alt="" onerror="this.onerror=null;this.style.display=\'none\';this.nextElementSibling&&(this.nextElementSibling.style.display=\'flex\')">' +
+        '<img class="co-logo" src="' + esc(img) + '" alt="Company logo" onerror="this.onerror=null;this.style.display=\'none\';this.nextElementSibling&&(this.nextElementSibling.style.display=\'flex\')">' +
         '<div class="co-logo co-initial" style="display:none">' + initial + '</div>' +
         '<p class="co-name">' + co + '</p>' +
         '<h2 class="role-title">' + title + '</h2>' +

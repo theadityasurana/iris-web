@@ -1,14 +1,20 @@
 import type { ReactNode } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
+import { Logo } from '@web/ui/bits';
 import { useLocation } from 'react-router-dom';
 import { useAuth, APPLE_WEB_ENABLED, type OAuthProvider } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 
 export function AuthLayout({ title, subtitle, children, footer }: { title: string; subtitle?: ReactNode; children: ReactNode; footer?: ReactNode }) {
+  useEffect(() => { document.title = `${title} | Iris`; }, [title]);
   return (
     <div className="auth">
       <div className="auth-form">
-        <a href="/" className="brand auth-brand"><img src="/app/logo.png" alt="" />Iris</a>
+        <div className="auth-top">
+          <a href="/" className="btn outline sm"><ArrowLeft />Back to home</a>
+          <a href="/" className="brand auth-brand"><Logo size={26} />Iris</a>
+        </div>
         <div className="auth-body">
           <h1 className="t-title">{title}</h1>
           {subtitle && <p className="t-body muted" style={{ marginTop: 8 }}>{subtitle}</p>}
@@ -17,10 +23,10 @@ export function AuthLayout({ title, subtitle, children, footer }: { title: strin
         {footer && <div className="auth-foot t-callout muted">{footer}</div>}
       </div>
       <aside className="auth-aside" aria-hidden="true">
-        <video src="/media/iris-1080.mp4" autoPlay muted loop playsInline poster="/media/iris-poster-1080.jpg" />
+        <video src="/media/auth-clouds.mp4" autoPlay muted loop playsInline preload="metadata" poster="/media/auth-clouds-poster.webp" />
         <div className="auth-quote">
-          <p className="t-heading">Swipe right on a job. Iris fills in the application and submits it for you.</p>
-          <p className="t-callout muted" style={{ marginTop: 10 }}>Same account as the Iris app on iPhone and Android.</p>
+          <p className="t-overline">One account, app and web</p>
+          <p className="auth-line">Find the job. Iris handles the application.</p>
         </div>
       </aside>
     </div>
@@ -47,7 +53,7 @@ export function OAuthButtons() {
   const toast = useToast();
   const location = useLocation();
   const [busy, setBusy] = useState<OAuthProvider | null>(null);
-  const next = new URLSearchParams(location.search).get('next') || '/app/jobs';
+  const next = new URLSearchParams(location.search).get('next') || '/app/home';
 
   const go = async (p: OAuthProvider) => {
     setBusy(p);

@@ -42,7 +42,7 @@ def comparison(slug, name, kind, best, who):
     return {
         "slug": f"iris-vs-{slug}",
         "title": title,
-        "seo_title": f"Iris vs {name} (2026): Features, Pricing & Which to Choose",
+        "seo_title": f"Iris vs {name} (2026): Features and Pricing",
         "description": f"Iris vs {name} compared: how each one applies, tracking, interview prep and price, and which kind of job seeker each suits best.",
         "keywords": f"Iris vs {name}, {name} alternative, {name} review, AI job application app, auto apply jobs",
         "category": "Comparisons",

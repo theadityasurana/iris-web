@@ -1,13 +1,34 @@
-# No caching for HTML and JS/CSS assets
-/*.html
-  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
-  CDN-Cache-Control: no-store
-  Pragma: no-cache
+# HTML always revalidates so a deploy shows up immediately.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
 
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/blog/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/app/*
+  Cache-Control: no-cache
+  X-Robots-Tag: noindex
+
+# Hashed bundles never change, so browsers can keep them for a year.
 /app/assets/*
-  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
-  CDN-Cache-Control: no-store
-  Pragma: no-cache
+  Cache-Control: public, max-age=31536000, immutable
+  X-Robots-Tag: noindex
+
+/media/*
+  Cache-Control: public, max-age=2592000
+
+/logo.png
+  Cache-Control: public, max-age=604800
+
+/logo.webp
+  Cache-Control: public, max-age=604800
 
 # Preview image: must be cacheable for social crawlers
 /yoiris.jpeg

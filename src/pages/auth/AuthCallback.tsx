@@ -26,6 +26,6 @@ export default function AuthCallback() {
     );
   }
   if (isLoading || !session || !profileRow) return <PageLoader />;
-  const dest = !isOnboardingComplete ? '/app/onboarding' : next && next.startsWith('/app/') ? next : '/app/jobs';
+  const dest = !isOnboardingComplete ? '/app/onboarding' : next && next.startsWith('/app/') ? next : '/app/home';
   return <Navigate to={dest} replace />;
 }

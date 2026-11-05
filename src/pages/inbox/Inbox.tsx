@@ -46,6 +46,7 @@ function SenderAvatar({ name, email }: { name: string; email?: string }) {
 }
 
 function groupThreads(items: MailItem[]): Thread[] {
+  const map = new Map<string, Thread>();
   for (const m of items) {
     const id = threadKey(m);
     const t = map.get(id);
@@ -110,7 +111,7 @@ function ComposeModal({ open, onClose, from, defaults }: { open: boolean; onClos
   );
 }
 
-function ThreadView({ threadId, proxy, onBack }: { threadId: string; proxy: string | null; onBack: () => void }) {
+export function ThreadView({ threadId, proxy, onBack }: { threadId: string; proxy: string | null; onBack: () => void }) {
   const { userId, profile } = useAuth();
   const toast = useToast();
   const qc = useQueryClient();
@@ -272,6 +273,7 @@ export default function Inbox() {
 
   return (
     <div className={`mail ${openThread ? 'has-thread' : ''}`}>
+      <h1 className="sr-only">Inbox</h1>
       <aside className="mail-folders">
         <button className="btn block" onClick={() => setComposeOpen(true)} disabled={!proxy}><PenSquare />Compose</button>
         <nav className="nav-group" style={{ marginTop: 14 }}>

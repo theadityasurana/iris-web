@@ -7,7 +7,7 @@ date: 2026-11-02
 updated: 2026-11-02
 author: Team Iris
 excerpt: Before a recruiter sees your resume, software usually reads it first. A few formatting choices decide whether it reads it correctly.
-cover: /media/blog/ats-friendly-resume.jpg
+cover: /media/blog/ats-friendly-resume.webp
 cover_alt: The Iris app showing an OpenAI Data Scientist job card next to the Iris logo
 tldr: An ATS-friendly resume uses a single-column layout, standard section headings (Experience, Education, Skills), the same order for every role (title, company, dates), no important text in images, headers or footers, keywords that match the job description where they're true, and a text-based PDF or DOCX file.
 ---

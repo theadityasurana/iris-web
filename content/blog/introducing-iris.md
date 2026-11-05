@@ -7,7 +7,7 @@ date: 2026-11-02
 updated: 2026-11-02
 author: Team Iris
 excerpt: Applying to jobs shouldn't be a second full-time job. Here's why we built Iris, and how a single swipe turns into a real application.
-cover: /media/blog/introducing-iris.jpg
+cover: /media/blog/introducing-iris.webp
 cover_alt: The Iris app on a phone showing an Anthropic Security Data Engineer job card next to the Iris logo
 tldr: Iris is an AI job application app for iPhone and Android that works like Tinder for jobs. You see one job at a time; swipe right and Iris completes and submits the application using your resume, swipe left to pass, and swipe up to save. It's free to start, with free applications every month.
 ---

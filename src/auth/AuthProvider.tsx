@@ -11,13 +11,15 @@ import { supabase, getStorageUrl } from '@/lib/supabase';
 import { mapDbToUserProfile, profileUpdateToDb, onboardingProfileRow, upsertOnboardingProfileWithVerify, welcomeEmailRow, stripNullBytes } from '@/lib/profile-mapping';
 import { getOrCreateProxyEmail } from '@/lib/resend';
 import { sanitizeError } from '@/utils/sanitizeError';
+import { clearAllJobCaches } from '@/lib/jobs-cache';
+import { clearDeviceCache, readCachedProfile, writeCachedProfile } from '@web/lib/cache';
 import type { UserProfile } from '@/types';
 import { defaultOnboardingData, type OnboardingData } from '@/types/onboarding';
 
 export type OAuthProvider = 'google' | 'linkedin_oidc' | 'apple';
 
 /** Apple web sign-in needs a Services ID + secret in Supabase; flip on once set. */
-export const APPLE_WEB_ENABLED = true;
+export const APPLE_WEB_ENABLED = false;
 
 const SWIPED_KEY = 'iris_web_swiped_jobs';
 export const APP_ORIGIN = typeof window !== 'undefined' ? window.location.origin : 'https://irisjobs.live';
@@ -91,9 +93,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (row?.onboarding_data && typeof row.onboarding_data === 'object') {
       setOnboardingData({ ...defaultOnboardingData, ...row.onboarding_data });
     }
+    if (row) writeCachedProfile(uid, row);
     const server = Array.isArray(row?.swiped_job_ids) ? (row!.swiped_job_ids as string[]) : [];
     const local = readLocalSwiped(uid);
     setSwipedJobIds(Array.from(new Set([...server, ...local])));
+  }, []);
+
+  const applyRowCached = useCallback((row: Record<string, any>, uid: string) => {
+    setProfileRow(row);
+    setProfile(mapDbToUserProfile(row, uid));
+    const server = Array.isArray(row.swiped_job_ids) ? (row.swiped_job_ids as string[]) : [];
+    setSwipedJobIds(Array.from(new Set([...server, ...readLocalSwiped(uid)])));
   }, []);
 
   /** Load (or, for a brand-new account, create) the profiles row. */
@@ -148,8 +158,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const isNewUser = userIdRef.current !== s.user.id;
       userIdRef.current = s.user.id;
       if (isNewUser) {
-        setIsLoading(true);
-        await loadProfile(s).catch(() => {});
+        // A returning device renders from its cached profile straight away, then refreshes.
+        const cached = readCachedProfile(s.user.id);
+        if (cached) {
+          applyRowCached(cached, s.user.id);
+          setIsLoading(false);
+          void loadProfile(s).catch(() => {});
+        } else {
+          setIsLoading(true);
+          await loadProfile(s).catch(() => {});
+        }
       }
       if (!cancelled) setIsLoading(false);
     };
@@ -160,7 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setTimeout(() => { void handle(s); }, 0);
     });
     return () => { cancelled = true; sub.subscription.unsubscribe(); };
-  }, [loadProfile]);
+  }, [loadProfile, applyRowCached]);
 
   const refetchProfile = useCallback(async () => {
     const { data } = await supabase.auth.getSession();
@@ -185,7 +203,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { success: true };
   }, []);
 
-  const signInWithOAuth = useCallback(async (provider: OAuthProvider, next = '/app/jobs'): Promise<Result> => {
+  const signInWithOAuth = useCallback(async (provider: OAuthProvider, next = '/app/home'): Promise<Result> => {
     const redirectTo = `${APP_ORIGIN}/app/auth/callback?next=${encodeURIComponent(next)}`;
     const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo } });
     if (error) return { success: false, error: sanitizeError(error.message) };
@@ -319,6 +337,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const clearLocal = useCallback(() => {
     queryClient.clear();
+    clearDeviceCache();
+    clearAllJobCaches().catch(() => {});
     setProfile(null);
     setProfileRow(null);
     setSwipedJobIds([]);

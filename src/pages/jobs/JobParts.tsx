@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Briefcase, Clock, Users, Building2, ExternalLink, GraduationCap, Banknote, Globe2 } from 'lucide-react';
+import { MapPin, Briefcase, Clock, Users, Building2, ExternalLink, GraduationCap, Banknote, Globe2, Bookmark } from 'lucide-react';
 import type { Job } from '@/types';
 import { CompanyLogo, formatSalary } from '@web/ui/bits';
 
@@ -21,6 +21,71 @@ export function JobFacts({ job }: { job: Job }) {
       {job.experienceLevel && job.experienceLevel !== 'Not specified' && <span><GraduationCap />{job.experienceLevel}</span>}
       {salary && <span><Banknote />{salary}</span>}
       <span><Clock />{job.postedDate}</span>
+    </div>
+  );
+}
+
+/** Score bands, same wording everywhere the score appears. */
+export function matchBand(score: number) {
+  if (score >= 85) return { label: 'Best match', strong: true };
+  if (score >= 70) return { label: 'Top pick', strong: true };
+  if (score >= 60) return { label: 'Strong fit', strong: false };
+  return { label: 'Worth applying', strong: false };
+}
+
+/** Feed card: used by Home and the Jobs grid. */
+export function JobTile({ job, onSave, onPass, onApply, busy }: { job: Job; onSave: () => void; onPass: () => void; onApply: () => void; busy?: boolean }) {
+  const salary = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency, job.salaryPeriod, job.salaryRangeRaw);
+  const band = matchBand(job.matchScore);
+  const exp = job.experienceLevel && job.experienceLevel !== 'Not specified' ? job.experienceLevel : null;
+  return (
+    <article className="tile">
+      <header className="tile-head">
+        <CompanyLogo name={job.companyName} url={job.companyLogo} website={job.companyWebsite} />
+        <div className="grow">
+          <Link to={`/app/companies/${encodeURIComponent(job.companyName)}`} className="tile-company ellipsis">{job.companyName}</Link>
+          {job.industry && <div className="t-caption muted ellipsis">{job.industry}</div>}
+        </div>
+        {job.matchScore > 0 && (
+          <div className="tile-score">
+            <div className="tile-pct"><b className="num">{job.matchScore}</b><small>%</small></div>
+            <span className={`tile-band ${band.strong ? 'strong' : ''}`}>{band.label}</span>
+          </div>
+        )}
+      </header>
+      <div className="tile-body">
+        <h3 className="tile-title"><Link to={`/app/jobs/${job.id}`}>{job.jobTitle}</Link></h3>
+        <p className="t-caption muted">Posted {job.postedDate}</p>
+        <div className="tile-tags">
+          <span><MapPin />{job.location}</span>
+          <span><Globe2 />{MODE[job.locationType] ?? 'On-site'}</span>
+          {salary && <span><Banknote />{salary}</span>}
+          {exp && <span><GraduationCap />{exp}</span>}
+        </div>
+      </div>
+      <footer className="tile-actions">
+        <button className="btn outline" onClick={onSave} disabled={busy}><Bookmark />Save</button>
+        <button className="btn outline" onClick={onPass} disabled={busy}>Pass</button>
+        <button className="btn" onClick={onApply} disabled={busy}>Apply</button>
+      </footer>
+    </article>
+  );
+}
+
+export function JobTileSkeleton() {
+  return (
+    <div className="tile" aria-hidden="true">
+      <div className="tile-head">
+        <div className="sk" style={{ width: 42, height: 42, borderRadius: 11, flexShrink: 0 }} />
+        <div className="grow stack gap-6"><div className="sk" style={{ height: 15, width: '60%' }} /><div className="sk" style={{ height: 11, width: '38%' }} /></div>
+        <div className="sk" style={{ width: 44, height: 30 }} />
+      </div>
+      <div className="tile-body stack gap-8">
+        <div className="sk" style={{ height: 22, width: '82%' }} />
+        <div className="sk" style={{ height: 11, width: '30%' }} />
+        <div className="row gap-6 wrap" style={{ marginTop: 8 }}><div className="sk" style={{ height: 28, width: 96, borderRadius: 99 }} /><div className="sk" style={{ height: 28, width: 76, borderRadius: 99 }} /><div className="sk" style={{ height: 28, width: 104, borderRadius: 99 }} /></div>
+      </div>
+      <div className="tile-actions"><div className="sk" style={{ height: 42, flex: 1, borderRadius: 99 }} /><div className="sk" style={{ height: 42, flex: 1, borderRadius: 99 }} /><div className="sk" style={{ height: 42, flex: 1, borderRadius: 99 }} /></div>
     </div>
   );
 }
@@ -60,7 +125,8 @@ function splitLines(text: string): string[] {
 }
 
 /** Full job information; used beside the deck and on /app/jobs/:id. */
-export function JobDetail({ job, compact }: { job: Job; compact?: boolean }) {
+export function JobDetail({ job, compact, embedded }: { job: Job; compact?: boolean; embedded?: boolean }) {
+  const Title = embedded ? 'h2' : 'h1';
   const requirements = job.requirements.length ? job.requirements : [];
   return (
     <div className="job-detail">
@@ -69,7 +135,7 @@ export function JobDetail({ job, compact }: { job: Job; compact?: boolean }) {
           <CompanyLogo name={job.companyName} url={job.companyLogo} website={job.companyWebsite} size="lg" />
           <div className="grow">
             <Link to={`/app/companies/${encodeURIComponent(job.companyName)}`} className="t-callout muted">{job.companyName}</Link>
-            <h1 className="t-title" style={{ marginTop: 2 }}>{job.jobTitle}</h1>
+            <Title className="t-title" style={{ marginTop: 2 }}>{job.jobTitle}</Title>
           </div>
         </header>
       )}

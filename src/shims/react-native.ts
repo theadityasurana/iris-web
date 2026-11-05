@@ -1,6 +1,6 @@
 /** The few react-native APIs the shared lib/ code touches, for the browser. */
 export const Platform = {
-  OS: 'web' as const,
+  OS: 'web' as string,
   select<T>(spec: { web?: T; default?: T; ios?: T; android?: T }): T | undefined {
     return 'web' in spec ? spec.web : spec.default;
   },

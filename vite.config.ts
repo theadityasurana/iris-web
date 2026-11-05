@@ -16,6 +16,12 @@ const SHARED = resolve(__dirname, 'shared');
 const SRC = resolve(__dirname, 'src');
 const rootModule = (name: string) => resolve(ROOT, 'node_modules', name);
 
+const appFallback = (req: { url?: string }, _res: unknown, next: () => void) => {
+  const path = (req.url ?? '').split('?')[0];
+  if (path === '/app' || (path.startsWith('/app/') && !/\.[a-z0-9]+$/i.test(path))) req.url = '/app/index.html';
+  next();
+};
+
 export default defineConfig(({ mode }) => {
   // Only the logo.dev publishable token is exposed to the browser. Nothing
   // else from the app's .env (server keys etc.) is ever bundled.
@@ -26,7 +32,12 @@ export default defineConfig(({ mode }) => {
   return {
     root: __dirname,
     base: '/',
-    plugins: [react()],
+    plugins: [react(), {
+      // Dev only: serve the SPA for /app/* the way Cloudflare's _redirects does.
+      name: 'iris-app-fallback',
+      configureServer(server) { server.middlewares.use(appFallback); },
+      configurePreviewServer(server) { server.middlewares.use(appFallback); },
+    }],
     define: {
       __DEV__: JSON.stringify(mode !== 'production'),
       'process.env': JSON.stringify(publicEnv),
@@ -39,6 +50,7 @@ export default defineConfig(({ mode }) => {
         { find: /^@\/lib\/offline$/, replacement: resolve(SRC, 'shims/offline.ts') },
         { find: /^\.\/supabase$/, replacement: resolve(SRC, 'shims/supabase.ts') },
         { find: /^@\/constants\/company-logos$/, replacement: resolve(SRC, 'shims/company-logos.ts') },
+        { find: /^react-native-iap$/, replacement: resolve(SRC, 'shims/react-native-iap.ts') },
         { find: /^react-native$/, replacement: resolve(SRC, 'shims/react-native.ts') },
         { find: /^@react-native-async-storage\/async-storage$/, replacement: resolve(SRC, 'shims/async-storage.ts') },
         { find: /^@react-native-community\/netinfo$/, replacement: resolve(SRC, 'shims/netinfo.ts') },
@@ -52,7 +64,6 @@ export default defineConfig(({ mode }) => {
         { find: /^react-dom\/(.*)$/, replacement: rootModule('react-dom') + '/$1' },
         { find: /^@tanstack\/react-query$/, replacement: rootModule('@tanstack/react-query') },
         { find: /^@supabase\/supabase-js$/, replacement: rootModule('@supabase/supabase-js') },
-        { find: /^livekit-client$/, replacement: rootModule('livekit-client') },
         { find: /^zustand$/, replacement: rootModule('zustand') },
       ],
       dedupe: ['react', 'react-dom'],

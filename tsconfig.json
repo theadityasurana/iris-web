@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
@@ -18,12 +19,13 @@
       "@/lib/supabase": ["./src/shims/supabase.ts"],
       "@/lib/posthog": ["./src/shims/posthog.ts"],
       "@/lib/offline": ["./src/shims/offline.ts"],
+      "@/constants/company-logos": ["./src/shims/company-logos.ts"],
       "@/*": ["./shared/*"],
       "react-native": ["./src/shims/react-native.ts"],
+      "react-native-iap": ["./src/shims/react-native-iap.ts"],
       "@react-native-async-storage/async-storage": ["./src/shims/async-storage.ts"],
-      "@react-native-community/netinfo": ["./src/shims/netinfo.ts"],
-      "*": ["./node_modules/*"]
+      "@react-native-community/netinfo": ["./src/shims/netinfo.ts"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/env.d.ts", "shared/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/env.d.ts"]
 }

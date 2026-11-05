@@ -7,10 +7,11 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { fetchJobsBatch, fetchAllCompanies, type JobsFetchFailure } from '@/lib/jobs';
-import { buildFeedLadder, type FeedPanelFilters } from '@/lib/feed-search';
+import { buildFeedLadder, locationTier, type FeedPanelFilters } from '@/lib/feed-search';
 import { computeMatchScores } from '@/lib/match-scoring';
-import { getDefaultJobLevelsFromExperience, getEscalatedLevels, MAX_ROLE_BREADTH, type RoleBreadth } from '@/lib/feed-policy';
-import { validateSearchResultsWithGPT } from '@/lib/gpt-ranking';
+import { fitsLevels, getDefaultJobLevelsFromExperience, getEscalatedLevels, interleaveAdjacent, isRelevantCachedJob, titleMatchesKeyword, MAX_ROLE_BREADTH, type RoleBreadth } from '@/lib/feed-policy';
+import { validateJobsByDesiredRoles, validateSearchResultsWithGPT } from '@/lib/gpt-ranking';
+import { readJobCache, writeJobCache } from '@/lib/jobs-cache';
 import { rc } from '@/lib/remote-config';
 import type { Job, UserProfile } from '@/types';
 
@@ -103,12 +104,36 @@ export function useFeed(profile: UserProfile | null, swipedJobIds: string[], sea
       setError(null);
 
       let batch = computeMatchScores(profileRef.current, result.jobs);
+      const desired = profileRef.current?.desiredRoles ?? [];
       const anyFilter = activeFilterCount(filters) > 0;
+
+      // Same relevance pipeline, in the same order, as the app's home screen.
+      if (rc('features').ai_role_filter_enabled && !append && desired.length > 0 && roleBreadth.current === 0) {
+        const adjacent = batch.filter(j => j.relevanceTier === 'adjacent');
+        batch = [...await validateJobsByDesiredRoles(batch.filter(j => j.relevanceTier !== 'adjacent'), desired), ...adjacent];
+      }
       if (!anyFilter && searchTags.length > 0 && batch.length > 0 && r === 0) {
         const validated = await validateSearchResultsWithGPT(batch, searchTags);
         if (validated.length > 0) batch = validated;
       }
       if (gen !== generation.current) return 0;
+
+      const skipSanity = filters.companies.length > 0 || searchTags.length > 0;
+      const keywords = (result.titleKeywords ?? []).filter(k => k.length > 3).map(k => k.toLowerCase());
+      if (!skipSanity && keywords.length > 0) {
+        batch = batch.filter(job => job.relevanceTier === 'adjacent' || keywords.some(k => titleMatchesKeyword((job.jobTitle || '').toLowerCase(), k)));
+      }
+      const levels = steps[r].params(off).filters?.jobLevels ?? [];
+      if (!skipSanity && levels.length > 0) batch = batch.filter(job => fitsLevels(job.jobTitle || '', job.experienceLevel, levels));
+
+      const near = rc('feed').location_tiers_enabled
+        ? { cities: profileRef.current?.nearCities, countries: profileRef.current?.nearCountries }
+        : {};
+      const rank = (list: Job[]) => list
+        .map(job => ({ job, tier: locationTier(job, near), band: Math.floor((job.matchScore ?? 0) / 10), rnd: Math.random() }))
+        .sort((a, b) => (a.tier - b.tier) || (b.band - a.band) || (a.rnd - b.rnd))
+        .map(x => x.job);
+      batch = interleaveAdjacent(rank(batch.filter(j => j.relevanceTier !== 'adjacent')), rank(batch.filter(j => j.relevanceTier === 'adjacent')));
 
       const seen = new Set(swipedRef.current);
       offset.current = off + result.serverRowCount;
@@ -122,8 +147,10 @@ export function useFeed(profile: UserProfile | null, swipedJobIds: string[], sea
         return [...base, ...fresh];
       });
       if (!append) setIndex(0);
+      if (!searchTags.length && !anyFilter && batch.length && profileRef.current?.id) writeJobCache(profileRef.current.id, 'web-feed', batch, offset.current).catch(() => {});
       return added || batch.length;
-    } catch {
+    } catch (e) {
+      console.error('[feed] load failed', e);
       if (gen === generation.current) setError('network');
       return 0;
     } finally {
@@ -148,6 +175,16 @@ export function useFeed(profile: UserProfile | null, swipedJobIds: string[], sea
     setJobs([]);
     setIndex(0);
     setInitialLoaded(false);
+    const gen = generation.current;
+    if (!searchTags.length && activeFilterCount(filters) === 0 && profile.id) {
+      readJobCache(profile.id, 'web-feed').then(cached => {
+        if (gen !== generation.current || !cached?.jobs?.length) return;
+        const seen = new Set(swipedRef.current);
+        const levels = escalated.current.length ? escalated.current : baselineLevels;
+        const usable = cached.jobs.filter(j => !seen.has(j.id) && isRelevantCachedJob(j.jobTitle || '', j.experienceLevel, profileRef.current?.desiredRoles, levels));
+        setJobs(prev => (prev.length ? prev : usable));
+      }).catch(() => {});
+    }
     void load(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(searchTags), JSON.stringify(filters), rolesKey, !!profile]);
@@ -206,10 +243,16 @@ export function useFeed(profile: UserProfile | null, swipedJobIds: string[], sea
 
   const advance = useCallback(() => setIndex(i => i + 1), []);
   const rewind = useCallback(() => setIndex(i => Math.max(0, i - 1)), []);
+  /** Grid view: take one card out wherever it sits. */
+  const remove = useCallback((id: string) => setJobs(prev => prev.filter(j => j.id !== id)), []);
+  const restore = useCallback((job: Job) => setJobs(prev => (prev.some(j => j.id === job.id) ? prev : [job, ...prev])), []);
 
   return {
     current: jobs[index] ?? null,
     upcoming: jobs.slice(index + 1, index + 3),
+    visible: jobs.slice(index),
+    remove,
+    restore,
     remaining,
     loading,
     initialLoaded,

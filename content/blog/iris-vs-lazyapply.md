@@ -1,6 +1,6 @@
 ---
 title: Iris vs LazyApply: which is better for applying to jobs in 2026?
-seo_title: Iris vs LazyApply (2026): Features, Pricing & Which to Choose
+seo_title: Iris vs LazyApply (2026): Features and Pricing
 description: Iris vs LazyApply compared: how each one applies, tracking, interview prep and price, and which kind of job seeker each suits best.
 keywords: Iris vs LazyApply, LazyApply alternative, LazyApply review, AI job application app, auto apply jobs
 category: Comparisons

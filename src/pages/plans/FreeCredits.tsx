@@ -202,7 +202,7 @@ export default function FreeCredits() {
             </div>
           </div>
           <div className="stack gap-8">
-            {social.follow_items.map(({ platform, label }: { platform: SocialPlatform; label: string }) => {
+            {(social.follow_items as { platform: SocialPlatform; label: string }[]).map(({ platform, label }) => {
               const Icon = SOCIAL_ICONS[platform] ?? ExternalLink;
               const color = SOCIAL_COLORS[platform] ?? 'var(--ink)';
               const done = followStatus[platform];

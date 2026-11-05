@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent } from 'react';
-import { Link } from 'react-router-dom';
-import { X, Check, Bookmark, Search, SlidersHorizontal, RotateCcw, Info, WifiOff, Inbox as InboxIcon } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { X, Check, Bookmark, Search, SlidersHorizontal, RotateCcw, Info, WifiOff, Inbox as InboxIcon, LayoutGrid, Layers, ArrowRight } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 import { Empty } from '@web/ui/bits';
@@ -9,7 +9,7 @@ import type { FeedPanelFilters } from '@/lib/feed-search';
 import type { Job } from '@/types';
 import { useFeed, EMPTY_FILTERS, activeFilterCount } from './useFeed';
 import { useJobActions } from './useJobActions';
-import { JobCard, JobDetail } from './JobParts';
+import { JobCard, JobDetail, JobTile, JobTileSkeleton } from './JobParts';
 import { FiltersModal } from './FiltersModal';
 import { OutOfCredits } from './OutOfCredits';
 
@@ -24,13 +24,22 @@ export default function Jobs() {
   const { profile, swipedJobIds } = useAuth();
   const toast = useToast();
   const [tags, setTags] = useState<string[]>(() => readStored('iris_feed_tags', []));
-  const [draft, setDraft] = useState('');
+  const navigate = useNavigate();
+  const [view, setView] = useState<'feed' | 'swipe'>(() => {
+    try { const v = localStorage.getItem('iris_jobs_view'); if (v === 'feed' || v === 'swipe') return v; } catch { /* private mode */ }
+    return window.matchMedia('(max-width: 640px)').matches ? 'swipe' : 'feed';
+  });
+  useEffect(() => { try { localStorage.setItem('iris_jobs_view', view); } catch { /* private mode */ } }, [view]);
   const [filters, setFilters] = useState<FeedPanelFilters>(() => readStored('iris_feed_filters', EMPTY_FILTERS));
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [companies, setCompanies] = useState<string[]>([]);
 
   useEffect(() => { try { sessionStorage.setItem('iris_feed_tags', JSON.stringify(tags)); sessionStorage.setItem('iris_feed_filters', JSON.stringify(filters)); } catch { /* private mode */ } }, [tags, filters]);
   useEffect(() => { fetchAllCompanies().then(setCompanies).catch(() => {}); }, []);
+  useEffect(() => {
+    // The search page hands its terms over through sessionStorage.
+    setTags(readStored('iris_feed_tags', []));
+  }, []);
 
   const feed = useFeed(profile, swipedJobIds, tags, filters);
   const actions = useJobActions();
@@ -65,6 +74,7 @@ export default function Jobs() {
   // keyboard: ← skip, → apply, ↑ save
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (view !== 'swipe') return;
       const t = e.target as HTMLElement;
       if (t.closest('input, textarea, select, [contenteditable], .overlay')) return;
       if (e.key === 'ArrowLeft') { e.preventDefault(); void act('left'); }
@@ -73,7 +83,7 @@ export default function Jobs() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [act]);
+  }, [act, view]);
 
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (busy.current || (e.target as HTMLElement).closest('a, button')) return;
@@ -95,16 +105,18 @@ export default function Jobs() {
     else setDrag({ x: 0, y: 0, active: false });
   };
 
-  const addTag = () => {
-    const v = draft.trim();
-    if (!v) return;
-    if (!tags.some(t => t.toLowerCase() === v.toLowerCase())) setTags([...tags, v]);
-    setDraft('');
-  };
-  const onSearchKey = (e: ReactKeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') { e.preventDefault(); addTag(); }
-    if (e.key === 'Backspace' && !draft && tags.length) setTags(tags.slice(0, -1));
-  };
+  const gridAct = useCallback(async (dir: Dir, target: Job) => {
+    feed.remove(target.id);
+    if (dir === 'left') { actions.skip(target); return; }
+    if (dir === 'up') {
+      const ok = await actions.save(target);
+      toast(ok ? `Saved ${target.jobTitle}` : 'Could not save this job', ok ? 'ok' : 'error');
+      return;
+    }
+    const outcome = await actions.apply(target);
+    if (outcome === 'no-credits') { feed.restore(target); return; }
+    toast(outcome === 'applied' ? `Applying to ${target.companyName}` : 'Your application could not be queued', outcome === 'applied' ? 'ok' : 'error');
+  }, [feed, actions, toast]);
 
   const nFilters = activeFilterCount(filters);
   const job = feed.current;
@@ -119,15 +131,22 @@ export default function Jobs() {
 
   return (
     <div className="page wide jobs-page">
-      <div className="feed-bar">
-        <div className="tag-search" onClick={e => (e.currentTarget.querySelector('input') as HTMLInputElement)?.focus()}>
-          <Search />
-          {tags.map(t => (
-            <span key={t} className="chip static">{t}<button className="x" onClick={() => setTags(tags.filter(x => x !== t))} aria-label={`Remove ${t}`}><X size={13} /></button></span>
-          ))}
-          <input value={draft} onChange={e => setDraft(e.target.value)} onKeyDown={onSearchKey} onBlur={addTag}
-            placeholder={tags.length ? 'Add another' : 'Search a role, company or city'} aria-label="Search jobs" />
+      <div className="page-head">
+        <div>
+          <h1 className="t-title">Jobs</h1>
+          <p>Matched to your roles, level and location. Nearest and strongest first.</p>
         </div>
+        <div className="segmented" role="group" aria-label="View">
+          <button className={view === 'feed' ? 'on' : ''} onClick={() => setView('feed')} aria-pressed={view === 'feed'}><LayoutGrid size={15} />Feed</button>
+          <button className={view === 'swipe' ? 'on' : ''} onClick={() => setView('swipe')} aria-pressed={view === 'swipe'}><Layers size={15} />Swipe</button>
+        </div>
+      </div>
+
+      <div className="feed-bar">
+        <button className="search-trigger" onClick={() => navigate('/app/jobs/search')}>
+          <Search size={17} />
+          {tags.length ? <span className="ellipsis">{tags.join(', ')}</span> : <span className="muted">Job title, company or city</span>}
+        </button>
         <button className={`btn ${nFilters ? '' : 'outline'}`} onClick={() => setFiltersOpen(true)}>
           <SlidersHorizontal />Filters{nFilters > 0 && <span className="num">· {nFilters}</span>}
         </button>
@@ -136,7 +155,35 @@ export default function Jobs() {
 
       {feed.notice && job && <div className="banner" style={{ marginBottom: 16 }}><Info />{feed.notice}</div>}
 
-      <div className="deck-layout">
+      {view === 'feed' && (
+        <>
+          {feed.visible.length > 0 ? (
+            <div className="tile-grid">
+              {feed.visible.map(j => <JobTile key={j.id} job={j} onSave={() => gridAct('up', j)} onPass={() => gridAct('left', j)} onApply={() => gridAct('right', j)} />)}
+              {feed.loading && Array.from({ length: 3 }, (_, i) => <JobTileSkeleton key={i} />)}
+            </div>
+          ) : (!feed.initialLoaded || feed.loading) ? (
+            <div className="tile-grid" role="status" aria-label="Loading jobs">{Array.from({ length: 6 }, (_, i) => <JobTileSkeleton key={i} />)}</div>
+          ) : feed.error ? (
+            <div className="card"><Empty icon={WifiOff} title="We couldn't load jobs" body={feed.error === 'timeout' ? 'The search took too long. Try again in a moment.' : 'Check your connection and try again.'} action={<button className="btn" onClick={feed.retry}><RotateCcw />Try again</button>} /></div>
+          ) : (
+            <div className="card"><Empty icon={InboxIcon} title="You've seen every match for now" body="New roles are added through the day. Widen your search or filters to see more." action={<button className="btn" onClick={() => { setTags([]); setFilters(EMPTY_FILTERS); feed.retry(); }}>Reset search</button>} /></div>
+          )}
+          {!actions.entitlements.paid && actions.freeLeft <= 0 && feed.visible.length > 0 && (
+            <div className="teaser">
+              <div className="t-overline muted">You've used your free applications</div>
+              <h2 className="t-title">{feed.visible.length}+ more roles are ready for you</h2>
+              <p className="soft">Upgrade and Iris keeps applying to the ones you pick.</p>
+              <div className="row gap-8 wrap center" style={{ marginTop: 18 }}>
+                <Link to="/app/plans" className="btn lg">See plans<ArrowRight /></Link>
+                <Link to="/app/free-credits" className="btn outline lg">Earn free credits</Link>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {view === 'swipe' && <div className="deck-layout">
         <div className="deck-col">
           <div className="deck">
             {!job && !feed.initialLoaded && <div className="job-card sk" style={{ position: 'absolute', inset: 0 }} />}
@@ -187,13 +234,13 @@ export default function Jobs() {
                 <span className="t-overline muted">Job details</span>
                 <Link to={`/app/jobs/${job.id}`} className="btn ghost sm">Open page</Link>
               </div>
-              <JobDetail job={job} />
+              <JobDetail job={job} embedded />
             </div>
           ) : (
             <div className="card flat pad detail-placeholder t-callout muted">Job details appear here.</div>
           )}
         </div>
-      </div>
+      </div>}
 
       <FiltersModal open={filtersOpen} onClose={() => setFiltersOpen(false)} value={filters} onApply={setFilters} companies={companies} />
       <OutOfCredits open={actions.outOfCredits} onClose={() => actions.setOutOfCredits(false)} entitlements={actions.entitlements} resetAt={actions.freeResetAt} />

@@ -7,7 +7,7 @@ date: 2026-11-02
 updated: 2026-11-02
 author: Team Iris
 excerpt: The problem isn't that there are too few jobs. It's that applying to each one costs too much time, so most people apply to too few.
-cover: /media/blog/why-job-search-feels-broken.jpg
+cover: /media/blog/why-job-search-feels-broken.webp
 cover_alt: The Iris app showing a Stripe Backend Engineer job card next to the Iris logo
 tldr: Job searching feels broken because each application can take 30 minutes or more, so people apply to fewer roles than they should. Hiring is noisy and good candidates are often passed over for random reasons, so more well-chosen applications lead to better odds. AI auto-apply tools like Iris cut the time per application to a single swipe, so you choose jobs on fit rather than effort.
 ---

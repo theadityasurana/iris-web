@@ -9,6 +9,10 @@ function logoDevUrl(domain: string) {
   return `https://img.logo.dev/${domain}?token=${LOGO_DEV_TOKEN}&size=80&format=png`;
 }
 
+export function Logo({ size = 30 }: { size?: number }) {
+  return <img className="brand-logo" src="/app/logo.webp" alt="Iris" width={size} height={size} style={{ width: size, height: size }} />;
+}
+
 /** Company logo with the app's provider chain, ending in an initial badge. */
 export function CompanyLogo({ name, url, website, size }: { name: string; url?: string | null; website?: string | null; size?: 'sm' | 'lg' }) {
   const candidates = useMemo(() => {

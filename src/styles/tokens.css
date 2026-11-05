@@ -1,101 +1,116 @@
-/* Iris web — design tokens shared by the app and the marketing pages. */
+/* Iris web design tokens: warm paper surfaces, ink actions, one violet accent. */
 
 :root {
-  --font: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --serif: 'EB Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* neutrals (warm, near-black ink) */
-  --bg: #ffffff;
-  --bg-sunken: #f6f6f5;
-  --surface: #ffffff;
-  --surface-2: #f4f4f3;
-  --field: #f1f1f0;
-  --line: #ebebea;
-  --line-strong: #d9d9d6;
-  --ink: #1c1c1b;
-  --ink-2: #43433f;
-  --ink-3: #7c7c76;
-  --ink-4: #a8a8a2;
-  --inverse: #ffffff;
-  --chrome: rgba(255, 255, 255, 0.86);
+  /* neutrals */
+  --bg: #f8f5ef;
+  --bg-sunken: #f2eee6;
+  --surface: #fffdf9;
+  --surface-2: #f3efe7;
+  --field: #fbf9f4;
+  --line: #e8e2d7;
+  --line-strong: #d8d1c4;
+  --ink: #23201b;
+  --ink-2: #4e4a41;
+  --ink-3: #797366;
+  --ink-4: #a39c8e;
+  --inverse: #fffdf9;
+  --chrome: rgba(248, 245, 239, 0.88);
+  --sidebar: linear-gradient(180deg, #fbf8f2 0%, #f4efe5 100%);
+  --card-head: linear-gradient(180deg, #efe9dc 0%, #f6f2ea 100%);
 
   /* brand + status */
-  --brand: #00c853;
-  --brand-ink: #00873a;
-  --brand-soft: #e7f7ed;
-  --warn: #c25e00;
-  --warn-soft: #fff3e3;
-  --danger: #d32f2f;
-  --danger-soft: #fdecec;
-  --info: #2f5fd0;
-  --info-soft: #eaf0fd;
+  --brand: #6d4ae0;
+  --brand-ink: #5536c4;
+  --brand-soft: #efeafc;
+  --ok: #2f7a55;
+  --ok-soft: #e4f2ea;
+  --warn: #a8620f;
+  --warn-soft: #f9eedb;
+  --danger: #bd3f36;
+  --danger-soft: #f9e6e3;
+  --info: #3560b8;
+  --info-soft: #e8eefa;
 
   --r-1: 6px;
-  --r-2: 10px;
-  --r-3: 14px;
-  --r-4: 20px;
+  --r-2: 12px;
+  --r-3: 16px;
+  --r-4: 22px;
   --r-5: 28px;
-  --shadow-1: 0 1px 2px rgba(28, 28, 27, 0.05);
-  --shadow-2: 0 1px 2px rgba(28, 28, 27, 0.04), 0 8px 24px rgba(28, 28, 27, 0.06);
-  --shadow-3: 0 2px 4px rgba(28, 28, 27, 0.04), 0 24px 56px rgba(28, 28, 27, 0.12);
+  --shadow-1: 0 1px 2px rgba(58, 48, 30, 0.06);
+  --shadow-2: 0 1px 2px rgba(58, 48, 30, 0.05), 0 10px 28px rgba(58, 48, 30, 0.07);
+  --shadow-3: 0 2px 6px rgba(58, 48, 30, 0.06), 0 28px 64px rgba(58, 48, 30, 0.16);
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #121211;
-    --bg-sunken: #0c0c0b;
-    --surface: #1a1a19;
-    --surface-2: #222220;
-    --field: #262624;
-    --line: #2b2b29;
-    --line-strong: #3a3a37;
-    --ink: #f4f4f2;
-    --ink-2: #c9c9c4;
-    --ink-3: #8f8f89;
-    --ink-4: #62625d;
-    --inverse: #121211;
-    --chrome: rgba(18, 18, 17, 0.86);
-    --brand: #19d464;
-    --brand-ink: #3ddc7a;
-    --brand-soft: #14301f;
-    --warn: #ffb24a;
-    --warn-soft: #3a2a14;
-    --danger: #ff6b66;
-    --danger-soft: #3a1817;
-    --info: #8aa8ff;
-    --info-soft: #1b2440;
-    --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
-    --shadow-3: 0 24px 56px rgba(0, 0, 0, 0.55);
+    --bg: #161411;
+    --bg-sunken: #100e0c;
+    --surface: #1f1c18;
+    --surface-2: #29251f;
+    --field: #24211b;
+    --line: #322d26;
+    --line-strong: #453f35;
+    --ink: #f5f1e9;
+    --ink-2: #cfc9bd;
+    --ink-3: #989183;
+    --ink-4: #6d675b;
+    --inverse: #1a1714;
+    --chrome: rgba(22, 20, 17, 0.88);
+    --sidebar: linear-gradient(180deg, #1b1815 0%, #161411 100%);
+    --card-head: linear-gradient(180deg, #2b261f 0%, #221f19 100%);
+    --brand: #a58bf5;
+    --brand-ink: #b9a4f8;
+    --brand-soft: #2b2444;
+    --ok: #6fc79b;
+    --ok-soft: #1c3128;
+    --warn: #e6ae62;
+    --warn-soft: #36291a;
+    --danger: #ee8a81;
+    --danger-soft: #3a1f1c;
+    --info: #94b1ec;
+    --info-soft: #1f2a42;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 0, 0, 0.32);
+    --shadow-3: 0 28px 64px rgba(0, 0, 0, 0.55);
     color-scheme: dark;
   }
 }
 :root[data-theme='dark'] {
-  --bg: #121211;
-  --bg-sunken: #0c0c0b;
-  --surface: #1a1a19;
-  --surface-2: #222220;
-  --field: #262624;
-  --line: #2b2b29;
-  --line-strong: #3a3a37;
-  --ink: #f4f4f2;
-  --ink-2: #c9c9c4;
-  --ink-3: #8f8f89;
-  --ink-4: #62625d;
-  --inverse: #121211;
-  --chrome: rgba(18, 18, 17, 0.86);
-  --brand: #19d464;
-  --brand-ink: #3ddc7a;
-  --brand-soft: #14301f;
-  --warn: #ffb24a;
-  --warn-soft: #3a2a14;
-  --danger: #ff6b66;
-  --danger-soft: #3a1817;
-  --info: #8aa8ff;
-  --info-soft: #1b2440;
-  --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-3: 0 24px 56px rgba(0, 0, 0, 0.55);
+  --bg: #161411;
+  --bg-sunken: #100e0c;
+  --surface: #1f1c18;
+  --surface-2: #29251f;
+  --field: #24211b;
+  --line: #322d26;
+  --line-strong: #453f35;
+  --ink: #f5f1e9;
+  --ink-2: #cfc9bd;
+  --ink-3: #989183;
+  --ink-4: #6d675b;
+  --inverse: #1a1714;
+  --chrome: rgba(22, 20, 17, 0.88);
+  --sidebar: linear-gradient(180deg, #1b1815 0%, #161411 100%);
+  --card-head: linear-gradient(180deg, #2b261f 0%, #221f19 100%);
+  --brand: #a58bf5;
+  --brand-ink: #b9a4f8;
+  --brand-soft: #2b2444;
+  --ok: #6fc79b;
+  --ok-soft: #1c3128;
+  --warn: #e6ae62;
+  --warn-soft: #36291a;
+  --danger: #ee8a81;
+  --danger-soft: #3a1f1c;
+  --info: #94b1ec;
+  --info-soft: #1f2a42;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 0, 0, 0.32);
+  --shadow-3: 0 28px 64px rgba(0, 0, 0, 0.55);
   color-scheme: dark;
 }
 
@@ -105,32 +120,36 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   font-family: var(--font);
   font-size: 15px;
-  line-height: 1.45;
-  letter-spacing: -0.005em;
+  line-height: 1.5;
   color: var(--ink);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
 }
 img, svg, video { display: block; max-width: 100%; }
 button, input, textarea, select { font: inherit; color: inherit; letter-spacing: inherit; }
 button { cursor: pointer; background: none; border: 0; padding: 0; }
 a { color: inherit; text-decoration: none; }
 h1, h2, h3, h4, p { margin: 0; }
-:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
 ::selection { background: var(--brand-soft); color: var(--ink); }
 
-/* type scale */
-.t-hero { font-size: clamp(40px, 6.4vw, 68px); line-height: 1.02; letter-spacing: -0.035em; font-weight: 700; }
-.t-display { font-size: clamp(30px, 4vw, 40px); line-height: 1.1; letter-spacing: -0.03em; font-weight: 700; }
-.t-title { font-size: 26px; line-height: 1.2; letter-spacing: -0.025em; font-weight: 650; }
-.t-heading { font-size: 19px; line-height: 1.3; letter-spacing: -0.015em; font-weight: 600; }
+/* type scale: serif for page voice, sans for controls, mono for labels */
+.t-hero { font-family: var(--serif); font-size: clamp(38px, 6vw, 64px); line-height: 1.04; letter-spacing: -0.02em; font-weight: 500; }
+.t-display { font-family: var(--serif); font-size: clamp(32px, 4vw, 44px); line-height: 1.08; letter-spacing: -0.018em; font-weight: 500; }
+.t-title { font-family: var(--serif); font-size: clamp(28px, 3vw, 34px); line-height: 1.12; letter-spacing: -0.015em; font-weight: 500; }
+.t-heading { font-family: var(--serif); font-size: 24px; line-height: 1.2; letter-spacing: -0.01em; font-weight: 500; }
 .t-sub { font-size: 16px; line-height: 1.4; font-weight: 600; letter-spacing: -0.01em; }
-.t-body { font-size: 15px; line-height: 1.5; }
-.t-callout { font-size: 14px; line-height: 1.45; }
-.t-caption { font-size: 12.5px; line-height: 1.35; }
-.t-overline { font-size: 11.5px; line-height: 1.3; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.t-body { font-size: 15px; line-height: 1.55; }
+.t-callout { font-size: 14px; line-height: 1.5; }
+.t-caption { font-size: 12.5px; line-height: 1.4; }
+.t-overline { font-family: var(--mono); font-size: 11px; line-height: 1.4; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; }
 .muted { color: var(--ink-3); }
 .soft { color: var(--ink-2); }
 .num { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

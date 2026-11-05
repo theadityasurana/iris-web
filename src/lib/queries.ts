@@ -118,3 +118,26 @@ export function useUnreadMail() {
 export function useRemoteConfigBootstrap() {
   useEffect(() => { refreshRemoteConfig(true).catch(() => {}); }, []);
 }
+
+export interface FeaturedCompany { name: string; logoUrl: string | null; website: string | null; openJobs: number }
+
+/**
+ * Companies to follow. Uses HEAD counts, so no job rows are downloaded, and is
+ * cached for a day on the device to keep Supabase egress low.
+ */
+export function useFeaturedCompanies(limit = 12) {
+  return useQuery({
+    queryKey: ['featured-companies', limit],
+    staleTime: 24 * 60 * 60_000,
+    gcTime: 7 * 24 * 60 * 60_000,
+    queryFn: async (): Promise<FeaturedCompany[]> => {
+      const { data } = await supabase.from('companies').select('name, logo_url, website').not('logo_url', 'is', null).order('name').limit(limit * 4);
+      const pool = (data ?? []).slice(0, limit * 2);
+      const counted = await Promise.all(pool.map(async (c: any) => {
+        const { count } = await supabase.from('jobs').select('id', { count: 'estimated', head: true }).eq('company_name', c.name);
+        return { name: c.name as string, logoUrl: c.logo_url as string | null, website: c.website as string | null, openJobs: count ?? 0 };
+      }));
+      return counted.filter(c => c.openJobs > 0).sort((a, b) => b.openJobs - a.openJobs).slice(0, limit);
+    },
+  });
+}

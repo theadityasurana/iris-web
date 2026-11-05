@@ -1,11 +1,11 @@
 ---
 title: Iris vs Huntr: which is better for applying to jobs in 2026?
-seo_title: Iris vs Huntr (2026): Features, Pricing & Which to Choose
+seo_title: Iris vs Huntr (2026): Features and Pricing
 description: Iris vs Huntr compared: how each one applies, tracking, interview prep and price, and which kind of job seeker each suits best.
 keywords: Iris vs Huntr, Huntr alternative, Huntr review, AI job application app, auto apply jobs
 category: Comparisons
 excerpt: Huntr is a job-search tracker with resume tools. Iris is a swipe-to-apply app that submits real applications on company career pages. Here's how they differ.
-tldr: Huntr is a job-search tracker with resume tools, best for tracking applications on a kanban board. Iris turns a right swipe into a submitted application on the company's own careers page, tracks every application, scores your fit and ATS match, and can apply for you overnight. Pick Huntr if you are one of people who apply by hand and want a clean tracker; pick Iris if you want to choose each job yourself in seconds and have the application done for you.
+tldr: Huntr is a job-search tracker with resume tools, best for tracking applications on a kanban board. Iris turns a right swipe into a submitted application on the company's own careers page, tracks every application, scores your fit and ATS match, and can apply for you overnight. Pick Huntr if you apply by hand and want a clean tracker; pick Iris if you want to choose each job yourself in seconds and have the application done for you.
 date: 2026-11-03
 author: Team Iris
 generated: true

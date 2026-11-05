@@ -1,11 +1,11 @@
 ---
 title: Iris vs LoopCV: which is better for applying to jobs in 2026?
-seo_title: Iris vs LoopCV (2026): Features, Pricing & Which to Choose
+seo_title: Iris vs LoopCV (2026): Features and Pricing
 description: Iris vs LoopCV compared: how each one applies, tracking, interview prep and price, and which kind of job seeker each suits best.
 keywords: Iris vs LoopCV, LoopCV alternative, LoopCV review, AI job application app, auto apply jobs
 category: Comparisons
 excerpt: LoopCV is an automated job-search and application platform. Iris is a swipe-to-apply app that submits real applications on company career pages. Here's how they differ.
-tldr: LoopCV is an automated job-search and application platform, best for running automated search loops. Iris turns a right swipe into a submitted application on the company's own careers page, tracks every application, scores your fit and ATS match, and can apply for you overnight. Pick LoopCV if you are one of people who want recurring automated searches by email; pick Iris if you want to choose each job yourself in seconds and have the application done for you.
+tldr: LoopCV is an automated job-search and application platform, best for running automated search loops. Iris turns a right swipe into a submitted application on the company's own careers page, tracks every application, scores your fit and ATS match, and can apply for you overnight. Pick LoopCV if you want recurring automated searches by email; pick Iris if you want to choose each job yourself in seconds and have the application done for you.
 date: 2026-11-03
 author: Team Iris
 generated: true
