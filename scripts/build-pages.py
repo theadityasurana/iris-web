@@ -32,7 +32,7 @@ h2.t { font-family: var(--serif); font-weight: 500; font-size: clamp(2.1rem, 4.6
 @media (min-width: 860px) { .nav-r a:not(.pill) { display: inline; } }
 """
 
-NAV = f"""<nav class="nav" aria-label="Main"><a class="brand" href="/"><img src="/logo.webp" alt="Iris logo" width="30" height="30">Iris</a><div class="nav-r"><a href="/#how">How it works</a><a href="/jobs/">Jobs</a><a href="/#pricing">Pricing</a><a href="/love/">Love</a><a href="/blog/">Blog</a><a href="/app/sign-in">Sign in</a><a class="pill" href="https://irisjobs.live/app/sign-up">Get started</a></div></nav>"""
+NAV = f"""<nav class="nav" aria-label="Main"><a class="brand" href="/"><img src="/logo.webp" alt="Iris logo" width="30" height="30">Iris</a><div class="nav-r"><a href="/jobs/">Jobs</a><a href="/#pricing">Pricing</a><a href="/blog/">Blog</a><a href="/app/sign-in">Sign in</a><a class="pill" href="https://irisjobs.live/app/sign-up">Get started</a></div></nav>"""
 
 
 def page(path, title, desc, css, body, ld=None, ask=True):
@@ -82,7 +82,9 @@ def page(path, title, desc, css, body, ld=None, ask=True):
 """)
 
 
-WA_ICON = '<svg viewBox="0 0 24 24" width="30" height="30" fill="#fff" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5.3-.5c.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.5 2.5 1 3 .8 3.6.8.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15l-1.3 4.9 5-1.3A10 10 0 1 0 12 2z"/></svg>'
+WA_PATH = 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z'
+WA_ICON = f'<svg viewBox="0 0 24 24" width="30" height="30" fill="#fff" role="img" aria-label="WhatsApp"><path d="{WA_PATH}"/></svg>'
+WA_GREEN = f'<svg viewBox="0 0 24 24" width="15" height="15" fill="#25D366" aria-hidden="true"><path d="{WA_PATH}"/></svg>'
 
 CHAT = [
     ("day", "Today 8:30 AM"),
@@ -136,7 +138,7 @@ body { background: radial-gradient(70% 60% at 8% 0%, #fbe2c4 0%, transparent 70%
 @media (prefers-reduced-motion: reduce) { .wa-b { animation: none; opacity: 1; transform: none; } .tag i { animation: none; } }
 """, f"""<main class="wrap wa">
   <div>
-    <div class="tag"><i></i>Coming soon</div>
+    <div class="tag">{WA_GREEN}<i></i>Coming to WhatsApp soon</div>
     <h1 class="big">Your job search, <em>by text.</em></h1>
     <p class="lede">Iris is coming to WhatsApp. Get your best matches in a chat, reply to apply, and hear back the moment a recruiter does. No new app to open.</p>
     <div class="soon" role="status"><span>{WA_ICON}</span>Iris on WhatsApp is almost here</div>
@@ -167,7 +169,10 @@ REVIEWS = [
     {"name": "Awais A.", "source": "Google Play", "date": "25 Jul 2026", "stars": 5, "text": "best ui and best app I've ever used", "url": PLAY_STORE},
 ]
 # Screenshots of real posts, with the author's permission: add {"image": "/media/love/file.webp", "alt": "...", "url": "link to the post"}.
-SCREENSHOTS = []
+SCREENSHOTS = [
+    {"image": f"/media/love/{f.name}", "alt": "A post about Iris from a user", "url": f"/media/love/{f.name}"}
+    for f in sorted((PUB / "media/love").glob("*")) if f.suffix.lower() in (".webp", ".jpg", ".jpeg", ".png")
+]
 
 
 def review_card(r, i):
@@ -227,9 +232,9 @@ page("about", "About Iris and Founder Aditya Surana", "Iris turns job applicatio
 .ab { display: grid; gap: 44px; align-items: center; padding-top: 64px; }
 .ab h1 { margin-top: 12px; }
 .ab .lede { margin-top: 20px; font-size: 1.2rem; color: var(--ink-2); max-width: 30em; }
-.ph { position: relative; justify-self: center; width: min(100%, 420px); }
-.ph img { width: 100%; aspect-ratio: 19/25; object-fit: cover; border-radius: 30px; box-shadow: var(--shadow-lg); }
-.ph figcaption { position: absolute; left: 16px; right: 16px; bottom: 16px; padding: 12px 16px; border-radius: 16px; background: rgba(255,253,249,.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.ph { width: 100%; margin: 0; }
+.ph img { width: 100%; height: auto; border-radius: 24px; box-shadow: var(--shadow-lg); }
+.ph figcaption { padding: 14px 4px 0; }
 .ph b { display: block; font-family: var(--serif); font-size: 1.35rem; font-weight: 500; line-height: 1.2; }
 .ph small { color: var(--ink-2); }
 .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
@@ -242,7 +247,7 @@ page("about", "About Iris and Founder Aditya Surana", "Iris turns job applicatio
 .feats h3 { font-family: var(--serif); font-weight: 500; font-size: 1.5rem; line-height: 1.15; }
 .feats p { margin-top: 8px; font-size: .98rem; }
 .small { margin-top: 40px; font-size: .84rem; color: var(--muted); }
-@media (min-width: 860px) { .ab { grid-template-columns: minmax(0, 1.15fr) minmax(0, 420px); } }
+@media (min-width: 860px) { .ab { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); } }
 @media (min-width: 760px) { .feats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 """, f"""<main class="wrap">
   <section class="ab">
@@ -252,7 +257,7 @@ page("about", "About Iris and Founder Aditya Surana", "Iris turns job applicatio
       <p class="lede">Iris started from a simple observation: applying to jobs online is unnecessarily tedious. So Aditya Surana built it from scratch, to reimagine the whole experience from discovery to offer.</p>
       <div class="links">{''.join(f'<a href="{u}" target="_blank" rel="noopener me">{n}</a>' for n, u in SOCIAL)}</div>
     </div>
-    <figure class="ph"><img src="/media/founder/aditya.webp" alt="Aditya Surana, founder of Iris" width="760" height="1000"><figcaption><b>Aditya Surana</b><small>Founder · B.Tech + M.Tech, IIT BHU, Class of 2025</small></figcaption></figure>
+    <figure class="ph"><img src="/media/founder/aditya-full.webp" alt="Aditya Surana, founder of Iris" width="1080" height="1031"><figcaption><b>Aditya Surana</b><small>Founder · B.Tech + M.Tech, IIT BHU, Class of 2025</small></figcaption></figure>
   </section>
   <section class="sec">
     <div class="overline">What we do</div>
@@ -275,7 +280,7 @@ page("about", "About Iris and Founder Aditya Surana", "Iris turns job applicatio
     <p>No more spray-and-pray. <a href="/mission/">Read our mission</a>, or see <a href="/love/">what people are saying</a>.</p>
     <p class="small"><a href="/credits/">Image credits</a></p>
   </section>
-</main>""", ld={"@context": "https://schema.org", "@type": "AboutPage", "url": f"{SITE}/about/", "mainEntity": {"@type": "Person", "name": "Aditya Surana", "jobTitle": "Founder", "worksFor": {"@type": "Organization", "name": "Iris", "url": SITE}, "alumniOf": "IIT BHU", "image": f"{SITE}/media/founder/aditya.webp", "sameAs": [u for _, u in SOCIAL]}})
+</main>""", ld={"@context": "https://schema.org", "@type": "AboutPage", "url": f"{SITE}/about/", "mainEntity": {"@type": "Person", "name": "Aditya Surana", "jobTitle": "Founder", "worksFor": {"@type": "Organization", "name": "Iris", "url": SITE}, "alumniOf": "IIT BHU", "image": f"{SITE}/media/founder/aditya-full.webp", "sameAs": [u for _, u in SOCIAL]}})
 
 page("mission", "Our Mission: Why We Built Iris", "We believe finding a job should be as seamless as discovering one. A note from Iris founder Aditya Surana on why we built the Tinder for jobs.", """
 .ms { max-width: 760px; margin: 0 auto; padding-top: 72px; }
@@ -284,7 +289,7 @@ page("mission", "Our Mission: Why We Built Iris", "We believe finding a job shou
 .letter p { font-family: var(--serif); font-size: clamp(1.25rem, 2.3vw, 1.5rem); line-height: 1.42; }
 .letter p + p { margin-top: 18px; }
 .sign { display: flex; align-items: center; gap: 14px; margin-top: 28px; }
-.sign img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; object-position: 50% 16%; }
+.sign img { width: 54px; height: 54px; border-radius: 14px; }
 .sign b { display: block; font-weight: 600; }
 .sign small { color: var(--muted); }
 .pr { margin-top: 80px; }
@@ -302,7 +307,7 @@ page("mission", "Our Mission: Why We Built Iris", "We believe finding a job shou
     <p>Applying online is slow, repetitive and frustrating. You fill out the same forms on different portals and upload the same resume again and again, and the part that actually matters gets squeezed out.</p>
     <p>We believe finding a job should be as seamless as discovering one. Our mission is to remove the friction, so you can focus on preparing for interviews, learning new skills and building a meaningful career.</p>
     <p>Swipe right on what excites you, and we handle the rest.</p>
-    <div class="sign"><img src="/media/founder/aditya.webp" alt="Aditya Surana" width="54" height="54"><div><b>Aditya Surana</b><small>Founder, Iris</small></div></div>
+    <div class="sign"><img src="/logo.webp" alt="Iris" width="54" height="54"><div><b>Aditya Surana</b><small>Founder, Iris</small></div></div>
   </div>
   <section class="pr">
     <h2 class="t">Three things guide how we build it.</h2>

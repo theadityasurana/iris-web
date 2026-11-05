@@ -3,7 +3,7 @@ import urllib.parse
 
 APP_STORE = "https://apps.apple.com/in/app/nextquark/id6761863089"
 PLAY_STORE = "https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke"
-OG_IMAGE = "https://irisjobs.live/media/iris-og.jpg?v=1"
+OG_IMAGE = "https://irisjobs.live/media/iris-og.jpg?v=2"
 ASK_PROMPT = "What is Iris (irisjobs.live), the AI job application app known as the Tinder for jobs, and is it good for job seekers?"
 
 _q = urllib.parse.quote(ASK_PROMPT)
@@ -20,8 +20,8 @@ ASK_SECTION = '<section class="sf-ask" aria-label="Ask an AI about Iris"><h2>Sti
 ) + "</div></section>"
 
 FOOTER_LINKS = [
-    ("Product", [("How it works", "/#how"), ("Browse jobs", "/jobs/"), ("Pricing", "/#pricing"), ("Wall of love", "/love/"), ("Continue on web", "https://irisjobs.live/app/sign-up"), ("WhatsApp", "/whatsapp/")]),
-    ("Company", [("About us", "/about/"), ("Our mission", "/mission/"), ("Blog", "/blog/"), ("Tinder for jobs", "/tinder-for-jobs/")]),
+    ("Product", [("How it works", "/#how"), ("Browse jobs", "/jobs/"), ("Pricing", "/#pricing"), ("Continue on web", "https://irisjobs.live/app/sign-up"), ("WhatsApp", "/whatsapp/")]),
+    ("Company", [("About us", "/about/"), ("Wall of love", "/love/"), ("Our mission", "/mission/"), ("Blog", "/blog/"), ("Tinder for jobs", "/tinder-for-jobs/")]),
     ("Get the app", [("App Store", APP_STORE), ("Google Play", PLAY_STORE)]),
     ("Social", [("Instagram", "https://www.instagram.com/irisjobs.live/"), ("X", "https://x.com/irisjobs_live"), ("LinkedIn", "https://www.linkedin.com/company/tryiris/about/")]),
 ]

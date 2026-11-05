@@ -9,6 +9,7 @@ import { useToast } from '@web/ui/Toast';
 import { formatDate } from '@web/ui/bits';
 import { PLAN_CONFIGS } from '@/lib/billing';
 import { getPlanDisplayName } from '@/lib/subscription';
+import { Hired, PlansFaq, Stages, TimeSaved } from '@web/pages/plans/PlansExtras';
 
 const INCLUDED = ['Job feed, search and swipe', 'Applications submitted for you', 'Your own application inbox', 'Application tracking and replies'];
 
@@ -52,6 +53,7 @@ export default function Plans() {
       <div className="plans-head">
         <h1 className="t-display">Plans for the website</h1>
         <p className="soft">Apply to more jobs from your browser. Cancel any time.</p>
+        <div className="px-low">Apply for as low as {region === 'IN' ? '₹4' : 'under $0.10'} per application</div>
         <div className="segmented" role="group" aria-label="Billing period" style={{ marginTop: 18 }}>
           <button className={period === 'monthly' ? 'on' : ''} aria-pressed={period === 'monthly'} onClick={() => setPeriod('monthly')}>Monthly</button>
           <button className={period === 'quarterly' ? 'on' : ''} aria-pressed={period === 'quarterly'} onClick={() => setPeriod('quarterly')}>Quarterly</button>
@@ -109,7 +111,25 @@ export default function Plans() {
         })}
       </div>
 
-      <p className="t-caption muted" style={{ textAlign: 'center', marginTop: 20 }}>
+      <Hired />
+      <section className="px-section" aria-label="Compare plans">
+        <div className="t-overline muted">Compare</div>
+        <h2 className="t-title" style={{ marginBottom: 14 }}>Find the right plan.</h2>
+        <div className="card px-table-wrap"><table className="px-table">
+          <thead><tr><th scope="col">Per {period === 'quarterly' ? 'quarter' : 'month'}</th>{PLAN_CONFIGS.map(pl => <th key={pl.id} scope="col">{pl.label}</th>)}</tr></thead>
+          <tbody>
+            <tr><th scope="row">Price</th>{PLAN_CONFIGS.map(pl => <td key={pl.id}>{money(pl.pricing[region].currency, pl.pricing[region][period])}</td>)}</tr>
+            <tr><th scope="row">Applications</th>{PLAN_CONFIGS.map(pl => <td key={pl.id}>{pl.creditsPerMonth * (period === 'quarterly' ? 3 : 1)}</td>)}</tr>
+            <tr><th scope="row">Per application</th>{PLAN_CONFIGS.map(pl => <td key={pl.id}>{money(pl.pricing[region].currency, Math.round((pl.pricing[region][period] / (pl.creditsPerMonth * (period === 'quarterly' ? 3 : 1))) * 100) / 100)}</td>)}</tr>
+            {INCLUDED.map(f => <tr key={f}><th scope="row">{f}</th>{PLAN_CONFIGS.map(pl => <td key={pl.id}><Check size={16} aria-label="Included" /></td>)}</tr>)}
+          </tbody>
+        </table></div>
+      </section>
+      <TimeSaved />
+      <Stages />
+      <PlansFaq />
+
+      <p className="t-caption muted" style={{ textAlign: 'center', marginTop: 28 }}>
         Payments are processed securely by Dodo Payments. Have a coupon? Enter it at checkout. Want credits for free? <Link to="/app/free-credits" className="link">Earn them here</Link>.
       </p>
     </div>

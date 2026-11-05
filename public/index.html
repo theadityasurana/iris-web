@@ -30,13 +30,13 @@
   <meta property="og:description" content="Swipe right. AI applies to 100s of jobs in seconds. Over 2 million jobs globally. Try for free!">
   <meta property="og:site_name" content="Iris">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://irisjobs.live/media/iris-og.jpg?v=1">
-  <meta property="og:image:secure_url" content="https://irisjobs.live/media/iris-og.jpg?v=1">
+  <meta property="og:image" content="https://irisjobs.live/media/iris-og.jpg?v=2">
+  <meta property="og:image:secure_url" content="https://irisjobs.live/media/iris-og.jpg?v=2">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Iris: Swipe right. AI applies. The Tinder for jobs, free to try.">
-  <meta name="twitter:image" content="https://irisjobs.live/media/iris-og.jpg?v=1">
+  <meta name="twitter:image" content="https://irisjobs.live/media/iris-og.jpg?v=2">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Iris - Tinder for Jobs!">
   <meta name="twitter:description" content="Swipe right. AI applies to 100s of jobs in seconds. Over 2 million jobs globally. Try for free!">
@@ -504,16 +504,115 @@
     .job .jd-text { grid-column: 1 / -1; margin-top: 10px; font-size: .9rem; line-height: 1.45; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .job .jd-text.open { display: block; max-height: 240px; overflow-y: auto; }
     .job .read-more { grid-column: 1 / -1; justify-self: start; margin-top: 4px; padding: 2px 0; border: 0; background: none; font: 500 .88rem var(--sans); color: var(--accent); cursor: pointer; }
+
+    /* ── How it works: pinned and sliding on desktop, swiping on phones ── */
+    html, body { overflow-x: clip; }
+    .howx { padding-top: 88px; }
+    .howx-track { display: flex; align-items: flex-start; gap: 12px; margin-top: 18px; padding: 0 16px 6px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .howx-track::-webkit-scrollbar { display: none; }
+    .howx-track .bento { flex: 0 0 calc(100vw - 32px); margin-top: 0; scroll-snap-align: center; }
+    .bento[hidden] { display: grid !important; }
+    .bento:not(.play) *, .bento:not(.play) *::after { animation: none !important; }
+    .stepper i b { animation: none !important; transition: transform .08s linear; }
+    .swipe-hint { display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); }
+    .eg { text-align: center; }
+    @media (min-width: 880px) { .howx-track .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 900px) {
+      .swipe-hint { display: none; }
+      .howx-pin.live { height: 400vh; }
+      .howx-pin.live .howx-stick { position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; padding-top: 76px; overflow: hidden; }
+      .howx-pin.live .howx-top .overline { display: none; }
+      .howx-pin.live .howx-top h2.title { margin-top: 0; font-size: clamp(1.9rem, 3vw, 2.6rem); }
+      .howx-pin.live .stepper { margin-top: 12px; }
+      .howx-pin.live .stepper button { height: 38px; line-height: 38px; font-size: .92rem; }
+      .howx-pin.live .step-lede { margin: 8px auto 0; min-height: 0; text-align: center; font-size: .98rem; max-width: 62em; }
+      .howx-pin.live .howx-track { flex: 0 0 auto; gap: 28px; margin-top: 12px; padding-bottom: 0; overflow: visible; scroll-snap-type: none; will-change: transform; align-items: stretch; }
+      .howx-pin.live .howx-track .bento { flex: 0 0 auto; }
+      .howx-pin.live .bc { padding: 18px 20px; border-radius: 20px; }
+      .howx-pin.live .bc h3 { margin-top: 4px; font-size: 1.4rem; }
+      .howx-pin.live .bc.dark h3 { font-size: 1.8rem; }
+      .howx-pin.live .inset { margin-top: 10px; padding: 12px; font-size: .86rem; }
+      .howx-pin.live .bcol, .howx-pin.live .bento { gap: 12px; }
+      .howx-pin.live .answer { min-height: 3.2em; }
+      .howx-pin.live .match, .howx-pin.live .ping { margin-top: 6px; padding: 7px 10px; }
+      .howx-pin.live .ping i { width: 26px; height: 26px; }
+      .howx-pin.live .tick { margin-top: 5px; }
+      .howx-pin.live .wk { padding: 4px 10px; }
+      .howx-pin.live .wk b { font-size: 1.4rem; }
+      .howx-pin.live .diff { margin-top: 10px; padding: 10px; font-size: .86rem; }
+      .howx-pin.live .diff div { padding: 6px 8px; margin-top: 4px; }
+      .howx-pin.live .eg { position: absolute; left: 0; right: 0; bottom: 6px; margin: 0; }
+    }
+
+    /* ── Phones ── */
+    .plan .sub { margin: 2px 0 0; max-width: none; text-align: left; font-size: .92rem; }
+    .wa-cta svg { width: 21px; height: 21px; color: inherit; flex-shrink: 0; }
+    @media (max-width: 640px) {
+      .howx { padding-top: 64px; }
+      .sec, .placed { padding-top: 64px; }
+      .wrap { padding-left: 16px; padding-right: 16px; }
+      .howx-top { text-align: center; }
+      .stepper { margin: 22px 0 0; overflow: visible; justify-content: space-between; padding: 0; }
+      .stepper button { height: 36px; line-height: 36px; padding: 0 11px; font-size: .84rem; gap: 0; }
+      .stepper button small { display: none; }
+      .stepper i { flex: 1 1 4px; min-width: 4px; margin: 0 3px; }
+      .step-lede { min-height: 7.4em; margin-top: 14px; font-size: .98rem; text-align: left; }
+      .bc { padding: 18px; border-radius: 20px; }
+      .bc.dark h3 { font-size: 1.65rem; }
+      .bc h3 { font-size: 1.4rem; }
+      .inset { margin-top: 12px; padding: 12px; }
+      .bc.dark .inset { font-size: .72rem; }
+      .scan.hit { margin: 6px -4px; padding: 8px 6px; }
+      .rc { grid-template-columns: 20px minmax(72px, .6fr) minmax(0, 1.4fr); }
+      .routed span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+      .pipe { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .seg { justify-content: flex-start; }
+      .eg { margin-top: 12px; }
+
+      .formdemo { margin-top: 22px; gap: 18px; }
+      .fd-copy .lede { font-size: 1rem; }
+      .fd-copy ul { gap: 7px; margin-top: 12px; font-size: .94rem; }
+      .fd-win { margin: 0 -4px; }
+      .fd-bar span { display: none; }
+      .fd-form { gap: 9px; padding: 13px; }
+      .fd-mw { grid-column: 1 / -1; }
+      .fd-f div.in { height: 36px; font-size: .86rem; }
+      .fd-area div.in { height: 66px; }
+      .fd-opts { font-size: .82rem; }
+
+      .pr-ribbon { display: block; max-width: 330px; margin: 14px auto 0; padding: 8px 14px; font-size: .9rem; border-radius: 14px; }
+      .pr-toggle { display: flex; width: 100%; max-width: 340px; margin: 16px auto 0; }
+      .pr-toggle button { flex: 1; padding: 0 6px; font-size: .86rem; white-space: nowrap; }
+      .pr-grid { margin-top: 18px; gap: 12px; }
+      .plan { padding: 22px; }
+      .plan .amt b { font-size: 2.6rem; }
+      .plan ul { margin: 14px 0 18px; }
+
+      .webx { margin-top: 64px; }
+      .webx-track { padding: 18px 16px 6px; gap: 12px; }
+      .slide { flex-basis: calc(100vw - 44px); }
+      .slide-cap b { font-size: 1.32rem; }
+      .loop { padding: 22px 18px; }
+      .band-dark { margin-top: 64px; padding: 56px 0; }
+      .band { margin-top: 64px; padding: 44px 18px; }
+      .wordmarks { margin-top: 32px; padding-top: 24px; gap: 8px; }
+      .wordmarks span { height: 42px; font-size: .9rem; }
+      .faq { padding: 2px 16px; }
+      .faq summary { min-height: 54px; font-size: .96rem; }
+      .sf-ask { padding: 64px 16px; }
+      .offer { margin-top: 64px; }
+      .logo-grid { margin-top: 26px; }
+      .surface { padding: 20px; }
+    }
+    @media (max-width: 370px) { .stepper button { padding: 0 8px; font-size: .78rem; } }
   </style>
 </head>
 <body>
   <nav class="nav" aria-label="Main">
     <a class="nav-brand" href="/"><img src="/logo.webp" alt="Iris logo" width="40" height="40"><span>Iris</span></a>
     <div class="nav-right">
-      <a class="nav-links" href="/#how">How it works</a>
       <a class="nav-links" href="/jobs/">Jobs</a>
       <a class="nav-links" href="/#pricing">Pricing</a>
-      <a class="nav-links" href="/love/">Love</a>
       <a class="nav-links" href="/blog/">Blog</a>
       <a class="nav-links" href="https://irisjobs.live/app/sign-in">Sign in</a>
       <a class="pill" id="nav-cta" href="#">Download <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -533,7 +632,7 @@
             <div class="ctas-row">
               <div class="ctas" id="actions"></div>
               <a class="pill light web-cta" id="web-cta" href="https://irisjobs.live/app/sign-up">Continue on web</a>
-              <a class="pill light web-cta wa-cta" href="/whatsapp/"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5.3-.5c.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.5 2.5 1 3 .8 3.6.8.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.6 15l-1.3 4.9 5-1.3A10 10 0 1 0 12 2z"/></svg>Continue on WhatsApp</a>
+              <a class="pill light web-cta wa-cta" href="/whatsapp/"><svg viewBox="0 0 24 24" width="21" height="21" fill="#25D366" role="img" aria-label="WhatsApp"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>Continue on WhatsApp</a>
             </div>
             <p class="countdown" id="countdown"></p>
             <a id="open-now" href="#" class="pill" style="display:none">Open Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -561,7 +660,7 @@
         <div class="logo-grid" id="logo-grid"></div>
       </section>
 
-      <section class="sec wrap" id="how">
+      <section class="howx" id="how"><div class="howx-pin" id="howx"><div class="howx-stick"><div class="wrap howx-top">
         <div class="sec-head">
           <div class="overline">How it works</div>
           <h2 class="title">From first match to <em>first interview.</em></h2>
@@ -573,7 +672,7 @@
           <button role="tab" aria-selected="false" data-step="3"><small>04</small>Track</button>
         </div>
         <p class="step-lede" id="step-lede" aria-live="polite"></p>
-        <div id="bentos"><div class="bento" data-panel="0">
+        </div><div id="bentos" class="howx-track"><div class="bento" data-panel="0">
   <article class="bc dark"><div class="ey">01 · Find → head start</div><h3>New roles, found for you early.</h3>
     <div class="inset">
       <div class="scan rise" style="--d:.1"><span>scanning figma.com/careers…</span><span>0 new</span></div>
@@ -596,7 +695,7 @@
       <div class="ping rise" style="--d:1.6"><i>◆</i><span>Push<small>Iris · 1 strong match just dropped</small></span></div>
     </div></article>
   </div>
-</div><div class="bento" data-panel="1" hidden>
+</div><div class="bento" data-panel="1">
   <div class="bcol">
     <article class="bc"><div class="ey">01 · Reads the job</div><h3>Keywords and must-haves</h3><div class="inset jd">We’re looking for a senior engineer with <mark style="--d:.3">4+ years</mark> of <mark style="--d:.6">React</mark> and <mark style="--d:.9">TypeScript</mark>, who has shipped <mark style="--d:1.2">design systems</mark> at scale.
       <div class="chips2"><span class="rise" style="--d:1.4">must · React</span><span class="rise" style="--d:1.5">must · TypeScript</span><span class="rise" style="--d:1.6">must · design systems</span><span class="rise" style="--d:1.7">must · 4+ years</span></div></div></article>
@@ -612,13 +711,13 @@
     </div>
     <div class="seg"><span style="padding:0;box-shadow:none">Tailoring level</span><div><span>Off</span><span class="on">Honest</span><span>Aggressive</span></div></div>
     <p class="mini">Uses your real experience. Change the level any time from your account.</p></article>
-</div><div class="bento" data-panel="2" hidden>
+</div><div class="bento" data-panel="2">
   <article class="bc dark"><div class="ey">01 · Receipt</div><h3>Your application, itemised.</h3><div class="inset"><div style="color:#c9b8ff">✓ APPLICATION SUBMITTED</div><div style="margin-top:8px;color:#f3efe7;font-family:var(--serif);font-size:1.3rem">Senior Frontend Engineer · Stripe</div><div style="color:#8d8577;margin:4px 0 8px">via Greenhouse · just now</div><div class="rc" style="--d:0.40"><span>Full name</span><span>Asha Rao</span></div><div class="rc" style="--d:0.75"><span>Email</span><span>asha@example.com</span></div><div class="rc" style="--d:1.10"><span>LinkedIn</span><span>linkedin.com/in/asharao</span></div><div class="rc" style="--d:1.45"><span>Resume</span><span>asha_rao_stripe.pdf</span></div><div class="rc" style="--d:1.80"><span>Authorized to work</span><span>Yes</span></div><div class="rc" style="--d:2.15"><span>Why Stripe?</span><span>Written from your resume</span></div><p class="mini rise" style="--d:2.7">6 of 6 fields · 0 skipped</p></div></article>
   <div class="bcol">
     <article class="bc"><div class="ey">02 · Coverage</div><h3>The systems companies use</h3><div class="inset logos-grid"><div style="--d:0"><img src="/media/ats/greenhouse.png" alt="Greenhouse" width="22" height="22" loading="lazy">Greenhouse</div><div style="--d:1"><img src="/media/ats/lever.png" alt="Lever" width="22" height="22" loading="lazy">Lever</div><div style="--d:2"><img src="/media/ats/ashby.png" alt="Ashby" width="22" height="22" loading="lazy">Ashby</div><div style="--d:3"><img src="/media/ats/smartrecruiters.png" alt="SmartRecruiters" width="22" height="22" loading="lazy">SmartRecruiters</div><div style="--d:4"><img src="/media/ats/workday.png" alt="Workday" width="22" height="22" loading="lazy">Workday</div></div></article>
     <article class="bc"><div class="ey">03 · In your voice</div><h3>Long answers too.</h3><div class="inset"><div class="q">Why are you interested in Stripe?</div><div class="answer" data-type="The work I’d most want to ship is developer-first products that just feel right, which is exactly what your team already builds." data-type-delay="500"></div></div></article>
   </div>
-</div><div class="bento" data-panel="3" hidden>
+</div><div class="bento" data-panel="3">
   <article class="bc dark"><div class="ey">01 · The pipeline</div><h3>Every reply finds its application.</h3><div class="inset"><div class="routed rise"><span>recruiting@stripe.com → Stripe · Frontend Engineer</span><b>ROUTED</b></div><div class="pipe"><div><h5>Applied<b data-to="47" data-from="0">0</b></h5><p class=""><em>Stripe</em>Frontend Engineer</p><p class=""><em>Datadog</em>Frontend Engineer</p><p class=""><em>Notion</em>Product Manager</p></div><div><h5>Saved<b data-to="23" data-from="0">0</b></h5><p class=""><em>OpenAI</em>Solutions Engineer</p><p class=""><em>Ramp</em>Sales Engineer</p></div><div><h5>Replied<b data-to="9" data-from="0">0</b></h5><p class="moved"><em>Stripe</em>Frontend Engineer</p><p class=""><em>Figma</em>Senior Designer</p></div><div><h5>Interview<b data-to="4" data-from="0">0</b></h5><p class=""><em>Linear</em>Senior Engineer</p><p class=""><em>Vercel</em>Frontend Lead</p></div></div><div class="quote rise" style="--d:1.2">“Hi Asha, thanks for applying. We’d love to schedule a call. Are you free Wednesday or Thursday afternoon?”</div></div></article>
   <div class="bcol">
     <article class="bc"><div class="ey">02 · Upcoming</div><h3>Interviews this week.</h3><div class="inset">
@@ -633,8 +732,8 @@
     </div></article>
   </div>
 </div></div>
-        <p class="eg">Example data, for illustration</p>
-      </section>
+        <p class="eg wrap"><span class="swipe-hint">Swipe to see each stage →</span>Example data, for illustration</p>
+      </div></div></section>
 
       <section class="sec wrap" id="watch">
         <div class="sec-head"><div class="overline">See it happen</div><h2 class="title">Watch Iris fill a whole application <em>in seconds.</em></h2></div>
@@ -651,10 +750,10 @@
                 <div class="fd-head"><img src="/media/ats/greenhouse.png" alt="Greenhouse" width="34" height="34" loading="lazy"><div><b>Senior Frontend Engineer</b><small>Stripe · Bengaluru · Full-time</small></div></div>
                 <div class="fd-f" data-fd="text" data-v="Asha"><label>First name</label><div class="in"></div></div>
                 <div class="fd-f" data-fd="text" data-v="Rao"><label>Last name</label><div class="in"></div></div>
-                <div class="fd-f" data-fd="text" data-v="asha@example.com"><label>Email</label><div class="in"></div></div>
-                <div class="fd-f" data-fd="text" data-v="+91 98765 00000"><label>Phone number</label><div class="in"></div></div>
-                <div class="fd-f" data-fd="text" data-v="linkedin.com/in/asharao"><label>LinkedIn</label><div class="in"></div></div>
-                <div class="fd-f" data-fd="text" data-v="Bengaluru, India"><label>Location</label><div class="in"></div></div>
+                <div class="fd-f fd-mw" data-fd="text" data-v="asha@example.com"><label>Email</label><div class="in"></div></div>
+                <div class="fd-f fd-mw" data-fd="text" data-v="+91 98765 00000"><label>Phone number</label><div class="in"></div></div>
+                <div class="fd-f fd-mw" data-fd="text" data-v="linkedin.com/in/asharao"><label>LinkedIn</label><div class="in"></div></div>
+                <div class="fd-f fd-mw" data-fd="text" data-v="Bengaluru, India"><label>Location</label><div class="in"></div></div>
                 <div class="fd-f" data-fd="text" data-v="6"><label>Years of experience</label><div class="in"></div></div>
                 <div class="fd-f" data-fd="text" data-v="30 days"><label>Notice period</label><div class="in"></div></div>
                 <div class="fd-f fd-wide"><span class="fd-l">Authorized to work in India?</span><div class="fd-opts radio" data-fd="opt" data-pick="0"><span><s></s>Yes</span><span><s></s>No</span></div></div>
@@ -767,7 +866,7 @@
   </main>
 
   <section class="sf-ask" aria-label="Ask an AI about Iris"><h2>Still curious? Ask your favorite AI about Iris.</h2><div class="sf-ask-chips"><a href="https://chatgpt.com/?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F&amp;hints=search" target="_blank" rel="noopener nofollow"><img src="/media/llm/chatgpt.png" alt="ChatGPT" width="22" height="22" loading="lazy">ChatGPT</a><a href="https://claude.ai/new?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow"><img src="/media/llm/claude.png" alt="Claude" width="22" height="22" loading="lazy">Claude</a><a href="https://www.perplexity.ai/search?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow"><img src="/media/llm/perplexity.png" alt="Perplexity" width="22" height="22" loading="lazy">Perplexity</a><a href="https://www.google.com/search?udm=50&amp;q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow"><img src="/media/llm/gemini.png" alt="Gemini" width="22" height="22" loading="lazy">Gemini</a><a href="https://grok.com/?q=What%20is%20Iris%20%28irisjobs.live%29%2C%20the%20AI%20job%20application%20app%20known%20as%20the%20Tinder%20for%20jobs%2C%20and%20is%20it%20good%20for%20job%20seekers%3F" target="_blank" rel="noopener nofollow"><img src="/media/llm/grok.png" alt="Grok" width="22" height="22" loading="lazy">Grok</a></div></section>
-  <footer class="sf"><div class="sf-cols"><nav aria-label="Product"><h3>Product</h3><a href="/#how">How it works</a><a href="/jobs/">Browse jobs</a><a href="/#pricing">Pricing</a><a href="/love/">Wall of love</a><a href="https://irisjobs.live/app/sign-up">Continue on web</a><a href="/whatsapp/">WhatsApp</a></nav><nav aria-label="Company"><h3>Company</h3><a href="/about/">About us</a><a href="/mission/">Our mission</a><a href="/blog/">Blog</a><a href="/tinder-for-jobs/">Tinder for jobs</a></nav><nav aria-label="Get the app"><h3>Get the app</h3><a href="https://apps.apple.com/in/app/nextquark/id6761863089" target="_blank" rel="noopener">App Store</a><a href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener">Google Play</a></nav><nav aria-label="Social"><h3>Social</h3><a href="https://www.instagram.com/irisjobs.live/">Instagram</a><a href="https://x.com/irisjobs_live" target="_blank" rel="noopener">X</a><a href="https://www.linkedin.com/company/tryiris/about/" target="_blank" rel="noopener">LinkedIn</a></nav></div>
+  <footer class="sf"><div class="sf-cols"><nav aria-label="Product"><h3>Product</h3><a href="/#how">How it works</a><a href="/jobs/">Browse jobs</a><a href="/#pricing">Pricing</a><a href="https://irisjobs.live/app/sign-up">Continue on web</a><a href="/whatsapp/">WhatsApp</a></nav><nav aria-label="Company"><h3>Company</h3><a href="/about/">About us</a><a href="/love/">Wall of love</a><a href="/mission/">Our mission</a><a href="/blog/">Blog</a><a href="/tinder-for-jobs/">Tinder for jobs</a></nav><nav aria-label="Get the app"><h3>Get the app</h3><a href="https://apps.apple.com/in/app/nextquark/id6761863089" target="_blank" rel="noopener">App Store</a><a href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener">Google Play</a></nav><nav aria-label="Social"><h3>Social</h3><a href="https://www.instagram.com/irisjobs.live/">Instagram</a><a href="https://x.com/irisjobs_live" target="_blank" rel="noopener">X</a><a href="https://www.linkedin.com/company/tryiris/about/" target="_blank" rel="noopener">LinkedIn</a></nav></div>
   <div class="sf-stage" aria-hidden="true">
     <div class="sf-string"></div>
     <div class="sf-charm"><img src="/logo.webp" alt="Iris" width="96" height="96" loading="lazy"></div>
@@ -1121,7 +1220,7 @@
       });
     }
 
-    // How it works: a stepper that fills as it goes, and only runs while on screen.
+    // How it works: slides sideways as you scroll on desktop, and swipes on phones.
     (function howItWorks() {
       var LEDE = [
         'Iris keeps watching company career pages. When a role that fits your resume goes up, it lands in your feed, so you can be among the first to apply.',
@@ -1129,29 +1228,26 @@
         'Iris opens the company’s own application, fills in every field, answers the questions from your profile, attaches your resume and submits.',
         'Confirmations and recruiter replies land back on the right application. Your tracker updates itself, so nothing gets lost in your inbox.'
       ];
-      var STEP = 9000;
-      var box = document.getElementById('stepper');
-      if (!box) return;
-      var tabs = [].slice.call(box.querySelectorAll('button'));
-      var lines = [].slice.call(box.querySelectorAll('i'));
-      var panels = [].slice.call(document.querySelectorAll('#bentos [data-panel]'));
-      var lede = document.getElementById('step-lede');
-      var current = 0, timer = null, auto = true, visible = false, typers = [];
+      var pin = document.getElementById('howx'), track = document.getElementById('bentos'), box = document.getElementById('stepper');
+      if (!pin || !track || !box) return;
+      var tabs = [].slice.call(box.querySelectorAll('button')), lines = [].slice.call(box.querySelectorAll('i b'));
+      var panels = [].slice.call(track.querySelectorAll('[data-panel]'));
+      var lede = document.getElementById('step-lede'), stick = pin.querySelector('.howx-stick');
+      var desktop = window.matchMedia('(min-width: 900px) and (min-height: 620px)');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      box.style.setProperty('--step', STEP + 'ms');
+      var current = -1, typers = [], started = false;
 
       function animate(panel) {
-        typers.forEach(clearInterval); typers = [];
+        typers.forEach(clearInterval); typers.forEach(clearTimeout); typers = [];
+        panel.classList.remove('play'); void panel.offsetWidth; panel.classList.add('play');
         panel.querySelectorAll('[data-type]').forEach(function(el) {
           var text = el.getAttribute('data-type');
           if (reduce) { el.textContent = text; return; }
           el.textContent = ''; el.classList.add('type-cursor');
-          var start = setTimeout(function() {
-            var i = 0;
-            var t = setInterval(function() { i += 2; el.textContent = text.slice(0, i); if (i >= text.length) { clearInterval(t); el.classList.remove('type-cursor'); } }, 28);
+          typers.push(setTimeout(function() {
+            var i = 0, t = setInterval(function() { i += 2; el.textContent = text.slice(0, i); if (i >= text.length) { clearInterval(t); el.classList.remove('type-cursor'); } }, 28);
             typers.push(t);
-          }, Number(el.getAttribute('data-type-delay')) || 0);
-          typers.push(start);
+          }, Number(el.getAttribute('data-type-delay')) || 0));
         });
         panel.querySelectorAll('[data-to]').forEach(function(el) {
           var to = Number(el.getAttribute('data-to')), from = Number(el.getAttribute('data-from')) || 0;
@@ -1160,29 +1256,66 @@
           (function tick(now) { var p = Math.min(1, (now - t0) / 1800); el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); })(t0);
         });
       }
-      function show(i) {
+      function activate(i) {
+        if (i === current) return;
         current = i;
         tabs.forEach(function(t, n) { t.classList.toggle('on', n === i); t.classList.toggle('done', n < i); t.setAttribute('aria-selected', n === i ? 'true' : 'false'); });
-        lines.forEach(function(l, n) { l.classList.toggle('full', n < i); l.classList.remove('run'); if (n === i && auto && !reduce) { void l.offsetWidth; l.classList.add('run'); } });
-        panels.forEach(function(p, n) { p.hidden = n !== i; });
         lede.textContent = LEDE[i];
-        animate(panels[i]);
-        schedule();
+        if (started) animate(panels[i]);
       }
-      function schedule() {
-        clearTimeout(timer);
-        if (auto && visible && !reduce) timer = setTimeout(function() { show((current + 1) % tabs.length); }, STEP);
+      function fill(pos) { lines.forEach(function(b, k) { b.style.transform = 'scaleX(' + Math.max(0, Math.min(1, pos - k)) + ')'; }); }
+      function fit() {
+        var live = pin.classList.contains('live');
+        panels.forEach(function(p) { p.style.zoom = ''; p.style.width = ''; });
+        if (!live) return;
+        var slide = Math.min(1240, window.innerWidth - 100);
+        panels.forEach(function(p) { p.style.width = slide + 'px'; });
+        var room = stick.clientHeight - (track.getBoundingClientRect().top - stick.getBoundingClientRect().top) - 46;
+        var tallest = panels.reduce(function(m, p) { return Math.max(m, p.offsetHeight); }, 0);
+        var z = Math.min(1, room / tallest);
+        panels.forEach(function(p) { p.style.zoom = z; p.style.width = (slide / z) + 'px'; });
+        track.style.paddingLeft = track.style.paddingRight = ((window.innerWidth - slide) / 2) + 'px';
       }
-      tabs.forEach(function(t, i) { t.addEventListener('click', function() { auto = false; clearTimeout(timer); show(i); }); });
-      lede.textContent = LEDE[0];
-      if ('IntersectionObserver' in window) {
-        var seen = false;
-        new IntersectionObserver(function(es) {
-          visible = es[0].isIntersecting;
-          if (visible && !seen) { seen = true; show(0); } else schedule();
-          box.parentNode.classList.toggle('paused', !visible);
-        }, { threshold: 0.25 }).observe(box.parentNode);
-      } else { visible = true; show(0); }
+      function onScroll() {
+        if (!pin.classList.contains('live')) return;
+        var r = pin.getBoundingClientRect(), span = r.height - window.innerHeight;
+        var p = Math.min(1, Math.max(0, -r.top / span));
+        // Ends with the last slide centred, the same way the first one starts.
+        var max = panels[panels.length - 1].getBoundingClientRect().left - panels[0].getBoundingClientRect().left;
+        track.style.transform = 'translate3d(' + (-p * max) + 'px,0,0)';
+        var pos = p * (panels.length - 1);
+        fill(pos);
+        activate(Math.round(pos));
+      }
+      function layout() {
+        var on = desktop.matches && !reduce;
+        pin.classList.toggle('live', on);
+        if (!on) { track.style.transform = ''; track.style.paddingLeft = track.style.paddingRight = ''; }
+        fit(); onScroll();
+      }
+      function go(i) {
+        if (pin.classList.contains('live')) {
+          var top = pin.getBoundingClientRect().top + window.scrollY, span = pin.offsetHeight - window.innerHeight, y = top + span * i / (panels.length - 1);
+          if (window.irisLenis) window.irisLenis.scrollTo(y, { duration: 1.1, force: true }); else window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+        } else {
+          track.scrollTo({ left: panels[i].offsetLeft - track.offsetLeft - 16, behavior: reduce ? 'auto' : 'smooth' });
+        }
+      }
+      tabs.forEach(function(t, i) { t.addEventListener('click', function() { go(i); }); });
+      track.addEventListener('scroll', function() {
+        if (pin.classList.contains('live')) return;
+        var pos = track.scrollLeft / (panels[0].offsetWidth + 12);
+        fill(pos); activate(Math.min(panels.length - 1, Math.round(pos)));
+      }, { passive: true });
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', layout);
+      lede.textContent = LEDE[0]; activate(0); layout();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+      if ('IntersectionObserver' in window && !reduce) {
+        new IntersectionObserver(function(es, io) {
+          if (es[0].isIntersecting) { started = true; animate(panels[current]); io.disconnect(); }
+        }, { threshold: 0.2 }).observe(track);
+      } else { started = true; panels.forEach(animate); }
     })();
 
     // A whole form filled in about five seconds, while it is on screen.
@@ -1248,7 +1381,8 @@
         if (!pin.classList.contains('live')) return;
         var r = pin.getBoundingClientRect(), span = r.height - window.innerHeight;
         var p = Math.min(1, Math.max(0, -r.top / span));
-        var max = track.scrollWidth - track.clientWidth;
+        var slides = track.children;
+        var max = slides[slides.length - 1].getBoundingClientRect().left - slides[0].getBoundingClientRect().left;
         track.style.transform = 'translate3d(' + (-p * max) + 'px,0,0)';
         setDot(Math.round(p * (dots.length - 1)));
       }

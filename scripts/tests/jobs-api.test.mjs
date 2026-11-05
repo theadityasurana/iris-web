@@ -90,5 +90,15 @@ test('job link previews use the job, and strip markup', async () => {
   const p = previewFor({ title: 'Engineer', company_name: 'Stripe', location: 'Pune', type: 'Full-time', description: '<p>Build <b>things</b>.</p>' }, 'https://irisjobs.live', 'a b');
   assert.equal(p.title, 'Engineer at Stripe | Apply in one swipe on Iris');
   assert.equal(p.description, 'Pune · Full-time. Build things .');
-  assert.equal(p.image, 'https://irisjobs.live/api/og/job/a%20b');
+  assert.ok(p.image.startsWith('https://images.weserv.nl/?url=irisjobs.live%2Fapi%2Fog%2Fjob%2Fa%2520b.svg&output=jpg'));
+  assert.ok(p.image.includes('default='));
+});
+
+test('job image: handles long titles, accents, odd characters and missing logos', async () => {
+  const { jobSvg } = await import('../../functions/_lib/og-svg.js');
+  const long = jobSvg({ title: 'Sr. Application Software Engineer, Manufacturing Systems & Automation Platforms (Remote) — Team Lead, Région Île-de-France', company_name: 'Crédit <b>Agricole</b>', location: 'Paris', type: 'Full-time' }, null);
+  assert.ok(long.startsWith('<svg'));
+  assert.ok(!long.includes('<b>'));
+  assert.ok(jobSvg({ title: '', company_name: '' }, null).includes('</svg>'));
+  assert.ok(jobSvg({ title: 'नमस्ते 你好', company_name: 'Zepto' }, 'data:image/png;base64,AA').includes('data:image/png;base64,AA'));
 });
