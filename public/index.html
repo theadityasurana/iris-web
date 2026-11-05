@@ -109,8 +109,7 @@
     .job.invite .role-meta { margin-top: 6px; }
     .pulse { animation: pulse 1.2s ease-in-out infinite; }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
-    body.mode-job .video-box, body.mode-job .marketing { display: none; }
-
+    
     .sec { padding: 88px 0 0; }
     .sec-head { text-align: center; }
     .sec-head .lede { margin-left: auto; margin-right: auto; }
@@ -605,6 +604,48 @@
       .surface { padding: 20px; }
     }
     @media (max-width: 370px) { .stepper button { padding: 0 8px; font-size: .78rem; } }
+
+    /* ── Job links: words on the left, the job on a phone on the right ── */
+    #job-phone { display: none; }
+    body.mode-job .stage { display: none; }
+    body.mode-job #job-phone { display: block; }
+    .jp { position: relative; width: 330px; max-width: 100%; margin: 0 auto; padding: 10px; border-radius: 48px; text-align: left; background: #0c0c0d; box-shadow: 0 34px 70px -18px rgba(50, 35, 15, .6), inset 0 0 0 1px rgba(255,255,255,.14); }
+    .jp-screen { position: relative; display: flex; flex-direction: column; height: 640px; overflow: hidden; border-radius: 38px; background: #fff; color: #111; }
+    .jp-island { position: absolute; left: 50%; top: 9px; width: 84px; height: 24px; margin-left: -42px; border-radius: 12px; background: #0c0c0d; }
+    .jp-top { display: flex; align-items: center; justify-content: space-between; padding: 40px 14px 8px 18px; }
+    .jp-top b { font-family: var(--serif); font-size: 1.95rem; font-weight: 500; line-height: 1; color: #6d4ae0; }
+    .jp-top span { display: flex; gap: 5px; }
+    .jp-top i { width: 30px; height: 30px; border-radius: 50%; background: #f7f5f1; box-shadow: inset 0 0 0 1px #e6e3dd; }
+    .jp-card { flex: 1; display: flex; flex-direction: column; min-height: 0; margin: 0 10px; padding: 12px 12px 10px; overflow: hidden; border-radius: 18px; text-align: center; box-shadow: inset 0 0 0 1px #ececea; }
+    .jp-logo { display: grid; place-items: center; width: 78px; height: 78px; margin: 0 auto; border-radius: 18px; background: #f7f5f1; }
+    .jp-logo img { width: 50px; height: 50px; object-fit: contain; }
+    .jp-logo span { display: none; font-family: var(--serif); font-size: 2.2rem; color: #5536c4; }
+    .jp-co { margin-top: 10px; font-size: .94rem; font-weight: 500; }
+    .jp-title { margin-top: 3px; font-size: 1.32rem; font-weight: 500; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .jp-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 12px; }
+    .jp-chips span { max-width: 100%; padding: 4px 10px; border-radius: 99px; font-size: .8rem; font-weight: 500; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .jp-skl { margin-top: 12px; text-align: left; font-size: .84rem; font-weight: 500; }
+    .jp-skills { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-top: 6px; max-height: 92px; overflow: hidden; }
+    .jp-skills span { padding: 4px 10px; border-radius: 99px; font-size: .76rem; font-weight: 500; color: #fff; background: #111; white-space: nowrap; }
+    .jp-fit { align-self: flex-end; margin-top: auto; padding: 8px 14px; border-radius: 99px; font-size: .8rem; font-weight: 500; color: #fff; background: #d9a52a; }
+    .jp-tap { padding: 7px 0 0; text-align: center; font-size: .8rem; font-weight: 500; }
+    .jp-nav { display: flex; justify-content: space-around; align-items: center; padding: 8px 22px 6px; }
+    .jp-home { width: 100px; height: 4px; margin: 2px auto 8px; border-radius: 4px; background: #c8c6c1; }
+    .jp-nav i { width: 12px; height: 12px; border-radius: 50%; background: #c8c6c1; }
+    .jp-nav i:nth-child(3) { background: #111; width: 14px; height: 14px; }
+    .jp.loading .jp-logo, .jp.loading .jp-co, .jp.loading .jp-title, .jp.loading .jp-chips span { color: transparent; background: #f1f0ee; border-radius: 10px; animation: pulse 1.2s ease-in-out infinite; }
+    body.mode-job .headline { font-size: clamp(2.8rem, 6.2vw, 5.4rem); }
+    body.mode-job .job { margin-top: 0; }
+    @media (min-width: 960px) {
+      body.mode-job .hero-first > .wrap:has(#job-phone) { display: grid; grid-template-columns: minmax(0, 1fr) 350px; column-gap: 56px; align-items: center; text-align: left; }
+      body.mode-job .hero-first > .wrap:has(#job-phone) > *:not(#job-phone) { grid-column: 1; }
+      body.mode-job #job-phone { grid-column: 2; grid-row: 1 / span 6; }
+      body.mode-job .sub { margin-left: 0; max-width: none; }
+      body.mode-job #job-slot:not(:empty) { margin-left: 0; max-width: 620px; }
+      body.mode-job .actions-col { align-items: flex-start; }
+      body.mode-job .ctas-row, body.mode-job .ctas { justify-content: flex-start; }
+    }
+    @media (max-width: 959px) { body.mode-job #job-phone { margin-top: 30px; } }
   </style>
 </head>
 <body>
@@ -637,6 +678,7 @@
             <p class="countdown" id="countdown"></p>
             <a id="open-now" href="#" class="pill" style="display:none">Open Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           </div>
+          <div id="job-phone" aria-label="This job, as it looks in the Iris app"></div>
         </div>
       </div>
       <div class="wrap">
@@ -997,7 +1039,7 @@
         scheduleStore(watchMs);
       }
       if (!isMobile) { scheduleStore(watchMs); return; }
-      if (!video) { start(); return; }
+      if (!video || document.body.classList.contains('mode-job')) { start(); return; }
       if (!video.paused && video.currentTime > 0) { start(); return; }
       cd.textContent = 'Loading preview…';
       video.addEventListener('playing', start, { once: true });
@@ -1142,6 +1184,51 @@
       return 'Posted ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
 
+    // The job on a phone, the same card as in the app. Anything a job doesn't have is left out.
+    function jobPhoneHtml(job, company) {
+      company = company || {};
+      if (!job) return '<div class="jp loading"><div class="jp-screen"><div class="jp-island"></div><div class="jp-top"><b>Iris</b><span><i></i><i></i><i></i><i></i></span></div><div class="jp-card"><div class="jp-logo"></div><div class="jp-co">Company</div><div class="jp-title">Finding this role for you</div><div class="jp-chips"><span>Full-time</span><span>Location</span><span>Experience</span></div></div><div class="jp-tap">Tap to see full details</div><div class="jp-nav"><i></i><i></i><i></i><i></i><i></i></div><div class="jp-home"></div></div></div>';
+      var text = String((job.type || '') + ' ' + (job.location || '')).toLowerCase();
+      var mode = text.indexOf('remote') > -1 ? 'Remote' : text.indexOf('hybrid') > -1 ? 'Hybrid' : 'On-site';
+      var exp = job.experience && !/^(null|not specified)$/i.test(job.experience) ? job.experience : '';
+      var pay = job.salary_range && !/undisclosed/i.test(job.salary_range) ? job.salary_range : '';
+      var posted = postedLabel(job.posted_at).replace(/^Posted /, '');
+      posted = posted ? posted.charAt(0).toUpperCase() + posted.slice(1) : '';
+      var chips = [[company.industry, '#ede9fe', '#5b34c9'], [company.company_type, '#dcfce7', '#1c7a43'], [job.type, '#ffedd5', '#b4560f'], [mode, '#f1f0ee', '#4e4a41'], [exp, '#dbeafe', '#2159b5'], [posted, '#f1f0ee', '#4e4a41'], [pay, '#f1f0ee', '#4e4a41'], [job.education_level, '#dbeafe', '#2159b5']]
+        .filter(function(c) { return c[0]; })
+        .map(function(c) { return '<span style="background:' + c[1] + ';color:' + c[2] + '">' + esc(c[0]) + '</span>'; }).join('');
+      var skills = (Array.isArray(job.skills) ? job.skills : typeof job.skills === 'string' ? job.skills.split(',') : [])
+        .map(function(v) { return String(v).trim(); }).filter(Boolean).slice(0, 12)
+        .map(function(v) { return '<span>' + esc(v) + '</span>'; }).join('');
+      var name = job.company_name;
+      return '<div class="jp"><div class="jp-screen"><div class="jp-island"></div>' +
+        '<div class="jp-top"><b>Iris</b><span><i></i><i></i><i></i><i></i></span></div>' +
+        '<div class="jp-card"><div class="jp-logo"><img alt="" src="' + esc(logoUrl(name, null, job.company_website)) + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span>' + esc(String(name).charAt(0).toUpperCase()) + '</span></div>' +
+        '<div class="jp-co">' + esc(name) + '</div><div class="jp-title">' + esc(job.title) + '</div>' +
+        '<div class="jp-chips">' + chips + '</div>' +
+        (skills ? '<div class="jp-skl">Skills</div><div class="jp-skills">' + skills + '</div>' : '') +
+        '<div class="jp-fit">Check FIT Score</div></div><div class="jp-tap">Tap to see full details</div>' +
+        '<div class="jp-nav"><i></i><i></i><i></i><i></i><i></i></div><div class="jp-home"></div></div></div>';
+    }
+    // Job pages show the phone instead of the video, so don't download it there.
+    function setHeroVideo(on) {
+      var v = document.getElementById('hero-video');
+      if (!v) return;
+      if (!on) { v.pause(); v.removeAttribute('src'); v.load(); return; }
+      if (v.getAttribute('src')) return;
+      v.src = '/media/iris-1080.mp4';
+      var p = v.play && v.play();
+      if (p && p.catch) p.catch(function() {});
+    }
+    function setJobPhone(job, company) {
+      var el = document.getElementById('job-phone');
+      if (el) el.innerHTML = jobPhoneHtml(job, company);
+    }
+    function fetchCompany(name) {
+      return fetch(SUPABASE_URL + '/rest/v1/companies?name=eq.' + encodeURIComponent(name) + '&select=industry,company_type&limit=1', { headers: HEADERS })
+        .then(function(r) { return r.ok ? r.json() : []; }).then(function(rows) { return rows[0] || {}; }).catch(function() { return {}; });
+    }
+
     function soloCard(kicker, title, body) {
       return '<div class="job solo"><p class="co-name">' + esc(kicker) + '</p><h2 class="role-title">' + esc(title) + '</h2>' + (body ? '<p class="role-meta">' + esc(body) + '</p>' : '') + '</div>';
     }
@@ -1156,7 +1243,7 @@
     function fetchJob(jobId) {
       var id = String(jobId || '').trim();
       if (!id) return Promise.resolve(null);
-      var sel = 'id,company_name,company_initial,title,location,type,experience,salary_range,posted_at,company_website,description';
+      var sel = 'id,company_name,company_initial,title,location,type,experience,salary_range,posted_at,company_website,description,skills,education_level';
       var url = SUPABASE_URL + '/rest/v1/jobs?id=eq.' + encodeURIComponent(id) + '&select=' + sel + '&limit=1';
       return fetch(url, { headers: HEADERS })
         .then(function(r) { return r.json().then(function(rows) { return { ok: r.ok, rows: rows }; }); })
@@ -1168,7 +1255,8 @@
 
     function normalizeJob(job) {
       job.title = (job.title || '').trim() || 'Open role';
-      job.company_name = (job.company_name || '').trim() || 'Company';
+      job.rawCompany = (job.company_name || '').trim();
+      job.company_name = job.rawCompany === 'Spacex' ? 'SpaceX' : (job.rawCompany || 'Company');
       return job;
     }
 
@@ -1179,6 +1267,9 @@
 
     // Job links: the video stays; the copy and a job card describe the role.
     function showJobLoading() {
+      document.body.classList.add('mode-job');
+      setHeroVideo(false);
+      setJobPhone(null);
       renderPage({ headline: 'Apply to this job in one swipe.', bio: 'Open it in Iris and apply in seconds. No forms, no cover letters.',
         jobCard: '<div class="job solo pulse"><p class="co-name">Loading</p><h2 class="role-title">Fetching role…</h2></div>' });
     }
@@ -1186,9 +1277,13 @@
     function showJob(job) {
       job = normalizeJob(job);
       renderPage({ jobCard: jobCardHtml(job), docTitle: job.title + ' at ' + job.company_name + ' – Iris' });
+      setJobPhone(job);
+      fetchCompany(job.rawCompany).then(function(c) { setJobPhone(job, c); });
     }
 
     function showJobFallback() {
+      document.body.classList.remove('mode-job');
+      setHeroVideo(true);
       renderPage({ jobCard: soloCard('Iris', 'Open this role in the app', 'Download Iris to see the full details and apply with one swipe.') });
     }
 
