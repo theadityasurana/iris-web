@@ -39,43 +39,141 @@ function wrap(font, text, size, max) {
   return [first, fit(font, words.slice(i).join(' '), size, max)];
 }
 
-export function jobSvg(job, logo) {
-  const raw = clean(job.company_name) || 'This company';
-  const company = raw === 'Spacex' ? 'SpaceX' : raw;
-  const title = clean(job.title) || 'Open role';
-  const salary = job.salary_range && !/competitive|undisclosed/i.test(job.salary_range) ? clean(job.salary_range) : '';
-  const place = clean(job.location);
-  const meta = fit(SANS, [place && fit(SANS, place, 25, 430), clean(job.type), salary].filter(Boolean).join('  ·  '), 25, 800);
+const skillList = v => (Array.isArray(v) ? v : typeof v === 'string' ? v.split(',') : []).map(clean).filter(Boolean);
 
-  // Iris | Company, centred as one unit.
-  const name = fit(SANS, company, 30, 380);
-  const irisW = widthOf(SERIF, 'Iris', 40);
-  const nameW = widthOf(SANS, name, 30);
-  const total = 52 + 12 + irisW + 56 + 52 + 14 + nameW;
-  let x = 600 - total / 2;
-  const logoX = x + 52 + 12 + irisW + 56;
+function postedLabel(v) {
+  const t = new Date(v).getTime();
+  if (!v || Number.isNaN(t)) return '';
+  const days = Math.floor((Date.now() - t) / 864e5);
+  if (days <= 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  if (days < 30) return `${days} days ago`;
+  const months = Math.floor(days / 30);
+  return months === 1 ? '1 month ago' : `${months} months ago`;
+}
+
+function workMode(job) {
+  const text = `${job.type ?? ''} ${job.location ?? ''}`.toLowerCase();
+  return text.includes('remote') ? 'Remote' : text.includes('hybrid') ? 'Hybrid' : 'On-site';
+}
+
+/** The chips on the app's job card, each with its colours, leaving out anything unknown. */
+export function jobChips(job, company = {}) {
+  const salary = job.salary_range && !/undisclosed/i.test(job.salary_range) ? clean(job.salary_range) : '';
+  const experience = job.experience && !/^(null|not specified)$/i.test(job.experience) ? clean(job.experience) : '';
+  return [
+    [clean(company.industry), '#ede9fe', '#5b34c9'],
+    [clean(company.company_type), '#dcfce7', '#1c7a43'],
+    [clean(job.type), '#ffedd5', '#b4560f'],
+    [workMode(job), '#f1f0ee', '#4e4a41'],
+    [experience, '#dbeafe', '#2159b5'],
+    [postedLabel(job.posted_at), '#f1f0ee', '#4e4a41'],
+    [salary, '#f1f0ee', '#4e4a41'],
+    [clean(job.education_level), '#dbeafe', '#2159b5'],
+  ].filter(c => c[0]);
+}
+
+/** Lays pills out in centred rows, stopping when the space runs out. */
+function pills(items, cx, top, maxW, opts) {
+  const { size, height, gap, maxRows, pad } = opts;
+  const rows = [[]];
+  let used = 0;
+  for (const item of items) {
+    const label = fit(SANS, item[0], size, maxW - pad * 2);
+    const w = widthOf(SANS, label, size) + pad * 2;
+    if (used && used + gap + w > maxW) {
+      if (rows.length === maxRows) break;
+      rows.push([]); used = 0;
+    }
+    rows[rows.length - 1].push([label, w, item[1], item[2]]);
+    used += (used ? gap : 0) + w;
+  }
+  let out = '', y = top;
+  for (const row of rows) {
+    if (!row.length) continue;
+    const total = row.reduce((n, p) => n + p[1], 0) + gap * (row.length - 1);
+    let x = cx - total / 2;
+    for (const [label, w, bg, fg] of row) {
+      out += `<rect x="${x.toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="${height}" rx="${height / 2}" fill="${bg}"/>${line(SANS, label, x + pad, y + height * 0.69, size, fg)}`;
+      x += w + gap;
+    }
+    y += height + gap;
+  }
+  return { svg: out, bottom: y };
+}
+
+/** The app's job card on a phone, filled in with this job. */
+function phone(job, company, name, logo) {
+  const X = 842, Y = 18, W = 308, H = 594;
+  const sx = X + 11, sy = Y + 11, sw = W - 22, sh = H - 22, cx = X + W / 2;
+  const logoBox = 74, logoY = sy + 74;
   const badge = logo
-    ? `<rect x="${logoX.toFixed(1)}" y="36" width="52" height="52" rx="13" fill="#fff"/><image x="${(logoX + 5).toFixed(1)}" y="41" width="42" height="42" href="${logo}"/>`
-    : `<rect x="${logoX.toFixed(1)}" y="36" width="52" height="52" rx="13" fill="#5536c4"/>${centred(SERIF, company[0].toUpperCase(), logoX + 26, 73, 34, '#fff')}`;
+    ? `<rect x="${cx - logoBox / 2}" y="${logoY}" width="${logoBox}" height="${logoBox}" rx="18" fill="#f7f5f1"/><image x="${cx - 26}" y="${logoY + 11}" width="52" height="52" href="${logo}"/>`
+    : `<rect x="${cx - logoBox / 2}" y="${logoY}" width="${logoBox}" height="${logoBox}" rx="18" fill="#5536c4"/>${centred(SERIF, name[0].toUpperCase(), cx, logoY + 52, 44, '#fff')}`;
 
-  const lines = wrap(SERIF, title, 54, 810);
-  const cardH = lines.length === 2 ? 266 : 208;
-  const cardY = 222;
-  const titleY = cardY + 118;
+  const company_y = logoY + logoBox + 22;
+  const titleLines = wrap(SANS, clean(job.title) || 'Open role', 20, sw - 48);
+  const title = titleLines.map((l, i) => centred(SANS, l, cx, company_y + 27 + i * 25, 20, '#111')).join('');
+  const chipsTop = company_y + 27 + (titleLines.length - 1) * 25 + 15;
+  const chips = pills(jobChips(job, company), cx, chipsTop, sw - 40, { size: 11.5, height: 22, gap: 5, maxRows: 4, pad: 9 });
+  const skills = skillList(job.skills).map(v => [v, '#111111', '#ffffff']);
+  const footerY = sy + sh - 118;
+  let skillBlock = '';
+  if (skills.length && chips.bottom < footerY - 44) {
+    const rows = Math.min(3, Math.floor((footerY - chips.bottom - 22) / 26));
+    skillBlock = line(SANS, 'Skills', sx + 22, chips.bottom + 12, 13, '#111')
+      + pills(skills, cx, chips.bottom + 19, sw - 40, { size: 11, height: 21, gap: 5, maxRows: rows, pad: 8 }).svg;
+  }
+  const nav = [0.14, 0.32, 0.5, 0.68, 0.86].map((f, i) => `<circle cx="${(sx + sw * f).toFixed(1)}" cy="${sy + sh - 30}" r="${i === 2 ? 7 : 6}" fill="${i === 2 ? '#111' : '#c8c6c1'}"/>`).join('');
+  const icons = [0, 1, 2, 3].map(i => `<circle cx="${sx + sw - 30 - i * 34}" cy="${sy + 45}" r="14" fill="#f7f5f1" stroke="#e6e3dd"/>`).join('');
+  return `<rect x="${X}" y="${Y + 12}" width="${W}" height="${H}" rx="50" fill="#2a1d08" opacity=".22"/>
+<rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="50" fill="#0c0c0d"/>
+<rect x="${sx}" y="${sy}" width="${sw}" height="${sh}" rx="40" fill="#fff"/>
+<rect x="${cx - 42}" y="${sy + 9}" width="84" height="24" rx="12" fill="#0c0c0d"/>
+${line(SERIF, 'Iris', sx + 20, sy + 55, 30, '#6d4ae0')}
+${icons}
+<rect x="${sx + 10}" y="${sy + 66}" width="${sw - 20}" height="${sh - 66 - 58}" rx="20" fill="#fff" stroke="#ececea"/>
+${badge}
+${centred(SANS, fit(SANS, name, 14, sw - 48), cx, company_y, 14, '#111')}
+${title}
+${chips.svg}
+${skillBlock}
+<rect x="${cx + 18}" y="${footerY + 20}" width="108" height="30" rx="15" fill="#d9a52a"/>
+${centred(SANS, 'Check FIT Score', cx + 72, footerY + 40, 11.5, '#fff')}
+<rect x="${sx + 10}" y="${footerY + 59}" width="${sw - 20}" height="1" fill="#ececea"/>
+${centred(SANS, 'Tap to see full details', cx, footerY + 78, 11.5, '#111')}
+${nav}
+<rect x="${cx - 44}" y="${sy + sh - 11}" width="88" height="4" rx="2" fill="#c8c6c1"/>`;
+}
+
+export function jobSvg(job, logo, company = {}) {
+  const raw = clean(job.company_name) || 'This company';
+  const name = raw === 'Spacex' ? 'SpaceX' : raw;
+  const place = clean(job.location);
+  const meta = [place && fit(SANS, place, 24, 380), clean(job.type)].filter(Boolean).join('  ·  ');
+
+  // Left side: Iris | Company, the headline, then who is hiring.
+  const left = 58;
+  const irisW = widthOf(SERIF, 'Iris', 40);
+  const shortName = fit(SANS, name, 28, 400);
+  const logoX = left + 52 + 12 + irisW + 50;
+  const lockup = logo
+    ? `<rect x="${logoX.toFixed(1)}" y="46" width="52" height="52" rx="13" fill="#fff"/><image x="${(logoX + 5).toFixed(1)}" y="51" width="42" height="42" href="${logo}"/>`
+    : `<rect x="${logoX.toFixed(1)}" y="46" width="52" height="52" rx="13" fill="#5536c4"/>${centred(SERIF, name[0].toUpperCase(), logoX + 26, 83, 34, '#fff')}`;
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
 <image width="1200" height="630" href="${BG}"/>
-<image x="${x.toFixed(1)}" y="36" width="52" height="52" href="${LOGO}"/>
-${line(SERIF, 'Iris', x + 64, 75, 40, '#23201b')}
-<rect x="${(x + 64 + irisW + 27).toFixed(1)}" y="42" width="2" height="40" fill="#23201b" opacity=".28"/>
-${badge}
-${line(SANS, name, logoX + 66, 73, 30, '#23201b')}
-${centred(SERIF, 'Apply to this job in one swipe.', 600, 178, 68, '#23201b')}
-<rect x="147" y="${cardY + 8}" width="906" height="${cardH}" rx="30" fill="#3a2a10" opacity=".14"/>
-<rect x="150" y="${cardY}" width="900" height="${cardH}" rx="30" fill="#fffdf9"/>
-${line(SANS, fit(SANS, `${company.toUpperCase()} IS HIRING`, 21, 800), 192, cardY + 58, 21, '#5536c4', 2.2)}
-${lines.map((l, i) => line(SERIF, l, 192, titleY + i * 58, 54, '#23201b')).join('\n')}
-${line(SANS, meta, 192, cardY + cardH - 34, 25, '#4e4a41')}
-${centred(SANS, 'Tinder for Jobs: Free to Try  ·  iOS  ·  Android  ·  Web', 600, Math.min(590, cardY + cardH + 66), 25, '#2f2b24')}
+<image x="${left}" y="46" width="52" height="52" href="${LOGO}"/>
+${line(SERIF, 'Iris', left + 64, 85, 40, '#23201b')}
+<rect x="${(left + 64 + irisW + 24).toFixed(1)}" y="52" width="2" height="40" fill="#23201b" opacity=".28"/>
+${lockup}
+${line(SANS, shortName, logoX + 66, 83, 28, '#23201b')}
+${line(SERIF, 'Apply to this job', left, 228, 88, '#23201b')}
+${line(SERIF, 'in one swipe.', left, 318, 88, '#5536c4')}
+${line(SANS, fit(SANS, `${name.toUpperCase()} IS HIRING`, 21, 720), left, 386, 21, '#5536c4', 2.2)}
+${wrap(SERIF, clean(job.title) || 'Open role', 40, 730).map((l, i) => line(SERIF, l, left, 434 + i * 44, 40, '#23201b')).join('\n')}
+${line(SANS, fit(SANS, meta, 24, 730), left, wrap(SERIF, clean(job.title) || 'Open role', 40, 730).length === 2 ? 516 : 472, 24, '#4e4a41')}
+${line(SANS, 'Tinder for Jobs: Free to Try  ·  iOS  ·  Android  ·  Web', left, 578, 23, '#2f2b24')}
+${phone(job, company, name, logo)}
 </svg>`;
 }
 

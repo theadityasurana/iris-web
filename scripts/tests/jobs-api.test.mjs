@@ -148,3 +148,15 @@ test('referral previews: one per code, first name only, and safe with odd input'
   for (const name of ['Asha', '', 'आदित्य', '<b>x</b>', 'A very very very very very very long name indeed']) assert.ok(inviteSvg(name, 'ASHA1234').endsWith('</svg>'), name);
   assert.ok(!inviteSvg('<b>x</b>', 'ASHA1234').includes('<b>'));
 });
+
+test('job image shows the phone card, and leaves out what a job does not have', async () => {
+  const { jobChips, jobSvg } = await import('../../functions/_lib/og-svg.js');
+  const job = { title: 'Security Data Engineer', company_name: 'Anthropic', location: 'San Francisco, CA', type: 'Full-time', experience: 'Senior Level', salary_range: 'Competitive salary', education_level: "Bachelor's Degree", posted_at: new Date(Date.now() - 2 * 864e5).toISOString(), skills: ['SQL', 'Git'] };
+  const labels = jobChips(job, { industry: 'Technology', company_type: 'Growth Stage' }).map(c => c[0]);
+  assert.deepEqual(labels, ['Technology', 'Growth Stage', 'Full-time', 'On-site', 'Senior Level', '2 days ago', 'Competitive salary', "Bachelor's Degree"]);
+  assert.deepEqual(jobChips({ location: 'Remote - US', experience: 'null' }).map(c => c[0]), ['Remote']);
+  for (const j of [job, { title: '', company_name: '' }, { ...job, skills: 'Go, Rust' }, { ...job, skills: null }, { ...job, title: 'x '.repeat(200), location: 'y '.repeat(200), skills: Array(60).fill('Kubernetes') }]) {
+    assert.ok(jobSvg(j, null).endsWith('</svg>'));
+  }
+  assert.ok(jobSvg(job, 'data:image/png;base64,AA').includes('data:image/png;base64,AA'));
+});
