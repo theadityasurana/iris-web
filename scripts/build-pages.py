@@ -168,10 +168,12 @@ REVIEWS = [
     {"name": "Dawar D.", "source": "Google Play", "date": "1 Aug 2026", "stars": 5, "text": "Superb concept and experience, would love if the UX becomes more sleek and effortlessly,plus more ctext to the AI about my profile", "url": PLAY_STORE},
     {"name": "Awais A.", "source": "Google Play", "date": "25 Jul 2026", "stars": 5, "text": "best ui and best app I've ever used", "url": PLAY_STORE},
 ]
-# Screenshots of real posts, with the author's permission: add {"image": "/media/love/file.webp", "alt": "...", "url": "link to the post"}.
+# Real messages the founder received, cropped so nobody can be identified. Add only real ones.
 SCREENSHOTS = [
-    {"image": f"/media/love/{f.name}", "alt": "A post about Iris from a user", "url": f"/media/love/{f.name}"}
-    for f in sorted((PUB / "media/love").glob("*")) if f.suffix.lower() in (".webp", ".jpg", ".jpeg", ".png")
+    {"image": "/media/love/stages.webp", "w": 872, "h": 362, "alt": "Bro I started using this app today. It's really great. I really liked that once an application is submitted the entire stages of application filling by AI agents is shown like it's answering application questions etc."},
+    {"image": "/media/love/concept.webp", "w": 890, "h": 474, "alt": "Hello Aditya, connected with you because I came across nextquark and it blew my mind because I was thinking to quit my job and learn a few things and launch a product. And that product was Tinder but for jobs, LOL. Its a lovely concept, isn't it. Good luck to you, I believe in your(our) idea."},
+    {"image": "/media/love/launch.webp", "w": 872, "h": 189, "alt": "Brother! Congrats on the launch, and keep going, you've built something awesome."},
+    {"image": "/media/love/wild.webp", "w": 492, "h": 82, "alt": "Saw you are building tinder for jobs lol that's wild."},
 ]
 
 
@@ -184,7 +186,7 @@ def review_card(r, i):
     </a>"""
 
 
-shots = "".join(f'<a class="post shot" href="{e(s["url"])}" target="_blank" rel="noopener"><img src="{e(s["image"])}" alt="{e(s["alt"])}" loading="lazy"></a>' for s in SCREENSHOTS)
+shots = "".join(f'<figure class="post shot"><img src="{e(s["image"])}" alt="{e(s["alt"])}" width="{s["w"]}" height="{s["h"]}" loading="lazy"><figcaption>Message to the founder · name hidden for privacy</figcaption></figure>' for s in SCREENSHOTS)
 tweet = "https://x.com/intent/tweet?text=" + "I%27m%20using%20%40irisjobs_live%20to%20apply%20to%20jobs.%20Swipe%20right%2C%20AI%20applies.%20https%3A%2F%2Firisjobs.live"
 page("love", "Wall of Love: What Job Seekers Say About Iris", "Real reviews and posts from people using Iris, the Tinder for jobs. See what job seekers say, and share your own story.", """
 .lv-h { padding-top: 72px; text-align: center; }
@@ -202,7 +204,9 @@ a.post:hover { transform: translateY(-3px) rotate(0deg); box-shadow: inset 0 0 0
 .a0 { background: #5536c4; } .a1 { background: #2f7a55; } .a2 { background: #b4632a; } .a3 { background: #3560b8; }
 .stars { margin-top: 14px; color: #e0a526; letter-spacing: 2px; }
 .post p { margin-top: 8px; font-size: 1.04rem; line-height: 1.42; }
-.post.shot { padding: 0; overflow: hidden; }
+.post.shot { margin-left: 0; margin-right: 0; padding: 8px 8px 12px; overflow: hidden; background: #1f2529; box-shadow: var(--shadow); }
+.post.shot img { width: 100%; height: auto; border-radius: 16px; }
+.post.shot figcaption { padding: 10px 8px 0; font-size: .78rem; color: #a9b4ba; }
 .invite { border: 1.5px dashed var(--line-2); background: transparent; box-shadow: none; text-align: center; padding: 32px 22px; }
 .invite h3 { font-family: var(--serif); font-weight: 500; font-size: 1.7rem; line-height: 1.12; }
 .invite p { color: var(--ink-2); font-size: .96rem; }
@@ -212,7 +216,7 @@ a.post:hover { transform: translateY(-3px) rotate(0deg); box-shadow: inset 0 0 0
 .nums span { display: block; margin-top: 8px; color: #bcb2d8; font-size: .92rem; }
 @media (min-width: 760px) { .nums { grid-template-columns: repeat(3, 1fr); } }
 """, f"""<main class="wrap">
-  <header class="lv-h"><div class="overline">Wall of love</div><h1 class="big">Don’t take <em>our</em> word for it.</h1><p>Reviews and posts from real people using Iris. Every one here links back to where it was published.</p></header>
+  <header class="lv-h"><div class="overline">Wall of love</div><h1 class="big">Don’t take <em>our</em> word for it.</h1><p>Reviews and messages from real people. Names on private messages are hidden for their privacy.</p></header>
   <section class="wall" aria-label="Reviews">
     {''.join(review_card(r, i) for i, r in enumerate(REVIEWS))}
     {shots}

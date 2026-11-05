@@ -64,7 +64,9 @@ a.post:hover { transform: translateY(-3px) rotate(0deg); box-shadow: inset 0 0 0
 .a0 { background: #5536c4; } .a1 { background: #2f7a55; } .a2 { background: #b4632a; } .a3 { background: #3560b8; }
 .stars { margin-top: 14px; color: #e0a526; letter-spacing: 2px; }
 .post p { margin-top: 8px; font-size: 1.04rem; line-height: 1.42; }
-.post.shot { padding: 0; overflow: hidden; }
+.post.shot { margin-left: 0; margin-right: 0; padding: 8px 8px 12px; overflow: hidden; background: #1f2529; box-shadow: var(--shadow); }
+.post.shot img { width: 100%; height: auto; border-radius: 16px; }
+.post.shot figcaption { padding: 10px 8px 0; font-size: .78rem; color: #a9b4ba; }
 .invite { border: 1.5px dashed var(--line-2); background: transparent; box-shadow: none; text-align: center; padding: 32px 22px; }
 .invite h3 { font-family: var(--serif); font-weight: 500; font-size: 1.7rem; line-height: 1.12; }
 .invite p { color: var(--ink-2); font-size: .96rem; }
@@ -78,7 +80,7 @@ a.post:hover { transform: translateY(-3px) rotate(0deg); box-shadow: inset 0 0 0
 <body>
 <nav class="nav" aria-label="Main"><a class="brand" href="/"><img src="/logo.webp" alt="Iris logo" width="30" height="30">Iris</a><div class="nav-r"><a href="/jobs/">Jobs</a><a href="/#pricing">Pricing</a><a href="/blog/">Blog</a><a href="/app/sign-in">Sign in</a><a class="pill" href="https://irisjobs.live/app/sign-up">Get started</a></div></nav>
 <main class="wrap">
-  <header class="lv-h"><div class="overline">Wall of love</div><h1 class="big">Don’t take <em>our</em> word for it.</h1><p>Reviews and posts from real people using Iris. Every one here links back to where it was published.</p></header>
+  <header class="lv-h"><div class="overline">Wall of love</div><h1 class="big">Don’t take <em>our</em> word for it.</h1><p>Reviews and messages from real people. Names on private messages are hidden for their privacy.</p></header>
   <section class="wall" aria-label="Reviews">
     <a class="post tilt0" href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener">
       <header><span class="av a0">D</span><div><b>Dawar D.</b><small>Google Play · 1 Aug 2026</small></div><img src="/favicon-48.png" alt="Iris" width="20" height="20"></header>
@@ -89,7 +91,7 @@ a.post:hover { transform: translateY(-3px) rotate(0deg); box-shadow: inset 0 0 0
       <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
       <p>best ui and best app I&#x27;ve ever used</p>
     </a>
-    
+    <figure class="post shot"><img src="/media/love/stages.webp" alt="Bro I started using this app today. It&#x27;s really great. I really liked that once an application is submitted the entire stages of application filling by AI agents is shown like it&#x27;s answering application questions etc." width="872" height="362" loading="lazy"><figcaption>Message to the founder · name hidden for privacy</figcaption></figure><figure class="post shot"><img src="/media/love/concept.webp" alt="Hello Aditya, connected with you because I came across nextquark and it blew my mind because I was thinking to quit my job and learn a few things and launch a product. And that product was Tinder but for jobs, LOL. Its a lovely concept, isn&#x27;t it. Good luck to you, I believe in your(our) idea." width="890" height="474" loading="lazy"><figcaption>Message to the founder · name hidden for privacy</figcaption></figure><figure class="post shot"><img src="/media/love/launch.webp" alt="Brother! Congrats on the launch, and keep going, you&#x27;ve built something awesome." width="872" height="189" loading="lazy"><figcaption>Message to the founder · name hidden for privacy</figcaption></figure><figure class="post shot"><img src="/media/love/wild.webp" alt="Saw you are building tinder for jobs lol that&#x27;s wild." width="492" height="82" loading="lazy"><figcaption>Message to the founder · name hidden for privacy</figcaption></figure>
     <div class="post invite"><h3>Landed an interview with Iris?</h3><p>Post about it and tag us, and we’ll add you to the wall.</p><a class="pill" href="https://x.com/intent/tweet?text=I%27m%20using%20%40irisjobs_live%20to%20apply%20to%20jobs.%20Swipe%20right%2C%20AI%20applies.%20https%3A%2F%2Firisjobs.live" target="_blank" rel="noopener">Share on X</a></div>
     <div class="post invite"><h3>Using Iris on your phone?</h3><p>A short review helps other job seekers find it.</p><a class="pill light" href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener">Review on Google Play</a></div>
     <div class="post invite"><h3>Got a story to tell?</h3><p>We’d love to hear how your search is going, good or bad.</p><a class="pill light" href="mailto:support@nextquark.com?subject=My%20Iris%20story">Email us</a></div>
