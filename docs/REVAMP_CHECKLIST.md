@@ -32,12 +32,12 @@ Status key: `[ ]` to do, `[x]` done and verified, `[!]` needs the owner (account
 - [!] Google Cloud Console: add `https://widujxpahzlpegzjjpqp.supabase.co/auth/v1/callback` to the authorised redirect URIs of OAuth client `785222584965-29ja…`
 - [!] Apple Developer: create a Services ID and Sign in with Apple key, generate the secret, and add them in Supabase Auth, then set `APPLE_WEB_ENABLED = true`. Keep the app's bundle ID `app.nextquark.hireswipe` in Supabase's Apple client ID list, or native Apple sign-in in the app could break
 - [!] Leave the Supabase Site URL alone unless the app is confirmed not to depend on it. The website passes its own redirect URL, which is already allow-listed
-- [!] Dodo: confirm product IDs and the webhook secret; approve setting Cloudflare secrets and the additive website-only billing table
+- [x] Dodo live: 12 products, webhook, Cloudflare secrets and billing tables are set up
 - [!] Google Search Console, Bing Webmaster Tools, GA4: create properties and send the verification codes and Measurement ID
 - [!] Keep `/.well-known`, `/job`, `/post`, `/invite`, `/iris`, `/download` working on www: the mobile app registers www for app links, so the redirect exempts them
 - [!] Cloudflare: confirm `www` DNS stays proxied so the redirect runs
 - [!] Blog: real author name and bio; review the competitor comparisons
-- [!] Approve commit, push and deploy
+- [x] Commit, push and deploy
 
 ## 2. Not promised
 
@@ -93,7 +93,7 @@ Status key: `[ ]` to do, `[x]` done and verified, `[!]` needs the owner (account
 
 - [x] New `functions/api/dodo/checkout` in this repo: verify the Supabase JWT, correct Dodo API, region pricing
 - [x] New `functions/api/dodo/webhook` in this repo: mandatory signature, idempotent
-- [!] Website-only billing table and credit ledger (additive, after approval); app columns in `profiles` never written
+- [x] Website-only billing table and credit ledger (additive, after approval); app columns in `profiles` never written
 - [x] Do not use or deploy `rork/supabase/functions/dodo-*`
 - [x] Plans page checkout and return states
 - [ ] End-to-end test in Dodo test mode (real checkout session verified; paid flow needs secrets and deploy)
