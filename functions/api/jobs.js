@@ -15,7 +15,7 @@ const DEFAULT_WINDOW_DAYS = 7;
 const MAX_OFFSET = 40;
 const FIXED_TTL = 3600;
 const SEARCH_TTL = 300;
-const COLUMNS = 'id,title,company_name,company_website,location,type,experience,salary_range,posted_at,skills,portal_url';
+const COLUMNS = 'id,title,company_name,company_website,location,type,experience,salary_range,posted_at,skills,portal_url,education_level';
 
 /** The fixed list on /jobs, one role from each. Names match the database exactly. */
 export const TOP_COMPANIES = ['Anthropic', 'OpenAI', 'Spacex', 'Neuralink', 'Speechify', 'Perplexity', 'ElevenLabs', 'Stripe', 'Figma', 'Notion', 'Duolingo', 'Ramp'];
@@ -45,7 +45,7 @@ export function topCompanyFor(f) {
   return TOP_COMPANIES.find(c => c.toLowerCase() === f.q) ?? null;
 }
 
-const LEVELS = {
+export const LEVELS = {
   intern: { exact: ['Internship'], titles: ['intern', 'internship', 'trainee', 'apprentice'] },
   entry: { exact: ['Entry Level'], titles: ['junior', 'graduate', 'entry level', 'associate'] },
   experienced: { exact: ['Middle Level', 'Senior Level', 'Lead', 'Principal'] },
@@ -54,7 +54,7 @@ const MODES = { remote: 'remote', hybrid: 'hybrid', onsite: null };
 const TYPES = { full: 'Full-time', part: 'Part-time', contract: 'Contract' };
 const DAYS = new Set(['1', '7', '14', '30']);
 
-const clean = (v, max) => (v || '').replace(/[^\p{L}\p{N} +#&./,'-]/gu, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
+export const clean = (v, max) => (v || '').replace(/[^\p{L}\p{N} +#&./,'-]/gu, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
 
 /** Only known values survive, in one order, so equal searches share one cache entry. */
 export function normalize(url) {
@@ -94,14 +94,25 @@ export function rpcParams(f, now = Date.now()) {
 }
 
 /** Removes rows the database could not rule out. */
-export function trimRows(rows, f) {
+export function trimRows(rows, f, max = PAGE) {
   let out = rows;
   if (f.mode === 'onsite') out = out.filter(r => !/remote|hybrid/i.test(`${r.type ?? ''} ${r.location ?? ''}`));
   if (f.level === 'intern' || f.level === 'entry') {
     const title = f.level === 'intern' ? /\b(intern|internship|trainee|apprentice|co-?op)\b/i : /\b(junior|jr\.?|graduate|grad|entry|associate|fresher)\b/i;
     out = out.filter(r => LEVELS[f.level].exact.includes(r.experience) || title.test(r.title ?? ''));
   }
-  return out.slice(0, PAGE);
+  return out.slice(0, max);
+}
+
+/** Up to `limit` matches for a set of filters, or null if the search fails. Used for share images. */
+export async function searchSample(filters, limit) {
+  const company = topCompanyFor(filters);
+  if (company) return companyRows(company, limit);
+  const params = { ...rpcParams(filters), p_limit: limit + 15, p_offset: 0 };
+  const call = extra => fetch(`${SUPABASE_URL}/rest/v1/rpc/search_jobs?select=${COLUMNS}`, { method: 'POST', headers, body: JSON.stringify({ ...params, ...extra }), signal: AbortSignal.timeout(7000) });
+  let res = await call({});
+  if (res.status === 500 && !filters.q) res = await call({ p_posted_after: new Date(Date.now() - DEFAULT_WINDOW_DAYS * 864e5).toISOString() });
+  return res.ok ? trimRows(await res.json(), filters, limit) : null;
 }
 
 export function atsOf(url) {

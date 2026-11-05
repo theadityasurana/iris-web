@@ -177,6 +177,38 @@ ${phone(job, company, name, logo)}
 </svg>`;
 }
 
+/** How a search reads in words, such as "entry-level remote". */
+export function searchWords(f) {
+  const level = { intern: 'internship', entry: 'entry-level', experienced: 'experienced' }[f.level];
+  const mode = { remote: 'remote', hybrid: 'hybrid', onsite: 'on-site' }[f.mode];
+  const type = { full: 'full-time', part: 'part-time', contract: 'contract' }[f.type];
+  return [level, mode, type].filter(Boolean).join(' ');
+}
+
+/** A shared search: how many roles match, with the top match on the phone. */
+export function searchSvg({ count, more, query, atCompany, place, filters, top, logo, company }) {
+  const label = searchWords(filters);
+  const total = `${count}${more ? '+' : ''}`;
+  const first = fit(SERIF, `${total} ${label ? `${label} ` : ''}${count === 1 ? 'job' : 'jobs'}`, 70, 740);
+  const second = query ? fit(SERIF, `${atCompany ? 'at' : 'for'} ${query}`, 70, 740) : '';
+  const third = place ? fit(SERIF, `in ${place}`, 70, 740) : '';
+  const lines = [first, second, third].filter(Boolean);
+  const raw = clean(top.company_name) || 'This company';
+  const name = raw === 'Spacex' ? 'SpaceX' : raw;
+  const left = 58;
+  const irisW = widthOf(SERIF, 'Iris', 40);
+  const startY = lines.length === 3 ? 196 : lines.length === 2 ? 226 : 266;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
+<image width="1200" height="630" href="${BG}"/>
+<image x="${left}" y="46" width="52" height="52" href="${LOGO}"/>
+${line(SERIF, 'Iris', left + 64, 85, 40, '#23201b')}
+${lines.map((l, i) => line(SERIF, l, left, startY + i * 80, 70, i === 0 ? '#5536c4' : '#23201b')).join('\n')}
+${line(SANS, count === 1 ? 'Apply to it in a single swipe.' : 'Apply to any of them in a single swipe.', left, startY + lines.length * 80 - 18, 31, '#2f2b24')}
+${line(SANS, 'Tinder for Jobs: Free to Try  ·  iOS  ·  Android  ·  Web', left, 578, 23, '#2f2b24')}
+${phone(top, company, name, logo)}
+</svg>`;
+}
+
 /** Latin names only, since the bundled fonts are Latin. Others read "A friend", as on an unknown code. */
 function displayName(name) {
   const n = clean(name);

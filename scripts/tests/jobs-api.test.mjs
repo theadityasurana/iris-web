@@ -160,3 +160,24 @@ test('job image shows the phone card, and leaves out what a job does not have', 
   }
   assert.ok(jobSvg(job, 'data:image/png;base64,AA').includes('data:image/png;base64,AA'));
 });
+
+test('shared search links: filters read as words, and plain /jobs/ is left alone', async () => {
+  const { searchWords, searchSvg } = await import('../../functions/_lib/og-svg.js');
+  const { searchPreview, displayText, searchParams } = await import('../../functions/jobs/index.js');
+  assert.equal(searchWords({ level: 'entry', mode: 'remote', type: 'full' }), 'entry-level remote full-time');
+  assert.equal(searchPreview(f('')), null);
+  const u = 'https://x/jobs/?level=entry&q=Software+Engineer&loc=Bengaluru';
+  const p = searchPreview(normalize(u), new URL(u).searchParams, 'https://irisjobs.live');
+  assert.equal(p.title, 'Entry-level Software Engineer jobs in Bengaluru | Iris');
+  const img = new URL(p.image);
+  assert.equal(img.host, 'irisjobs.live');
+  assert.ok(img.pathname.endsWith('.jpg'));
+  assert.equal(img.searchParams.get('level'), 'entry');
+  assert.equal(displayText('software engineer'), 'Software Engineer');
+  assert.equal(displayText('iOS'), 'iOS');
+  assert.equal(searchParams(normalize('https://x/?mode=<x>&q=pm'), new URLSearchParams('q=pm')).toString(), 'q=pm');
+  const top = { title: 'Engineer', company_name: 'Stripe', location: 'Pune', type: 'Full-time' };
+  for (const args of [{ count: 25, more: false, query: 'Software Engineer', place: 'Bengaluru' }, { count: 50, more: true, query: '', place: '' }, { count: 1, more: false, query: 'x '.repeat(90), place: 'y '.repeat(90) }]) {
+    assert.ok(searchSvg({ ...args, filters: { level: 'entry' }, top, logo: null, company: {} }).endsWith('</svg>'));
+  }
+});
