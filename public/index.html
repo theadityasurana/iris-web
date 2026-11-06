@@ -297,6 +297,8 @@
     .hero-first { position: relative; display: flex; flex-direction: column; justify-content: center; min-height: calc(100svh - 80px); padding: 40px 0 72px; }
     .hero-art { position: absolute; inset: -84px 0 -70px; height: auto; top: -84px; z-index: -1; background: url(/media/landing/hero.webp) 50% 100% / cover no-repeat; -webkit-mask-image: linear-gradient(180deg, #000 86%, transparent); mask-image: linear-gradient(180deg, #000 86%, transparent); }
     .hero .wrap { padding-top: 0; }
+    .hero .hero-kicker { font-family: var(--sans); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 500; line-height: 1.25; letter-spacing: -.01em; text-transform: none; color: var(--ink); text-wrap: balance; }
+    .hero .hero-kicker strong { font-weight: 700; color: var(--accent); }
     .stage { margin: 0 auto; padding-top: 56px; scroll-margin-top: 84px; }
     .video-box, .video-box video, .video-box img { aspect-ratio: 16 / 9; }
     .video-box { width: min(100%, calc((100svh - 130px) * 16 / 9)); max-height: calc(100svh - 130px); margin: 0 auto; border-radius: clamp(16px, 2.6vw, 32px); }
@@ -665,7 +667,7 @@
       <div class="hero-first">
         <div class="hero-art" aria-hidden="true"></div>
         <div class="wrap">
-          <div class="overline">The Tinder for jobs, with an AI that applies</div>
+          <div class="overline hero-kicker">The <strong>Tinder for jobs</strong>, with an AI that applies</div>
           <h1 class="headline" id="page-title">Swipe right.<br><em>AI applies.</em></h1>
           <p class="sub" id="page-bio">Apply to hundreds of jobs in seconds. Over 2 million jobs worldwide. Free to try.</p>
           <div id="job-slot"></div>
