@@ -924,6 +924,11 @@
     var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndpZHVqeHBhaHpscGVnempqcHFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NTI2NjIsImV4cCI6MjA4NzMyODY2Mn0.OyjX0Qg4UlDPfTmCwhdK3JuE30698f6A-a01LunhDtM';
     var PLAY_STORE = 'https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke';
     var APP_STORE = 'https://apps.apple.com/in/app/nextquark/id6761863089';
+    var WEB_APP = 'https://irisjobs.live/app/sign-up';
+    // Temporarily off while the iOS App Store build is behind: iPhone visitors go to the web app instead.
+    // Set back to true to show the hero App Store button and send iPhones to the App Store again.
+    var SHOW_HERO_APP_STORE = false;
+    var IOS_DEST = SHOW_HERO_APP_STORE ? APP_STORE : WEB_APP;
     var HEADERS = { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY };
     // Landing pages: show at least this much of the video before opening the store.
     var VIDEO_WATCH_MS = 20000;
@@ -940,7 +945,7 @@
     var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     var isAndroid = /Android/i.test(ua);
     var isMobile = isIOS || isAndroid;
-    var storeUrl = isIOS ? APP_STORE : isAndroid ? PLAY_STORE : null;
+    var storeUrl = isIOS ? IOS_DEST : isAndroid ? PLAY_STORE : null;
     var host = window.location.hostname;
     var path = window.location.pathname.replace(/\/$/, '') || '/';
 
@@ -982,15 +987,12 @@
       return '<a class="pill' + (light ? ' light' : '') + '" href="' + href + '">' + icon + '<span>' + label + '</span></a>';
     }
 
-    // Temporarily off while the iOS App Store build is behind. Set back to true to show the hero App Store button again.
-    var SHOW_HERO_APP_STORE = false;
-
     function setupStoreButton() {
       var actions = document.getElementById('actions');
       var nav = document.getElementById('nav-cta');
       if (isIOS) {
         actions.innerHTML = SHOW_HERO_APP_STORE ? pillHtml(APP_STORE, 'Download on the App Store', APPLE_SVG) : '';
-        nav.href = APP_STORE;
+        nav.href = IOS_DEST;
       } else if (isAndroid) {
         actions.innerHTML = pillHtml(PLAY_STORE, 'Get it on Google Play', PLAY_SVG);
         nav.href = PLAY_STORE;
@@ -1014,7 +1016,7 @@
         progress.hidden = true;
         return;
       }
-      var label = isIOS ? 'App Store' : 'Google Play';
+      var label = isIOS ? (SHOW_HERO_APP_STORE ? 'App Store' : 'the web app') : 'Google Play';
       var left = Math.ceil(ms / 1000);
       progress.hidden = false;
       bar.style.transition = 'none';
