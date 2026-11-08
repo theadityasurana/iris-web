@@ -982,19 +982,24 @@
       return '<a class="pill' + (light ? ' light' : '') + '" href="' + href + '">' + icon + '<span>' + label + '</span></a>';
     }
 
+    // Temporarily off while the iOS App Store build is behind. Set back to true to show the hero App Store button again.
+    var SHOW_HERO_APP_STORE = false;
+
     function setupStoreButton() {
       var actions = document.getElementById('actions');
       var nav = document.getElementById('nav-cta');
       if (isIOS) {
-        actions.innerHTML = pillHtml(APP_STORE, 'Download on the App Store', APPLE_SVG);
+        actions.innerHTML = SHOW_HERO_APP_STORE ? pillHtml(APP_STORE, 'Download on the App Store', APPLE_SVG) : '';
         nav.href = APP_STORE;
       } else if (isAndroid) {
         actions.innerHTML = pillHtml(PLAY_STORE, 'Get it on Google Play', PLAY_SVG);
         nav.href = PLAY_STORE;
       } else {
-        actions.innerHTML = pillHtml(APP_STORE, 'App Store', APPLE_SVG) + pillHtml(PLAY_STORE, 'Google Play', PLAY_SVG);
+        actions.innerHTML = (SHOW_HERO_APP_STORE ? pillHtml(APP_STORE, 'App Store', APPLE_SVG) : '') + pillHtml(PLAY_STORE, 'Google Play', PLAY_SVG);
         nav.href = APP_STORE;
       }
+      // An empty button group would still leave a gap in the row.
+      actions.style.display = actions.innerHTML ? '' : 'none';
     }
 
     // Countdown with a thin progress line along the bottom of the frame, then the store (phones only).
