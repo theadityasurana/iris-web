@@ -81,5 +81,8 @@ export function useJobActions() {
     return ok;
   }, [userId, addSwipedJobId, qc]);
 
-  return { apply, skip, save, outOfCredits, setOutOfCredits, entitlements, freeLeft, freeResetAt: free?.resetAt ?? 0 };
+  /** Same pre-check apply() runs first; lets the UI skip the applying animation when it would just open the paywall. */
+  const hasCredits = webCredits > 0 || canApply(entitlements, freeLeft);
+
+  return { apply, hasCredits, skip, save, outOfCredits, setOutOfCredits, entitlements, freeLeft, freeResetAt: free?.resetAt ?? 0 };
 }

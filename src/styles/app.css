@@ -301,6 +301,42 @@
 .round.save svg { width: 20px; height: 20px; }
 .round.apply { background: var(--ink); color: var(--inverse); box-shadow: var(--shadow-2); }
 .deck-hint { text-align: center; margin-top: 14px; }
+
+/* Apply flip: the card turns over to an "AI is applying for you" face, then leaves. */
+.apply-flip { position: relative; perspective: 1400px; transition: opacity 0.32s var(--ease), transform 0.32s var(--ease); }
+.apply-flip.out { opacity: 0; transform: translateY(-18px) scale(0.92); }
+.apply-flip-inner { position: relative; height: 100%; transform-style: preserve-3d; transition: transform 0.56s cubic-bezier(0.3, 0.7, 0.2, 1.05); }
+.apply-flip.flipped .apply-flip-inner { transform: rotateY(180deg); }
+.apply-flip-front, .apply-flip-back { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.apply-flip-front { position: relative; height: 100%; }
+.apply-flip-back {
+  position: absolute; inset: 0; transform: rotateY(180deg); overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 28px; text-align: center;
+  border-radius: var(--r-5); color: #fff;
+  background: radial-gradient(120% 80% at 50% 0%, #8a6bf0 0%, transparent 60%), linear-gradient(165deg, #5b3bd6 0%, #34208f 100%);
+  box-shadow: var(--shadow-3);
+}
+.tile-grid .apply-flip-back { border-radius: var(--r-4); }
+.deck-card .apply-flip { height: 100%; }
+.applying-orb { position: relative; display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: rgba(255, 255, 255, 0.14); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28); animation: applying-pulse 1.3s ease-out infinite; }
+.applying-orb svg { width: 30px; height: 30px; animation: applying-twinkle 1.3s ease-in-out infinite; }
+.applying-title { font-family: var(--serif); font-size: 27px; font-weight: 500; line-height: 1.15; }
+.applying-dots { display: inline-flex; gap: 3px; margin-left: 4px; }
+.applying-dots i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: applying-dot 0.9s ease-in-out infinite; }
+.applying-dots i:nth-child(2) { animation-delay: 0.15s; }
+.applying-dots i:nth-child(3) { animation-delay: 0.3s; }
+.applying-steps { position: relative; width: 100%; height: 20px; font-size: 14px; color: rgba(255, 255, 255, 0.82); }
+.applying-steps span { position: absolute; inset: 0; opacity: 0; animation: applying-step 1.5s var(--ease) both; }
+.applying-steps span:nth-child(2) { animation-delay: 0.5s; }
+.applying-steps span:nth-child(3) { animation: applying-step-last 1.5s var(--ease) 1s both; }
+.applying-bar { width: min(220px, 70%); height: 4px; border-radius: 99px; background: rgba(255, 255, 255, 0.2); overflow: hidden; }
+.applying-bar i { display: block; height: 100%; width: 100%; border-radius: inherit; background: #fff; transform-origin: left; animation: applying-fill 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both; }
+@keyframes applying-pulse { 0% { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.28), 0 0 0 0 rgba(255,255,255,0.35); } 100% { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.28), 0 0 0 22px rgba(255,255,255,0); } }
+@keyframes applying-twinkle { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.12) rotate(12deg); } }
+@keyframes applying-dot { 0%, 80%, 100% { opacity: 0.3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-4px); } }
+@keyframes applying-step { 0% { opacity: 0; transform: translateY(8px); } 8%, 28% { opacity: 1; transform: none; } 34%, 100% { opacity: 0; transform: translateY(-8px); } }
+@keyframes applying-step-last { 0% { opacity: 0; transform: translateY(8px); } 8%, 100% { opacity: 1; transform: none; } }
+@keyframes applying-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 kbd { display: inline-block; min-width: 20px; padding: 0 5px; border-radius: 5px; background: var(--surface-2); box-shadow: inset 0 -1px 0 var(--line-strong); font: 500 11px/18px var(--mono); color: var(--ink-2); text-align: center; }
 .detail-card { padding: 24px 26px; }
 .detail-placeholder { min-height: 300px; display: flex; align-items: center; justify-content: center; }

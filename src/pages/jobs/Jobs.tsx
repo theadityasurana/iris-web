@@ -9,12 +9,14 @@ import type { FeedPanelFilters } from '@/lib/feed-search';
 import type { Job } from '@/types';
 import { useFeed, EMPTY_FILTERS, activeFilterCount } from './useFeed';
 import { useJobActions } from './useJobActions';
-import { JobCard, JobDetail, JobTile, JobTileSkeleton } from './JobParts';
+import { ApplyFlip, APPLY_FLIP_MS, APPLY_OUT_MS, JobCard, JobDetail, JobTile, JobTileSkeleton, type ApplyPhase } from './JobParts';
 import { FiltersModal } from './FiltersModal';
 import { OutOfCredits } from './OutOfCredits';
 
 type Dir = 'left' | 'right' | 'up';
 const THRESHOLD = 110;
+
+const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 function readStored<T>(key: string, fallback: T): T {
   try { const raw = sessionStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch { return fallback; }
@@ -48,28 +50,44 @@ export default function Jobs() {
   // drag state
   const [drag, setDrag] = useState({ x: 0, y: 0, active: false });
   const [leaving, setLeaving] = useState<Dir | null>(null);
+  const [applyPhase, setApplyPhase] = useState<ApplyPhase>(null);
   const start = useRef<{ x: number; y: number } | null>(null);
   const busy = useRef(false);
 
   const act = useCallback(async (dir: Dir, job: Job | null = feed.current) => {
     if (!job || busy.current) return;
+
+    if (dir === 'right') {
+      // No credits: apply() opens the paywall; keep the card where it is.
+      if (!actions.hasCredits) { setDrag({ x: 0, y: 0, active: false }); void actions.apply(job); return; }
+      busy.current = true;
+      // Snap back to centre and flip over while the real application is queued.
+      setDrag({ x: 0, y: 0, active: false });
+      setApplyPhase('flip');
+      const pending = actions.apply(job);
+      await wait(APPLY_FLIP_MS);
+      setApplyPhase('out');
+      await wait(APPLY_OUT_MS);
+      feed.advance();
+      setApplyPhase(null);
+      busy.current = false;
+      const outcome = await pending;
+      if (outcome === 'no-credits') { feed.rewind(); return; }
+      toast(outcome === 'applied' ? `Applying to ${job.companyName}` : 'Your application could not be queued', outcome === 'applied' ? 'ok' : 'error');
+      return;
+    }
+
     busy.current = true;
     setLeaving(dir);
-    await new Promise(r => setTimeout(r, 240));
+    await wait(240);
     feed.advance();
     setLeaving(null);
     setDrag({ x: 0, y: 0, active: false });
     busy.current = false;
 
     if (dir === 'left') { actions.skip(job); return; }
-    if (dir === 'up') {
-      const ok = await actions.save(job);
-      toast(ok ? `Saved ${job.jobTitle}` : 'Could not save this job', ok ? 'ok' : 'error');
-      return;
-    }
-    const outcome = await actions.apply(job);
-    if (outcome === 'no-credits') { feed.rewind(); return; }
-    toast(outcome === 'applied' ? `Applying to ${job.companyName}` : 'Your application could not be queued', outcome === 'applied' ? 'ok' : 'error');
+    const ok = await actions.save(job);
+    toast(ok ? `Saved ${job.jobTitle}` : 'Could not save this job', ok ? 'ok' : 'error');
   }, [feed, actions, toast]);
 
   // keyboard: ← skip, → apply, ↑ save
@@ -106,18 +124,35 @@ export default function Jobs() {
     else setDrag({ x: 0, y: 0, active: false });
   };
 
+  // Grid tiles currently flipping to the "AI is applying" face, by job id.
+  const [tileApplying, setTileApplying] = useState<Record<string, Exclude<ApplyPhase, null>>>({});
+  const setTilePhase = (id: string, phase: ApplyPhase) => setTileApplying(prev => {
+    const next = { ...prev };
+    if (phase) next[id] = phase; else delete next[id];
+    return next;
+  });
+
   const gridAct = useCallback(async (dir: Dir, target: Job) => {
-    feed.remove(target.id);
-    if (dir === 'left') { actions.skip(target); return; }
-    if (dir === 'up') {
-      const ok = await actions.save(target);
-      toast(ok ? `Saved ${target.jobTitle}` : 'Could not save this job', ok ? 'ok' : 'error');
+    if (dir === 'right') {
+      if (tileApplying[target.id]) return;
+      if (!actions.hasCredits) { void actions.apply(target); return; }
+      setTilePhase(target.id, 'flip');
+      const pending = actions.apply(target);
+      await wait(APPLY_FLIP_MS);
+      setTilePhase(target.id, 'out');
+      await wait(APPLY_OUT_MS);
+      feed.remove(target.id);
+      setTilePhase(target.id, null);
+      const outcome = await pending;
+      if (outcome === 'no-credits') { feed.restore(target); return; }
+      toast(outcome === 'applied' ? `Applying to ${target.companyName}` : 'Your application could not be queued', outcome === 'applied' ? 'ok' : 'error');
       return;
     }
-    const outcome = await actions.apply(target);
-    if (outcome === 'no-credits') { feed.restore(target); return; }
-    toast(outcome === 'applied' ? `Applying to ${target.companyName}` : 'Your application could not be queued', outcome === 'applied' ? 'ok' : 'error');
-  }, [feed, actions, toast]);
+    feed.remove(target.id);
+    if (dir === 'left') { actions.skip(target); return; }
+    const ok = await actions.save(target);
+    toast(ok ? `Saved ${target.jobTitle}` : 'Could not save this job', ok ? 'ok' : 'error');
+  }, [feed, actions, toast, tileApplying]);
 
   const nFilters = activeFilterCount(filters);
   const job = feed.current;
@@ -125,7 +160,8 @@ export default function Jobs() {
   const leanLeft = drag.x < -40 || leaving === 'left';
   const leanUp = (drag.y < -40 && Math.abs(drag.x) < 60) || leaving === 'up';
 
-  const transform = leaving === 'right' ? 'translate(140%, 0) rotate(18deg)'
+  const transform = applyPhase ? 'translate(0, 0)'
+    : leaving === 'right' ? 'translate(140%, 0) rotate(18deg)'
     : leaving === 'left' ? 'translate(-140%, 0) rotate(-18deg)'
     : leaving === 'up' ? 'translate(0, -130%)'
     : `translate(${drag.x}px, ${drag.y}px) rotate(${drag.x / 22}deg)`;
@@ -160,7 +196,11 @@ export default function Jobs() {
         <>
           {feed.visible.length > 0 ? (
             <div className="tile-grid">
-              {feed.visible.map(j => <JobTile key={j.id} job={j} onSave={() => gridAct('up', j)} onPass={() => gridAct('left', j)} onApply={() => gridAct('right', j)} />)}
+              {feed.visible.map(j => (
+                <ApplyFlip key={j.id} phase={tileApplying[j.id] ?? null} company={j.companyName}>
+                  <JobTile job={j} busy={!!tileApplying[j.id]} onSave={() => gridAct('up', j)} onPass={() => gridAct('left', j)} onApply={() => gridAct('right', j)} />
+                </ApplyFlip>
+              ))}
               {feed.loading && Array.from({ length: 3 }, (_, i) => <JobTileSkeleton key={i} />)}
             </div>
           ) : (!feed.initialLoaded || feed.loading) ? (
@@ -212,10 +252,12 @@ export default function Jobs() {
                 className={`deck-card top ${drag.active ? 'dragging' : ''}`}
                 style={{ transform }}
                 onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
-                <span className={`stamp apply ${leanRight ? 'on' : ''}`}>Apply</span>
-                <span className={`stamp skip ${leanLeft ? 'on' : ''}`}>Skip</span>
-                <span className={`stamp save ${leanUp ? 'on' : ''}`}>Save</span>
-                <JobCard job={job} />
+                <ApplyFlip phase={applyPhase} company={job.companyName}>
+                  <span className={`stamp apply ${leanRight ? 'on' : ''}`}>Apply</span>
+                  <span className={`stamp skip ${leanLeft ? 'on' : ''}`}>Skip</span>
+                  <span className={`stamp save ${leanUp ? 'on' : ''}`}>Save</span>
+                  <JobCard job={job} />
+                </ApplyFlip>
               </div>
             )}
           </div>

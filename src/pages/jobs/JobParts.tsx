@@ -1,9 +1,42 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Briefcase, Clock, Users, Building2, ExternalLink, GraduationCap, Banknote, Globe2, Bookmark } from 'lucide-react';
+import { MapPin, Briefcase, Clock, Users, Building2, ExternalLink, GraduationCap, Banknote, Globe2, Bookmark, Sparkles } from 'lucide-react';
 import type { Job } from '@/types';
 import { CompanyLogo, formatSalary } from '@web/ui/bits';
 
 const MODE: Record<string, string> = { remote: 'Remote', hybrid: 'Hybrid', onsite: 'On-site' };
+
+export type ApplyPhase = 'flip' | 'out' | null;
+/** How long the "AI is applying" face holds after the flip starts, then how long it takes to leave. */
+export const APPLY_FLIP_MS = 1500;
+export const APPLY_OUT_MS = 320;
+
+/**
+ * Wraps a job card so Apply can flip it over to an "AI is applying for you"
+ * face before it leaves. The back face only mounts while applying, so its
+ * step animation starts in sync with the flip.
+ */
+export function ApplyFlip({ phase, company, children }: { phase: ApplyPhase; company: string; children: ReactNode }) {
+  return (
+    <div className={`apply-flip ${phase ? 'flipped' : ''} ${phase === 'out' ? 'out' : ''}`}>
+      <div className="apply-flip-inner">
+        <div className="apply-flip-front" aria-hidden={phase ? true : undefined}>{children}</div>
+        {phase && (
+          <div className="apply-flip-back" role="status" aria-live="polite">
+            <div className="applying-orb"><Sparkles /></div>
+            <div className="applying-title">AI is applying for you<span className="applying-dots"><i /><i /><i /></span></div>
+            <div className="applying-steps">
+              <span>Reading the role</span>
+              <span>Tailoring your answers</span>
+              <span className="ellipsis">Sending to {company}</span>
+            </div>
+            <div className="applying-bar"><i /></div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export function matchTone(score: number) {
   if (score >= 75) return 'green';
