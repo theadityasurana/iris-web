@@ -1,6 +1,7 @@
 /**
  * Website-only billing (Dodo Payments). Independent of the app's Apple/Google
- * subscriptions: it has its own table and credits, and never writes `profiles`.
+ * subscriptions: it has its own table and credits. The webhook mirrors only the
+ * plan status onto `profiles`, never credits (functions/api/dodo/webhook.js).
  */
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@web/auth/AuthProvider';

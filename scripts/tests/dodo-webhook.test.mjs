@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
-import { nextState, verify } from '../../functions/api/dodo/webhook.js';
+import { nextState, verify, profileUpdate } from '../../functions/api/dodo/webhook.js';
 
 const secret = 'whsec_' + Buffer.from('test-secret-bytes').toString('base64');
 const sign = (id, ts, body) => 'v1,' + createHmac('sha256', Buffer.from('test-secret-bytes')).update(`${id}.${ts}.${body}`).digest('base64');
@@ -44,4 +44,51 @@ test('cancel keeps credits; expiry clears them', () => {
 test('unknown plan and unknown event are ignored', () => {
   assert.equal(nextState('subscription.active', { ...data, metadata: { plan: 'x', period: 'monthly' } }, null), null);
   assert.equal(nextState('payment.succeeded', data, null), null);
+});
+
+// --- profiles mirror ---
+const T = Date.parse('2026-11-09T12:00:00Z');
+const webData = { subscription_id: 's1', created_at: '2026-11-09T11:20:00Z', next_billing_date: '2026-12-09T11:20:48Z', metadata: { plan: 'pro', period: 'monthly', region: 'IN' } };
+const freeProfile = { subscription_type: 'free', subscription_status: null, subscription_end_date: null };
+
+test('activation marks a free profile premium without touching credits', () => {
+  const p = profileUpdate('subscription.active', webData, freeProfile, null, T);
+  assert.equal(p.subscription_type, 'premium');
+  assert.equal(p.subscription_plan, 'pro');
+  assert.equal(p.billing_period, 'monthly');
+  assert.equal(p.subscription_status, 'active');
+  assert.equal(p.subscription_end_date, webData.next_billing_date);
+  assert.equal(p.subscription_start_date, webData.created_at);
+  assert.equal(p.pricing_region, 'IN');
+  assert.equal(p.iris_enabled, true);
+  assert.equal('applications_remaining' in p, false);
+  assert.equal('applications_limit' in p, false);
+});
+test('renewal keeps the original start date', () => {
+  const prof = { subscription_type: 'premium', subscription_status: 'active', subscription_start_date: '2026-11-09T11:20:00Z', subscription_end_date: '2026-12-09T11:20:48Z' };
+  const p = profileUpdate('subscription.renewed', { ...webData, next_billing_date: '2027-01-09T11:20:48Z' }, prof, { current_period_end: '2026-12-09T11:20:48+00:00' }, T);
+  assert.equal('subscription_start_date' in p, false);
+  assert.equal(p.subscription_end_date, '2027-01-09T11:20:48Z');
+});
+test('a live Play subscription is never overridden', () => {
+  const play = { subscription_type: 'premium', subscription_status: 'active', subscription_end_date: '2026-11-30T00:00:00Z', google_play_purchase_token: 'tok' };
+  assert.equal(profileUpdate('subscription.active', webData, play, null, T), null);
+});
+test('a lapsed Play subscription is replaced by the web plan', () => {
+  const lapsed = { subscription_type: 'free', subscription_status: 'expired', subscription_end_date: '2026-10-01T00:00:00Z', google_play_purchase_token: 'tok' };
+  assert.equal(profileUpdate('subscription.active', webData, lapsed, null, T).subscription_type, 'premium');
+});
+test('cancel / hold / expiry only touch a web-owned profile', () => {
+  const owned = { subscription_type: 'premium', subscription_status: 'active', subscription_end_date: '2026-12-09T11:20:48Z' };
+  const web = { current_period_end: '2026-12-09T11:20:48+00:00' };
+  assert.deepEqual(profileUpdate('subscription.cancelled', webData, owned, web, T), { subscription_status: 'cancelled' });
+  assert.deepEqual(profileUpdate('subscription.on_hold', webData, owned, web, T), { subscription_status: 'payment_failed' });
+  assert.deepEqual(profileUpdate('subscription.expired', webData, owned, web, T), { subscription_type: 'free', subscription_status: 'expired', iris_enabled: false });
+  const play = { ...owned, subscription_end_date: '2026-11-30T00:00:00Z', google_play_purchase_token: 'tok' };
+  assert.equal(profileUpdate('subscription.expired', webData, play, web, T), null);
+  assert.equal(profileUpdate('subscription.cancelled', webData, play, web, T), null);
+});
+test('missing profile or unknown plan is ignored', () => {
+  assert.equal(profileUpdate('subscription.active', webData, undefined, null, T), null);
+  assert.equal(profileUpdate('subscription.active', { ...webData, metadata: { plan: 'x', period: 'monthly' } }, freeProfile, null, T), null);
 });

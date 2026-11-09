@@ -1,7 +1,10 @@
 /**
- * Dodo webhook (Standard Webhooks). Writes only to the website's own tables,
- * web_subscriptions and web_billing_events; it never touches `profiles`, so
- * mobile subscriptions and credits are unaffected.
+ * Dodo webhook (Standard Webhooks). Credits live only in the website's own
+ * tables, web_subscriptions and web_billing_events. The plan's status is also
+ * mirrored onto `profiles` (subscription_type / plan / status / dates), which
+ * is what the app's paid-access gates, the admin dashboard and the upgrade
+ * alert read. That mirror never touches profile credits (the web adds its own
+ * on top) and never overrides a live Google Play / Razorpay subscription.
  */
 import { CREDITS_PER_MONTH, MONTHS, db, json } from '../../_lib/dodo.js';
 
@@ -61,6 +64,66 @@ export function nextState(type, data, existing) {
   }
 }
 
+const RENEWAL_GRACE_MS = 3 * 24 * 60 * 60 * 1000;
+
+/** Same rule as the app's hasPaidAccess() / SQL has_paid_access(). */
+export function hasPaidAccess(p, now = Date.now()) {
+  if (p?.subscription_type !== 'premium') return false;
+  const status = p.subscription_status || null;
+  const end = p.subscription_end_date ? new Date(p.subscription_end_date).getTime() : null;
+  if (status === 'cancelled') return end !== null && end > now;
+  if (status === null || status === 'active' || status === 'grace_period') return end === null || end + RENEWAL_GRACE_MS > now;
+  return false;
+}
+
+const sameInstant = (a, b) => !!a && !!b && new Date(a).getTime() === new Date(b).getTime();
+
+/**
+ * Pure: the `profiles` fields to write for this event, or null to leave the
+ * profile alone. `existing` is the web_subscriptions row before this event.
+ */
+export function profileUpdate(type, data, profile, existing, now = Date.now()) {
+  if (!profile) return null;
+  const meta = data.metadata || {};
+  const otherStore = !!(profile.google_play_purchase_token || profile.razorpay_subscription_id);
+  // The profile's paid state came from the web if its end date is the one we last wrote.
+  const webOwned = sameInstant(profile.subscription_end_date, existing?.current_period_end);
+
+  switch (type) {
+    case 'subscription.active':
+    case 'subscription.renewed': {
+      if (!CREDITS_PER_MONTH[meta.plan] || !MONTHS[meta.period]) return null;
+      if (otherStore && hasPaidAccess(profile, now) && !webOwned) return null;
+      const out = {
+        subscription_type: 'premium',
+        subscription_plan: meta.plan,
+        billing_period: meta.period,
+        subscription_status: 'active',
+        subscription_end_date: data.next_billing_date ?? null,
+        iris_enabled: true,
+      };
+      // Keep the original start date across renewals.
+      if (profile.subscription_type !== 'premium' || !profile.subscription_start_date) {
+        out.subscription_start_date = data.previous_billing_date || data.created_at || new Date(now).toISOString();
+      }
+      if (meta.region === 'IN' || meta.region === 'INTL') out.pricing_region = meta.region;
+      return out;
+    }
+    case 'subscription.cancelled':
+      // Auto-renew off: access runs until the paid period ends.
+      return webOwned ? { subscription_status: 'cancelled' } : null;
+    case 'subscription.on_hold':
+    case 'subscription.past_due':
+    case 'subscription.paused':
+    case 'subscription.failed':
+      return webOwned ? { subscription_status: 'payment_failed' } : null;
+    case 'subscription.expired':
+      return webOwned ? { subscription_type: 'free', subscription_status: 'expired', iris_enabled: false } : null;
+    default:
+      return null;
+  }
+}
+
 export async function onRequestPost({ request, env }) {
   const raw = await request.text();
   const id = request.headers.get('webhook-id');
@@ -87,16 +150,33 @@ export async function onRequestPost({ request, env }) {
   const next = nextState(event.type, data, existing);
   if (!next) return json({ ignored: true });
 
+  // Forget the delivery so Dodo's retry is processed rather than dropped.
+  const retry = async (what, status) => {
+    await db(env, `web_billing_events?webhook_id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
+    console.error(`${what} failed`, status);
+    return json({ error: 'retry' }, 500);
+  };
+
+  const profRes = await db(env, `profiles?id=eq.${encodeURIComponent(userId)}&select=subscription_type,subscription_status,subscription_start_date,subscription_end_date,google_play_purchase_token,razorpay_subscription_id`);
+  if (!profRes.ok) return retry('profile read', profRes.status);
+  const [profile] = await profRes.json();
+
   const write = await db(env, 'web_subscriptions?on_conflict=user_id', {
     method: 'POST',
     headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
     body: JSON.stringify({ user_id: userId, ...next }),
   });
-  if (!write.ok) {
-    // Forget the delivery so Dodo's retry is processed rather than dropped.
-    await db(env, `web_billing_events?webhook_id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
-    console.error('subscription write failed', write.status);
-    return json({ error: 'retry' }, 500);
+  if (!write.ok) return retry('subscription write', write.status);
+
+  const prof = profileUpdate(event.type, data, profile, existing);
+  if (prof) {
+    const pw = await db(env, `profiles?id=eq.${encodeURIComponent(userId)}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify(prof),
+    });
+    // A retry re-runs the web_subscriptions upsert harmlessly: the same period never refills credits.
+    if (!pw.ok) return retry('profile write', pw.status);
   }
   return json({ ok: true });
 }
