@@ -30,6 +30,7 @@ export interface Job {
     deadline: string | null;
     portal?: string;
     portalUrl?: string;
+    jobUrl?: string;
     companyWebsite?: string;
     salaryRangeRaw?: string;
     jobLevel?: string;

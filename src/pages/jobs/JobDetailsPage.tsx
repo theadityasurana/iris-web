@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Bookmark, BookmarkCheck, Check, Share2, SearchX } from 'lucide-react';
+import { ArrowLeft, Bookmark, BookmarkCheck, Check, ExternalLink, Share2, SearchX } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 import { Empty, PageLoader } from '@web/ui/bits';
@@ -70,6 +70,9 @@ export default function JobDetailsPage() {
       <button className="crumb" onClick={() => navigate(-1)}><ArrowLeft />Back</button>
       <JobDetail job={job} />
       <div className="sticky-actions">
+        {job.jobUrl && /^https?:\/\//i.test(job.jobUrl) && (
+          <a className="btn outline listing-btn" href={job.jobUrl} target="_blank" rel="noopener noreferrer" aria-label="Open the job listing" title="Open the job listing"><ExternalLink /><span>Open job listing</span></a>
+        )}
         <button className="icon-btn" onClick={onShare} aria-label="Share"><Share2 /></button>
         <button className="btn outline" onClick={onSave}>{saved ? <BookmarkCheck /> : <Bookmark />}{saved ? 'Saved' : 'Save'}</button>
         {!hideApply && (

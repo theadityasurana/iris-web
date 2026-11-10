@@ -221,6 +221,7 @@ export function mapSupabaseJobToJob(raw: SupabaseJob): Job {
     deadline: raw.deadline || null,
     portal: raw.portal,
     portalUrl: raw.portal_url,
+    jobUrl: raw.job_url || raw.portal_url || undefined,
     companyWebsite: raw.company_website,
     salaryRangeRaw: salaryFromRange.raw || undefined,
     industry: undefined,
