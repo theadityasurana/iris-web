@@ -544,7 +544,7 @@ def write_simple_pages():
 def write_discovery_files(posts):
     pub = ROOT / "public"
     today = dt.date.today().isoformat()
-    urls = [(SITE + "/", today), (SITE + "/blog/", max(p["updated"] for p in posts)), (SITE + AUTHOR_URL, today), (SITE + "/credits/", today), (SITE + "/jobs/", today), (SITE + "/tinder-for-jobs/", today), (SITE + "/love/", today), (SITE + "/about/", today), (SITE + "/mission/", today), (SITE + "/whatsapp/", today)]
+    urls = [(SITE + "/", today), (SITE + "/blog/", max(p["updated"] for p in posts)), (SITE + AUTHOR_URL, today), (SITE + "/credits/", today), (SITE + "/jobs/", today), (SITE + "/tinder-for-jobs/", today), (SITE + "/love/", today), (SITE + "/about/", today), (SITE + "/mission/", today), (SITE + "/whatsapp/", today), (SITE + "/privacy/", today), (SITE + "/terms/", today)]
     urls += [(f"{SITE}/blog/{p['slug']}/", p["updated"]) for p in posts]
     (pub / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

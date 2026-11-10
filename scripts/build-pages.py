@@ -323,4 +323,36 @@ page("mission", "Our Mission: Why We Built Iris", "We believe finding a job shou
   </section>
   <div class="go"><a class="pill" href="https://irisjobs.live/app/sign-up">Apply to your first job</a></div>
 </div></main>""")
+LEGAL_CSS = """
+.lg { max-width: 780px; margin: 0 auto; padding-top: 72px; padding-bottom: 24px; }
+.lg h1 { margin-top: 12px; }
+.lg .updated { margin-top: 18px; color: var(--muted); }
+.doc { margin-top: 36px; padding: clamp(24px, 5vw, 48px); border-radius: 28px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line), var(--shadow); color: var(--ink-2); overflow-wrap: anywhere; }
+.doc a { color: var(--accent); }
+.doc p { margin-top: 12px; }
+.doc .meta { color: var(--muted); font-size: .95rem; }
+.doc .meta + .meta { margin-top: 14px; }
+.doc section { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--line); }
+.doc h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 3vw, 2rem); line-height: 1.15; color: var(--ink); }
+.doc h2 span { color: var(--accent); }
+.doc h3 { margin-top: 26px; font-weight: 600; font-size: 1.06rem; color: var(--ink); }
+.doc h4 { margin-top: 18px; font-weight: 600; font-size: .98rem; color: var(--ink); }
+.doc strong { color: var(--ink); font-weight: 600; }
+"""
+
+
+def legal(path, title, heading, desc, updated):
+    content = (PUB.parent / "content" / "legal" / f"{path}.html").read_text()
+    page(path, title, desc, LEGAL_CSS, f"""<main class="wrap"><div class="lg">
+  <div class="overline">Legal</div>
+  <h1 class="big">{heading}</h1>
+  <p class="updated">Last updated: {updated}</p>
+  <article class="doc">
+{content}  </article>
+</div></main>""", ask=False)
+
+
+# Copied from nextquark.framer.website/privacy and /terms (content/legal/*.html).
+legal("privacy", "Privacy Policy | Iris", "Privacy <em>policy.</em>", "How Iris by NextQuark collects, uses, stores and protects your information across the Iris app and website.", "April 11th, 2026")
+legal("terms", "Terms and Conditions | Iris", "Terms &amp; <em>conditions.</em>", "The terms that govern your use of Iris by NextQuark, the job discovery and application app.", "February 21st, 2026")
 print("pages written")

@@ -77,7 +77,7 @@ function Personal() {
         </div>
       </section>
       <p className="t-caption muted" style={{ marginTop: 20 }}>
-        <a className="link" href="https://nextquark.framer.website/privacy" target="_blank" rel="noopener">Privacy</a> · <a className="link" href="https://nextquark.framer.website/terms" target="_blank" rel="noopener">Terms</a> · <a className="link" href="mailto:support@nextquark.com">support@nextquark.com</a>
+        <a className="link" href="/privacy/" target="_blank" rel="noopener">Privacy</a> · <a className="link" href="/terms/" target="_blank" rel="noopener">Terms</a> · <a className="link" href="mailto:support@nextquark.com">support@nextquark.com</a>
       </p>
       <ConfirmModal open={confirm} onClose={() => setConfirm(false)} onConfirm={remove} busy={deleting} danger title="Delete your account?" confirmLabel="Delete everything" body="This permanently deletes your Iris account and data on the web and in the app. It can't be undone." />
       <AccountActions onDelete={() => setConfirm(true)} logout={logout} />

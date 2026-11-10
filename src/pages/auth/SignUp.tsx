@@ -50,7 +50,7 @@ export default function SignUp() {
         {error && <div className="banner red">{error}</div>}
         <button className="btn lg block" type="submit" disabled={busy}>{busy ? <span className="spinner" /> : 'Create account'}</button>
         <p className="t-caption muted" style={{ textAlign: 'center' }}>
-          By continuing you agree to the <a className="link" href="https://nextquark.framer.website/terms" target="_blank" rel="noreferrer">Terms</a> and <a className="link" href="https://nextquark.framer.website/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>.
+          By continuing you agree to the <a className="link" href="/terms/" target="_blank" rel="noreferrer">Terms</a> and <a className="link" href="/privacy/" target="_blank" rel="noreferrer">Privacy Policy</a>.
         </p>
       </form>
     </AuthLayout>

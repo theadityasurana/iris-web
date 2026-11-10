@@ -41,7 +41,7 @@ FOOTER = '<footer class="sf"><div class="sf-cols">' + "".join(
     <div class="sf-charm"><img src="/logo.webp" alt="Iris" width="96" height="96" loading="lazy"></div>
     <div class="sf-word" data-word="Iris"><b>Iris</b></div>
   </div>
-  <div class="sf-bar"><span>© <span id="year" class="year">2026</span> Iris</span><nav aria-label="Legal"><a href="https://nextquark.framer.website/terms" target="_blank" rel="noopener">Terms</a><a href="https://nextquark.framer.website/privacy" target="_blank" rel="noopener">Privacy</a></nav></div>
+  <div class="sf-bar"><span>© <span id="year" class="year">2026</span> Iris</span><nav aria-label="Legal"><a href="/terms/">Terms</a><a href="/privacy/">Privacy</a></nav></div>
 </footer>"""
 
 HEAD_ASSETS = '<link rel="stylesheet" href="/media/site.css?v=1">'

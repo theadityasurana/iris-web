@@ -7,8 +7,8 @@ const APP_LINK_PATHS = /^\/(\.well-known\/|job\/|post\/|invite\/|iris\/?$|downlo
 
 /** Short legal links (privacy.nextquark.in, terms.nextquark.in) go to the legal pages. */
 const LEGAL_HOSTS = {
-  'privacy.nextquark.in': 'https://nextquark.framer.website/privacy',
-  'terms.nextquark.in': 'https://nextquark.framer.website/terms',
+  'privacy.nextquark.in': 'https://irisjobs.live/privacy/',
+  'terms.nextquark.in': 'https://irisjobs.live/terms/',
 };
 
 export function canonicalRedirect(requestUrl) {
