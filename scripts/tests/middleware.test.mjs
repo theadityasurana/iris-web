@@ -17,3 +17,8 @@ test('other hosts are never touched', () => {
 test('lookalike paths still redirect', () => {
   assert.equal(r('https://www.irisjobs.live/iris-report'), 'https://irisjobs.live/iris-report');
 });
+test('privacy and terms subdomains go to the legal pages, whatever the path', () => {
+  assert.equal(r('https://privacy.nextquark.in/'), 'https://nextquark.framer.website/privacy');
+  assert.equal(r('https://privacy.nextquark.in/anything?x=1'), 'https://nextquark.framer.website/privacy');
+  assert.equal(r('https://terms.nextquark.in/'), 'https://nextquark.framer.website/terms');
+});

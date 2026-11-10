@@ -5,8 +5,15 @@
  */
 const APP_LINK_PATHS = /^\/(\.well-known\/|job\/|post\/|invite\/|iris\/?$|download\/?$)/;
 
+/** Short legal links (privacy.nextquark.in, terms.nextquark.in) go to the legal pages. */
+const LEGAL_HOSTS = {
+  'privacy.nextquark.in': 'https://nextquark.framer.website/privacy',
+  'terms.nextquark.in': 'https://nextquark.framer.website/terms',
+};
+
 export function canonicalRedirect(requestUrl) {
   const url = new URL(requestUrl);
+  if (LEGAL_HOSTS[url.hostname]) return LEGAL_HOSTS[url.hostname];
   if (url.hostname !== 'www.irisjobs.live' || APP_LINK_PATHS.test(url.pathname)) return null;
   url.hostname = 'irisjobs.live';
   return url.toString();
