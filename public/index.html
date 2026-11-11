@@ -659,7 +659,7 @@
       <a class="nav-links" href="/#pricing">Pricing</a>
       <a class="nav-links" href="/blog/">Blog</a>
       <a class="nav-links" href="https://irisjobs.live/app/sign-in">Sign in</a>
-      <a class="pill" id="nav-cta" href="https://irisjobs.live/app/sign-up">Get started <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="pill" id="nav-cta" href="https://irisjobs.live/app/ios">Download <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
   </nav>
 
@@ -925,6 +925,7 @@
     var PLAY_STORE = 'https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke';
     var APP_STORE = 'https://apps.apple.com/in/app/nextquark/id6761863089';
     var WEB_APP = 'https://irisjobs.live/app/sign-up';
+    var IOS_MAINTENANCE = 'https://irisjobs.live/app/ios';
     // Temporarily off while the iOS App Store build is behind: iPhone visitors go to the web app instead.
     // Set back to true to show the hero App Store button and send iPhones to the App Store again.
     var SHOW_HERO_APP_STORE = false;
@@ -994,8 +995,9 @@
       var actions = document.getElementById('actions');
       var nav = document.getElementById('nav-cta');
       if (!actions) {
-        // Matches the hero: everyone goes to sign-up while the iOS app is under maintenance.
-        nav.href = WEB_APP;
+        // Android gets the Play Store; iPhones (and desktop, which used to get the App Store)
+        // go to the iOS-under-maintenance page until the App Store build is back.
+        nav.href = isAndroid ? PLAY_STORE : IOS_MAINTENANCE;
         return;
       }
       if (isIOS) {
