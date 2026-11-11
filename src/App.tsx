@@ -10,6 +10,7 @@ const SignUp = lazy(() => import('@web/pages/auth/SignUp'));
 const ForgotPassword = lazy(() => import('@web/pages/auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('@web/pages/auth/ResetPassword'));
 const AuthCallback = lazy(() => import('@web/pages/auth/AuthCallback'));
+const IosMaintenance = lazy(() => import('@web/pages/auth/IosMaintenance'));
 const Onboarding = lazy(() => import('@web/pages/onboarding/Onboarding'));
 const FirstJob = lazy(() => import('@web/pages/onboarding/FirstJob'));
 const BrowseJobs = lazy(() => import('@web/pages/browse/BrowseJobs'));
@@ -80,6 +81,7 @@ export function App() {
         <Route path="/app/forgot-password" element={<GuestOnly><ForgotPassword /></GuestOnly>} />
         <Route path="/app/reset-password" element={<ResetPassword />} />
         <Route path="/app/auth/callback" element={<AuthCallback />} />
+        <Route path="/app/ios" element={<IosMaintenance />} />
         <Route path="/app/onboarding" element={<OnboardingGate><Onboarding /></OnboardingGate>} />
 
         <Route path="/app/first-job" element={<RequireUser><FirstJob /></RequireUser>} />
