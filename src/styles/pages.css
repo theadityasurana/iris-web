@@ -217,6 +217,8 @@ a.table-row:hover { background: var(--surface-2); }
 
 .mail-list, .mail-reader { min-width: 0; }
 .mail-list-head .input-wrap { min-width: 0; }
+.otp-disclaimer { display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: var(--r-2); background: var(--brand-soft); color: var(--brand-ink); font-size: 13px; }
+.otp-disclaimer svg { flex-shrink: 0; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* Iris */

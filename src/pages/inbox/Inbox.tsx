@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Inbox as InboxIcon, Star, Send, Archive, PenSquare, Copy, Search, ArrowLeft, Reply, Forward, Trash2, MailOpen, Settings2 } from 'lucide-react';
+import { Inbox as InboxIcon, Star, Send, Archive, PenSquare, Copy, Search, ArrowLeft, Reply, Forward, Trash2, MailOpen, Settings2, ShieldCheck } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 import { Modal, ConfirmModal } from '@web/ui/Modal';
@@ -299,6 +299,12 @@ export default function Inbox() {
             <div className="cat-tabs">
               <button className={`chip ${category === 'All' ? 'on' : ''}`} onClick={() => setCategory('All')}>All</button>
               {categories.map(({ c, n }) => <button key={c} className={`chip ${category === c ? 'on' : ''}`} onClick={() => setCategory(c)}>{c}<span className="num" style={{ opacity: 0.6 }}>{n}</span></button>)}
+            </div>
+          )}
+          {category === 'OTP' && (
+            <div className="otp-disclaimer">
+              <ShieldCheck size={15} />
+              <span>Iris automatically handles OTPs during applications — you don't need to do anything.</span>
             </div>
           )}
         </div>
