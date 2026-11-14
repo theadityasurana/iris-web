@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, CreditCard, Eye, EyeOff, LogOut, Mail, Moon, SlidersHorizontal, Smartphone, Sun, Trash2, User, WandSparkles, type LucideIcon } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useFreeSwipes, useEntitlements, useSubscription, useTransactions } from '@web/lib/queries';
-import { useWebPlan, webPlanUsable } from '@web/lib/webBilling';
+import { useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
 import { ConfirmModal } from '@web/ui/Modal';
 import { useToast } from '@web/ui/Toast';
 import { Avatar, formatDate } from '@web/ui/bits';
@@ -174,13 +174,13 @@ function Billing() {
   const { data: web } = useWebPlan();
   const { data: tx = [], isLoading } = useTransactions();
   const active = webPlanUsable(web) ? web : null;
-  const planName = active ? getPlanDisplayName(active.plan) : ent.paid ? getPlanDisplayName(ent.plan) : 'Free';
+  const planName = active ? webPlanName(active.plan) : ent.paid ? getPlanDisplayName(ent.plan) : 'Free';
   const used = active ? active.credits_limit - active.credits_remaining : null;
   const appLeft = ent.usesCredits ? ent.creditsRemaining : free?.remaining;
   return (
     <>
       <section className="plan-hero">
-        <div className="t-overline muted">Your plan{active ? ` · ${active.period}` : ''}</div>
+        <div className="t-overline muted">Your plan{active ? ` · ${webPeriodName(active.period)}` : ''}</div>
         <div className="plan-hero-name">{planName}</div>
         <p className="t-callout soft">{active || ent.paid ? 'Thanks for backing Iris.' : 'Upgrade to let your agent apply to more jobs.'}</p>
         {active?.current_period_end && <p className="t-callout soft">{active.status === 'cancelled' ? 'Ends' : 'Renews'} {formatDate(active.current_period_end)}</p>}

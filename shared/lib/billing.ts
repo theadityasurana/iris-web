@@ -128,6 +128,18 @@ export const PLAN_CONFIGS: PlanConfig[] = [
   },
 ];
 
+/** Website-only Trial plan (Dodo): recurring every 14 days, kept apart from the three tiers. */
+export const TRIAL_PLAN = {
+  id: 'trial',
+  label: 'Trial',
+  credits: 30,
+  days: 14,
+  pricing: {
+    IN: { price: 199, currency: '₹' as const },
+    INTL: { price: 9.99, currency: '$' as const },
+  },
+};
+
 export const FREE_CREDITS_PER_MONTH = 10;
 
 /** Display-only FX. Store / billing amounts stay in the regional currency. */

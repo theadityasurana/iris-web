@@ -92,3 +92,20 @@ test('missing profile or unknown plan is ignored', () => {
   assert.equal(profileUpdate('subscription.active', webData, undefined, null, T), null);
   assert.equal(profileUpdate('subscription.active', { ...webData, metadata: { plan: 'x', period: 'monthly' } }, freeProfile, null, T), null);
 });
+
+const trial = { subscription_id: 't1', next_billing_date: '2026-11-28T00:00:00Z', customer: { customer_id: 'c1' }, metadata: { plan: 'trial', period: 'biweekly', region: 'IN' } };
+test('trial grants 30 credits per 14-day cycle', () => {
+  const s = nextState('subscription.active', trial, null);
+  assert.equal(s.credits_remaining, 30);
+  assert.equal(s.plan, 'trial');
+  assert.equal(s.period, 'biweekly');
+});
+test('trial with a wrong period is ignored', () => {
+  assert.equal(nextState('subscription.active', { ...trial, metadata: { plan: 'trial', period: 'monthly' } }, null), null);
+});
+test('trial mirrors onto profiles as a plan the app knows', () => {
+  const out = profileUpdate('subscription.active', trial, { subscription_type: 'free' }, null);
+  assert.equal(out.subscription_plan, 'starter');
+  assert.equal(out.billing_period, 'monthly');
+  assert.equal(out.subscription_type, 'premium');
+});

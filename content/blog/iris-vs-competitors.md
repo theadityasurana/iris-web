@@ -47,4 +47,4 @@ It raises the number of applications but often lowers quality. Applying to fewer
 
 ### How much does Iris cost?
 
-Free for 10 applications every 30 days. Starter is ₹499 / $19.99 a month, Pro ₹999 / $39.99 and Ultra ₹2,199 / $59.99, with cheaper quarterly billing.
+Free for 10 applications every 30 days. Starter is ₹499 / $19.99 a month, Pro ₹999 / $39.99 and Ultra ₹2,199 / $59.99, with cheaper quarterly billing. On the website you can also start with the Trial plan: ₹199 / $9.99 for 30 applications, renewing every 14 days.

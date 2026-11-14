@@ -495,6 +495,11 @@
     .plan.pop li::before { color: #b9a4f8; }
     .plan .pill { width: 100%; }
     .plan.pop .pill { color: #23201b; background: #fbf7ee; }
+    .pr-trial { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 18px; padding: 22px 28px; border-radius: 24px; text-align: left; background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); }
+    .pr-trial h3 { font-family: var(--serif); font-weight: 500; font-size: 1.45rem; line-height: 1.2; }
+    .pr-trial p { margin: 4px 0 0; max-width: none; color: var(--muted); font-size: .92rem; }
+    .pr-trial .pill { flex-shrink: 0; }
+    @media (max-width: 640px) { .pr-trial { flex-direction: column; align-items: stretch; padding: 20px; } .pr-trial .pill { width: 100%; } }
     .pr-note { margin-top: 18px; font-size: .86rem; color: var(--muted); }
     @media (min-width: 880px) { .pr-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
@@ -891,6 +896,11 @@
           <div class="pr-toggle" role="group" aria-label="Billing period"><button class="on" data-period="monthly" aria-pressed="true">Monthly</button><button data-period="quarterly" aria-pressed="false">Quarterly <span id="pr-save"></span></button></div>
         </div>
         <div class="pr-grid" id="pr-grid"></div>
+        <div class="pr-trial" id="pr-trial">
+          <div><h3>Want to try Iris first? Start at <span id="pr-trial-price">$9.99</span>.</h3>
+          <p>The Trial plan: 30 applications every 14 days. Renews every 14 days, cancel any time.</p></div>
+          <a class="pill" href="https://irisjobs.live/app/sign-up">Start a trial</a>
+        </div>
         <p class="pr-note" style="text-align:center">Start free, with no card. Cancel paid plans any time. Prices shown for your location.</p>
       </section>
 
@@ -1522,6 +1532,7 @@
         { label: 'Pro', credits: 200, popular: true, IN: { monthly: 999, quarterly: 2399, currency: '₹' }, INTL: { monthly: 39.99, quarterly: 95.99, currency: '$' } },
         { label: 'Ultra', credits: 500, IN: { monthly: 2199, quarterly: 5999, currency: '₹' }, INTL: { monthly: 59.99, quarterly: 143.99, currency: '$' } }
       ];
+      var TRIAL = { credits: 30, days: 14, IN: { price: 199, currency: '₹' }, INTL: { price: 9.99, currency: '$' } };
       var INCLUDED = ['Job feed, search and swipe', 'Applications submitted for you', 'Your own application inbox', 'Application tracking and replies'];
       var tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (_) {}
       var region = /Calcutta|Kolkata/.test(tz) ? 'IN' : 'INTL', period = 'monthly';
@@ -1533,6 +1544,7 @@
         document.getElementById('pr-low').textContent = 'Apply to jobs for as low as ' + (cur === '₹' ? '₹' + (Math.round(low * 100) / 100) : 'under $' + (Math.ceil(low * 100) / 100).toFixed(2)) + ' per application';
         var best = 0; PLANS.forEach(function(p) { var r = p[region]; best = Math.max(best, Math.round((1 - r.quarterly / (r.monthly * 3)) * 100)); });
         document.getElementById('pr-save').textContent = '· save up to ' + best + '%';
+        document.getElementById('pr-trial-price').textContent = money(TRIAL[region].currency, TRIAL[region].price);
         grid.innerHTML = PLANS.map(function(p) {
           var r = p[region], price = r[period], credits = p.credits * months;
           return '<article class="plan' + (p.popular ? ' pop' : '') + '"><h3>' + p.label + (p.popular ? '<span>Most popular</span>' : '') + '</h3>' +

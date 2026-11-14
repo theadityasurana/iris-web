@@ -4,10 +4,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useSubscription } from '@web/lib/queries';
-import { fetchRegion, openBillingPortal, startCheckout, useWebPlan, webPlanUsable } from '@web/lib/webBilling';
+import { fetchRegion, openBillingPortal, startCheckout, useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
 import { useToast } from '@web/ui/Toast';
 import { formatDate } from '@web/ui/bits';
-import { PLAN_CONFIGS } from '@/lib/billing';
+import { PLAN_CONFIGS, TRIAL_PLAN } from '@/lib/billing';
 import { getPlanDisplayName } from '@/lib/subscription';
 import { Hired, PlansFaq, Stages, TimeSaved } from '@web/pages/plans/PlansExtras';
 
@@ -37,9 +37,9 @@ export default function Plans() {
   const active = webPlanUsable(webPlan) ? webPlan : null;
   const appPlan = sub?.subscription_plan && sub.subscription_plan !== 'free' ? sub.subscription_plan : null;
 
-  const checkout = async (planId: string) => {
+  const checkout = async (planId: string, planPeriod: string = period) => {
     setBusy(planId);
-    try { window.location.href = (await startCheckout(planId, period)).url; }
+    try { window.location.href = (await startCheckout(planId, planPeriod)).url; }
     catch (e: any) { toast(e.message, 'error'); setBusy(null); }
   };
   const manage = async () => {
@@ -66,13 +66,13 @@ export default function Plans() {
           <button className="btn ghost sm" onClick={() => setParams({}, { replace: true })}>Dismiss</button>
         </div>
       )}
-      {returned && active && <div className="banner green" role="status" style={{ marginBottom: 20 }}><CheckCircle2 /><span className="grow">You're on {getPlanDisplayName(active.plan)}. {active.credits_remaining} credits are ready to use.</span></div>}
+      {returned && active && <div className="banner green" role="status" style={{ marginBottom: 20 }}><CheckCircle2 /><span className="grow">You're on {webPlanName(active.plan)}. {active.credits_remaining} credits are ready to use.</span></div>}
 
       {active && (
         <section className="card pad current-plan">
           <div>
-            <div className="t-overline muted">Your website plan · {active.period}</div>
-            <div className="t-title" style={{ marginTop: 6 }}>{getPlanDisplayName(active.plan)}</div>
+            <div className="t-overline muted">Your website plan · {webPeriodName(active.period)}</div>
+            <div className="t-title" style={{ marginTop: 6 }}>{webPlanName(active.plan)}</div>
             <p className="t-callout soft" style={{ marginTop: 6 }}>
               {active.credits_remaining} of {active.credits_limit} credits left
               {active.current_period_end && ` · ${active.status === 'cancelled' ? 'ends' : 'renews'} ${formatDate(active.current_period_end)}`}
@@ -110,6 +110,25 @@ export default function Plans() {
           );
         })}
       </div>
+
+      {(() => {
+        const t = TRIAL_PLAN.pricing[region];
+        const isCurrent = active?.plan === 'trial';
+        return (
+          <section className="trial-strip" aria-label="Trial plan">
+            <div>
+              <div className="t-overline muted">Trial plan</div>
+              <h2 className="t-heading" style={{ marginTop: 4 }}>Want to try Iris first? Start at {money(t.currency, t.price)}.</h2>
+              <p className="t-callout soft" style={{ marginTop: 4 }}>
+                {TRIAL_PLAN.credits} applications every {TRIAL_PLAN.days} days · {money(t.currency, Math.round((t.price / TRIAL_PLAN.credits) * 100) / 100)} per application. Renews every {TRIAL_PLAN.days} days, cancel any time.
+              </p>
+            </div>
+            <button className="btn outline lg" disabled={!!busy || webLoading || isCurrent} onClick={() => checkout(TRIAL_PLAN.id, 'biweekly')}>
+              {busy === TRIAL_PLAN.id ? <span className="spinner" /> : isCurrent ? 'Current plan' : 'Start a trial'}
+            </button>
+          </section>
+        );
+      })()}
 
       <Hired />
       <section className="px-section" aria-label="Compare plans">

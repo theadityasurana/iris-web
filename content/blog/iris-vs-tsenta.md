@@ -5,7 +5,7 @@ description: Iris vs Tsenta compared: how each one applies, tracking, interview 
 keywords: Iris vs Tsenta, Tsenta alternative, Tsenta review, AI job application app, auto apply jobs
 category: Comparisons
 excerpt: Tsenta is an AI job-application agent that applies to roles on your behalf. Iris is a swipe-to-apply app that submits real applications on company career pages. Here's how they differ.
-tldr: Tsenta is an AI job-application agent that applies to roles on your behalf, best for hands-off applying across many job boards. Iris turns a right swipe into a submitted application on the company's own careers page, tracks every application, scores your fit and ATS match, and can apply for you overnight. Pick Tsenta if you want an agent to work through a long list of postings without reviewing each one; pick Iris if you want to choose each job yourself in seconds and have the application done for you.
+tldr: Tsenta is an AI job-application agent that applies to roles on your behalf, best for hands-off applying across many job boards. Iris turns a right swipe into a submitted application on the company's own careers page, tracks every application, scores your fit and ATS match, and can apply for you overnight. Pick Tsenta if you are one of people who want an agent to work through a long list of postings without reviewing each one; pick Iris if you want to choose each job yourself in seconds and have the application done for you.
 date: 2026-11-03
 author: Team Iris
 generated: true
@@ -29,7 +29,7 @@ Iris is a mobile app for iOS and Android that works like "Tinder for jobs". You 
 | Applying while you sleep | Iris auto-apply (Starter and up) applies to matching jobs overnight and sends a morning report | Check Tsenta's current features |
 | Tracking | Every application has a live status and timeline in the app; recruiter replies land in your Iris inbox | Varies |
 | Interview prep | Fit score, ATS keyword score and likely interview questions per job; AI mock interviews on Pro and Ultra | Varies |
-| Price | Free: 10 applications every 30 days. Starter ₹499 / $19.99, Pro ₹999 / $39.99, Ultra ₹2,199 / $59.99 a month | See Tsenta's pricing page |
+| Price | Free: 10 applications every 30 days. Starter ₹499 / $19.99, Pro ₹999 / $39.99, Ultra ₹2,199 / $59.99 a month. Web Trial ₹199 / $9.99 for 30 applications every 14 days | See Tsenta's pricing page |
 
 ## Where Iris is different
 

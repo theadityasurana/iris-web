@@ -6,7 +6,7 @@
  * alert read. That mirror never touches profile credits (the web adds its own
  * on top) and never overrides a live Google Play / Razorpay subscription.
  */
-import { CREDITS_PER_MONTH, MONTHS, db, json } from '../../_lib/dodo.js';
+import { creditsFor, db, json } from '../../_lib/dodo.js';
 
 const MAX_AGE_SECONDS = 300;
 const enc = new TextEncoder();
@@ -43,8 +43,8 @@ export function nextState(type, data, existing) {
   switch (type) {
     case 'subscription.active':
     case 'subscription.renewed': {
-      if (!CREDITS_PER_MONTH[plan] || !MONTHS[period]) return null;
-      const grant = CREDITS_PER_MONTH[plan] * MONTHS[period];
+      const grant = creditsFor(plan, period);
+      if (!grant) return null;
       // A repeat event for a period already granted must not refill credits.
       const samePeriod = existing?.dodo_subscription_id === data.subscription_id && existing?.current_period_end === data.next_billing_date;
       return { ...base, plan, period, status: 'active', credits_limit: grant, credits_remaining: samePeriod ? existing.credits_remaining : grant };
@@ -92,12 +92,15 @@ export function profileUpdate(type, data, profile, existing, now = Date.now()) {
   switch (type) {
     case 'subscription.active':
     case 'subscription.renewed': {
-      if (!CREDITS_PER_MONTH[meta.plan] || !MONTHS[meta.period]) return null;
+      if (!creditsFor(meta.plan, meta.period)) return null;
       if (otherStore && hasPaidAccess(profile, now) && !webOwned) return null;
+      // The app only knows starter/pro/ultra and monthly/quarterly, so the trial
+      // is mirrored as Starter monthly. Its real plan lives in web_subscriptions.
+      const trial = meta.plan === 'trial';
       const out = {
         subscription_type: 'premium',
-        subscription_plan: meta.plan,
-        billing_period: meta.period,
+        subscription_plan: trial ? 'starter' : meta.plan,
+        billing_period: trial ? 'monthly' : meta.period,
         subscription_status: 'active',
         subscription_end_date: data.next_billing_date ?? null,
         iris_enabled: true,

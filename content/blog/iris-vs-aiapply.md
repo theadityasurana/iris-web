@@ -5,7 +5,7 @@ description: Iris vs AIApply compared: how each one applies, tracking, interview
 keywords: Iris vs AIApply, AIApply alternative, AIApply review, AI job application app, auto apply jobs
 category: Comparisons
 excerpt: AIApply is an AI toolkit for resumes, cover letters and automated applications. Iris is a swipe-to-apply app that submits real applications on company career pages. Here's how they differ.
-tldr: AIApply is an AI toolkit for resumes, cover letters and automated applications, best for generating tailored documents. Iris turns a right swipe into a submitted application on the company's own careers page, tracks every application, scores your fit and ATS match, and can apply for you overnight. Pick AIApply if you mainly want AI-written cover letters and resume versions; pick Iris if you want to choose each job yourself in seconds and have the application done for you.
+tldr: AIApply is an AI toolkit for resumes, cover letters and automated applications, best for generating tailored documents. Iris turns a right swipe into a submitted application on the company's own careers page, tracks every application, scores your fit and ATS match, and can apply for you overnight. Pick AIApply if you are one of people who mainly want AI-written cover letters and resume versions; pick Iris if you want to choose each job yourself in seconds and have the application done for you.
 date: 2026-11-03
 author: Team Iris
 generated: true
@@ -29,7 +29,7 @@ Iris is a mobile app for iOS and Android that works like "Tinder for jobs". You 
 | Applying while you sleep | Iris auto-apply (Starter and up) applies to matching jobs overnight and sends a morning report | Check AIApply's current features |
 | Tracking | Every application has a live status and timeline in the app; recruiter replies land in your Iris inbox | Varies |
 | Interview prep | Fit score, ATS keyword score and likely interview questions per job; AI mock interviews on Pro and Ultra | Varies |
-| Price | Free: 10 applications every 30 days. Starter ₹499 / $19.99, Pro ₹999 / $39.99, Ultra ₹2,199 / $59.99 a month | See AIApply's pricing page |
+| Price | Free: 10 applications every 30 days. Starter ₹499 / $19.99, Pro ₹999 / $39.99, Ultra ₹2,199 / $59.99 a month. Web Trial ₹199 / $9.99 for 30 applications every 14 days | See AIApply's pricing page |
 
 ## Where Iris is different
 

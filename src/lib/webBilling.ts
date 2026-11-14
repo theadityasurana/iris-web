@@ -8,15 +8,21 @@ import { useAuth } from '@web/auth/AuthProvider';
 import { useEntitlements, useFreeSwipes } from '@web/lib/queries';
 import { supabase } from '@/lib/supabase';
 import { freeSwipesPerCycle } from '@/lib/daily-swipes';
+import { getPlanDisplayName } from '@/lib/subscription';
 
 export interface WebPlan {
-  plan: 'starter' | 'pro' | 'ultra';
-  period: 'monthly' | 'quarterly';
+  plan: 'starter' | 'pro' | 'ultra' | 'trial';
+  period: 'monthly' | 'quarterly' | 'biweekly';
   status: 'active' | 'on_hold' | 'cancelled' | 'expired';
   credits_remaining: number;
   credits_limit: number;
   current_period_end: string | null;
 }
+
+/** Trial gets Starter's features; its credits come from its own 14-day cycle. */
+export const webPlanTier = (plan: WebPlan['plan']): 'starter' | 'pro' | 'ultra' => (plan === 'trial' ? 'starter' : plan);
+export const webPlanName = (plan: WebPlan['plan']) => (plan === 'trial' ? 'Trial' : getPlanDisplayName(plan));
+export const webPeriodName = (period: WebPlan['period']) => (period === 'biweekly' ? 'every 14 days' : period);
 
 export function webPlanUsable(p: WebPlan | null | undefined): p is WebPlan {
   if (!p || (p.status !== 'active' && p.status !== 'cancelled')) return false;

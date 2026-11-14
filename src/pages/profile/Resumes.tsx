@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, ExternalLink, FileText, Trash2, Upload } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useApplications, useEntitlements } from '@web/lib/queries';
-import { useWebPlan, webPlanUsable } from '@web/lib/webBilling';
+import { useWebPlan, webPlanTier, webPlanUsable } from '@web/lib/webBilling';
 import { PLAN_FEATURES } from '@/lib/entitlements';
 import { deleteResume, listResumes, pathFromUrl, resumeLink, signedResumeUrl, type ResumeFile } from '@web/lib/resumes';
 import { ConfirmModal } from '@web/ui/Modal';
@@ -35,7 +35,7 @@ export default function Resumes() {
 
   const activePath = pathFromUrl(profile?.resumeUrl);
   const { data: webPlan } = useWebPlan();
-  const limit = Math.max(ent.resumes ?? 1, webPlanUsable(webPlan) ? PLAN_FEATURES[webPlan.plan].resumes : 1);
+  const limit = Math.max(ent.resumes ?? 1, webPlanUsable(webPlan) ? PLAN_FEATURES[webPlanTier(webPlan.plan)].resumes : 1);
   const atLimit = files.length >= limit;
   // On a one-resume plan the only sensible action is to swap it.
   const replacing = limit === 1 && files.length === 1 ? files[0] : null;

@@ -5,6 +5,14 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 export const CREDITS_PER_MONTH = { starter: 75, pro: 200, ultra: 500 };
 export const MONTHS = { monthly: 1, quarterly: 3 };
+/** Trial: its own recurring plan, 30 applications every 14 days. */
+export const TRIAL_CREDITS = 30;
+
+/** Credits granted for one billing cycle, or 0 for an unknown plan/period pair. */
+export function creditsFor(plan, period) {
+  if (plan === 'trial') return period === 'biweekly' ? TRIAL_CREDITS : 0;
+  return CREDITS_PER_MONTH[plan] && MONTHS[period] ? CREDITS_PER_MONTH[plan] * MONTHS[period] : 0;
+}
 
 export const json = (body, status = 200, headers = {}) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...headers } });

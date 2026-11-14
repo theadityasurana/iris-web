@@ -1,7 +1,4 @@
-import { dodo, json, regionOf, requireUser } from '../../_lib/dodo.js';
-
-const PLANS = new Set(['starter', 'pro', 'ultra']);
-const PERIODS = new Set(['monthly', 'quarterly']);
+import { creditsFor, dodo, json, regionOf, requireUser } from '../../_lib/dodo.js';
 
 /** GET returns the buyer's pricing region. POST starts a Dodo checkout. */
 export async function onRequestGet({ request }) {
@@ -15,7 +12,7 @@ export async function onRequestPost({ request, env }) {
   let body;
   try { body = await request.json(); } catch { return json({ error: 'Invalid request.' }, 400); }
   const { plan, period } = body || {};
-  if (!PLANS.has(plan) || !PERIODS.has(period)) return json({ error: 'Unknown plan.' }, 400);
+  if (!creditsFor(plan, period)) return json({ error: 'Unknown plan.' }, 400);
 
   // Region comes from Cloudflare, not the browser, so the price can't be picked by the client.
   const region = regionOf(request);

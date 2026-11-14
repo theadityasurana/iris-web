@@ -29,7 +29,7 @@ Iris is a mobile app for iOS and Android that works like "Tinder for jobs". You 
 | Applying while you sleep | Iris auto-apply (Starter and up) applies to matching jobs overnight and sends a morning report | Check AutoApplyMax's current features |
 | Tracking | Every application has a live status and timeline in the app; recruiter replies land in your Iris inbox | Varies |
 | Interview prep | Fit score, ATS keyword score and likely interview questions per job; AI mock interviews on Pro and Ultra | Varies |
-| Price | Free: 10 applications every 30 days. Starter ₹499 / $19.99, Pro ₹999 / $39.99, Ultra ₹2,199 / $59.99 a month | See AutoApplyMax's pricing page |
+| Price | Free: 10 applications every 30 days. Starter ₹499 / $19.99, Pro ₹999 / $39.99, Ultra ₹2,199 / $59.99 a month. Web Trial ₹199 / $9.99 for 30 applications every 14 days | See AutoApplyMax's pricing page |
 
 ## Where Iris is different
 

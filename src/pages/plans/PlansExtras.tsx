@@ -86,6 +86,7 @@ export function PlansFaq() {
   const items = [
     { q: 'What is a credit?', a: 'One credit is one job application submitted for you. Website plans include the number of applications shown on each plan.' },
     { q: 'Is there a free plan?', a: `Yes. You get ${freeSwipesPerCycle()} free applications to start, with no card required.` },
+    { q: 'What is the Trial plan?', a: 'A low-cost way to try Iris: 30 applications every 14 days. It renews every 14 days until you cancel, and you can move to Starter, Pro or Ultra any time.' },
     { q: 'Can I cancel any time?', a: 'Yes. Open Manage billing to cancel. Your plan and remaining credits stay active until the end of the period you paid for.' },
     { q: 'What is the difference between monthly and quarterly?', a: 'Quarterly costs less per application and gives you three months of credits at once.' },
     { q: 'Do mobile app plans work here?', a: 'Yes. A plan bought in the iOS or Android app also works on the website, but it is managed through the App Store or Google Play.' },
