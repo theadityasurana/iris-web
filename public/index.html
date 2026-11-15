@@ -442,6 +442,8 @@
     .fd-p i { display: block; height: 100%; width: 0; background: var(--accent); }
     .fd-cur { position: absolute; left: 0; top: 0; width: 16px; height: 16px; z-index: 3; pointer-events: none; transition: transform .22s cubic-bezier(.3,.8,.3,1); }
     .fd-note { margin-top: 8px; font-size: .76rem; color: var(--muted); text-align: center; }
+    /* Sits right under the hero, whose painting fades out over its first ~70px. */
+    .hero > #watch { position: relative; padding-top: 120px; }
     @media (min-width: 900px) { .formdemo { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 48px; } }
 
     /* ── The website: pinned, moves sideways as you scroll ── */
@@ -579,6 +581,12 @@
       .formdemo { margin-top: 22px; gap: 18px; }
       .fd-copy .lede { font-size: 1rem; }
       .fd-copy ul { gap: 7px; margin-top: 12px; font-size: .94rem; }
+      /* Bullets: one left-aligned block, centred, so a wrapped line lines up under its own text. */
+      .fd-copy ul { width: fit-content; max-width: 100%; margin-left: auto; margin-right: auto; text-align: left; }
+      .fd-copy li { align-items: flex-start; }
+      /* A shorter form on phones: the same demo, without the fields that only add scrolling. */
+      .fd-hide-m { display: none; }
+      .hero > #watch { padding-top: 96px; }
       .fd-win { margin: 0 -4px; }
       .fd-bar span { display: none; }
       .fd-form { gap: 9px; padding: 13px; }
@@ -705,11 +713,11 @@
                 <div class="fd-f" data-fd="text" data-v="Asha"><label>First name</label><div class="in"></div></div>
                 <div class="fd-f" data-fd="text" data-v="Rao"><label>Last name</label><div class="in"></div></div>
                 <div class="fd-f fd-mw" data-fd="text" data-v="asha@example.com"><label>Email</label><div class="in"></div></div>
-                <div class="fd-f fd-mw" data-fd="text" data-v="+91 98765 00000"><label>Phone number</label><div class="in"></div></div>
-                <div class="fd-f fd-mw" data-fd="text" data-v="linkedin.com/in/asharao"><label>LinkedIn</label><div class="in"></div></div>
-                <div class="fd-f fd-mw" data-fd="text" data-v="Bengaluru, India"><label>Location</label><div class="in"></div></div>
-                <div class="fd-f" data-fd="text" data-v="6"><label>Years of experience</label><div class="in"></div></div>
-                <div class="fd-f" data-fd="text" data-v="30 days"><label>Notice period</label><div class="in"></div></div>
+                <div class="fd-f fd-hide-m fd-mw" data-fd="text" data-v="+91 98765 00000"><label>Phone number</label><div class="in"></div></div>
+                <div class="fd-f fd-hide-m fd-mw" data-fd="text" data-v="linkedin.com/in/asharao"><label>LinkedIn</label><div class="in"></div></div>
+                <div class="fd-f fd-hide-m fd-mw" data-fd="text" data-v="Bengaluru, India"><label>Location</label><div class="in"></div></div>
+                <div class="fd-f fd-hide-m" data-fd="text" data-v="6"><label>Years of experience</label><div class="in"></div></div>
+                <div class="fd-f fd-hide-m" data-fd="text" data-v="30 days"><label>Notice period</label><div class="in"></div></div>
                 <div class="fd-f fd-wide"><span class="fd-l">Authorized to work in India?</span><div class="fd-opts radio" data-fd="opt" data-pick="0"><span><s></s>Yes</span><span><s></s>No</span></div></div>
                 <div class="fd-f fd-wide"><span class="fd-l">Which of these have you used?</span><div class="fd-opts" data-fd="opt" data-pick="0,1,3"><span><s></s>React</span><span><s></s>TypeScript</span><span><s></s>Ruby</span><span><s></s>GraphQL</span></div></div>
                 <div class="fd-f fd-wide" data-fd="text" data-v="asha_rao_resume.pdf"><label>Resume</label><div class="in"></div></div>
@@ -1468,8 +1476,10 @@
       function run() {
         if (running || !onScreen) return;
         running = true; reset();
-        var slot = (RUN - 500) / items.length, t0 = performance.now();
-        items.forEach(function(it, i) {
+        // Only the fields on screen (phones hide a few).
+        var live = items.filter(function(it) { return it.offsetParent !== null; });
+        var slot = (RUN - 500) / live.length, t0 = performance.now();
+        live.forEach(function(it, i) {
           timers.push(setTimeout(function() {
             move(it);
             if (it.dataset.fd === 'text') {
