@@ -442,6 +442,19 @@
     .fd-p i { display: block; height: 100%; width: 0; background: var(--accent); }
     .fd-cur { position: absolute; left: 0; top: 0; width: 16px; height: 16px; z-index: 3; pointer-events: none; transition: transform .22s cubic-bezier(.3,.8,.3,1); }
     .fd-note { margin-top: 8px; font-size: .76rem; color: var(--muted); text-align: center; }
+    /* Mini demo in the hero */
+    .fd-hero { width: min(100%, 420px); margin: 28px auto 0; }
+    .fd-mini { box-shadow: inset 0 0 0 1px var(--line), 0 24px 60px -24px rgba(60, 40, 10, .45); }
+    .fd-mini .fd-form { gap: 8px 10px; padding: 12px 14px 14px; font-size: .78rem; }
+    .fd-mini .fd-head { padding-bottom: 8px; }
+    .fd-mini .fd-head img { width: 28px; height: 28px; }
+    .fd-mini .fd-head b { font-size: 1rem; }
+    .fd-mini .fd-f div.in { height: 30px; }
+    .fd-mini .fd-area div.in { height: 46px; font-size: .74rem; }
+    .fd-mini .fd-opts { min-height: 26px; }
+    .fd-mini .fd-submit { height: 34px; }
+    .fd-hero .fd-note { color: #4e4a41; }
+    body.mode-job .fd-hero { display: none; }
     @media (min-width: 900px) { .formdemo { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 48px; } }
 
     /* ── The website: pinned, moves sideways as you scroll ── */
@@ -685,9 +698,62 @@
             <p class="countdown" id="countdown"></p>
             <a id="open-now" href="#" class="pill" style="display:none">Open Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           </div>
+          <div class="fd-hero">
+            <div class="fd-win fd-mini" aria-label="Animated example of Iris filling in a job application">
+              <div class="fd-bar" aria-hidden="true"><i></i><i></i><i></i><span>jobs.lever.co/notion</span><b>Iris is filling this in</b></div>
+              <div class="fd-p"><i></i></div>
+              <div class="fd-form" aria-hidden="true">
+                <div class="fd-head"><img src="/media/ats/lever.png" alt="" width="28" height="28" loading="lazy"><div><b>Product Designer</b><small>Notion · Remote · Full-time</small></div></div>
+                <div class="fd-f" data-fd="text" data-v="Asha Rao"><label>Full name</label><div class="in"></div></div>
+                <div class="fd-f" data-fd="text" data-v="asha@example.com"><label>Email</label><div class="in"></div></div>
+                <div class="fd-f fd-wide" data-fd="text" data-v="asha_rao_notion.pdf"><label>Resume</label><div class="in"></div></div>
+                <div class="fd-f fd-wide"><span class="fd-l">Authorized to work in this country?</span><div class="fd-opts radio" data-fd="opt" data-pick="0"><span><s></s>Yes</span><span><s></s>No</span></div></div>
+                <div class="fd-f fd-wide fd-area" data-fd="text" data-fast="1" data-v="I design tools people live in all day, and Notion is the one I use most."><label>Why Notion?</label><div class="in"></div></div>
+                <div class="fd-submit">Submit application</div>
+              </div>
+              <svg class="fd-cur" viewBox="0 0 24 24" fill="#5536c4" stroke="#fff" stroke-width="1.5" aria-hidden="true"><path d="M5 3l14 9-6 1.5L9.5 20z"/></svg>
+            </div>
+            <p class="fd-note">An example: Iris fills the form from your profile</p>
+          </div>
           <div id="job-phone" aria-label="This job, as it looks in the Iris app"></div>
         </div>
       </div>
+
+      <section class="sec wrap" id="watch">
+        <div class="sec-head"><div class="overline">See it happen</div><h2 class="title">Watch Iris fill a whole application <em>in seconds.</em></h2></div>
+        <div class="formdemo">
+          <div class="fd-copy">
+            <p class="lede" style="margin-top:0">The form you’d dread takes Iris a moment: text fields, dropdowns, checkboxes and open questions, all from your profile.</p>
+            <ul><li>Your details, filled in exactly as you wrote them</li><li>The right resume attached for the role</li><li>Screening questions answered from your profile</li><li>Every application logged, so you can check it later</li></ul>
+          </div>
+          <div>
+            <div class="fd-win" id="fd" aria-label="Animated example of Iris filling in a job application">
+              <div class="fd-bar" aria-hidden="true"><i></i><i></i><i></i><span>job-boards.greenhouse.io/stripe</span><b id="fd-status">Iris is filling this in</b></div>
+              <div class="fd-p"><i id="fd-prog"></i></div>
+              <div class="fd-form" aria-hidden="true">
+                <div class="fd-head"><img src="/media/ats/greenhouse.png" alt="Greenhouse" width="34" height="34" loading="lazy"><div><b>Senior Frontend Engineer</b><small>Stripe · Bengaluru · Full-time</small></div></div>
+                <div class="fd-f" data-fd="text" data-v="Asha"><label>First name</label><div class="in"></div></div>
+                <div class="fd-f" data-fd="text" data-v="Rao"><label>Last name</label><div class="in"></div></div>
+                <div class="fd-f fd-mw" data-fd="text" data-v="asha@example.com"><label>Email</label><div class="in"></div></div>
+                <div class="fd-f fd-mw" data-fd="text" data-v="+91 98765 00000"><label>Phone number</label><div class="in"></div></div>
+                <div class="fd-f fd-mw" data-fd="text" data-v="linkedin.com/in/asharao"><label>LinkedIn</label><div class="in"></div></div>
+                <div class="fd-f fd-mw" data-fd="text" data-v="Bengaluru, India"><label>Location</label><div class="in"></div></div>
+                <div class="fd-f" data-fd="text" data-v="6"><label>Years of experience</label><div class="in"></div></div>
+                <div class="fd-f" data-fd="text" data-v="30 days"><label>Notice period</label><div class="in"></div></div>
+                <div class="fd-f fd-wide"><span class="fd-l">Authorized to work in India?</span><div class="fd-opts radio" data-fd="opt" data-pick="0"><span><s></s>Yes</span><span><s></s>No</span></div></div>
+                <div class="fd-f fd-wide"><span class="fd-l">Which of these have you used?</span><div class="fd-opts" data-fd="opt" data-pick="0,1,3"><span><s></s>React</span><span><s></s>TypeScript</span><span><s></s>Ruby</span><span><s></s>GraphQL</span></div></div>
+                <div class="fd-f fd-wide" data-fd="text" data-v="asha_rao_resume.pdf"><label>Resume</label><div class="in"></div></div>
+                <div class="fd-f fd-wide fd-area" data-fd="text" data-fast="1" data-v="I’ve spent six years building React products, and Stripe’s developer-first work is exactly what I want to do next."><label>Why do you want to work here?</label><div class="in"></div></div>
+                <div class="fd-f fd-wide"><div class="fd-opts" data-fd="opt" data-pick="0"><span><s></s>I confirm this information is accurate</span></div></div>
+                <div class="fd-submit" id="fd-submit">Submit application</div>
+              </div>
+              <svg class="fd-cur" id="fd-cur" viewBox="0 0 24 24" fill="#5536c4" stroke="#fff" stroke-width="1.5" aria-hidden="true"><path d="M5 3l14 9-6 1.5L9.5 20z"/></svg>
+            </div>
+            <p class="fd-note">An example application, shown in about five seconds</p>
+          </div>
+        </div>
+      </section>
+
       <div class="wrap">
         <div class="stage">
           <div class="video-box">
@@ -783,41 +849,6 @@
 </div></div>
         <p class="eg wrap"><span class="swipe-hint">Swipe to see each stage →</span>Example data, for illustration</p>
       </div></div></section>
-
-      <section class="sec wrap" id="watch">
-        <div class="sec-head"><div class="overline">See it happen</div><h2 class="title">Watch Iris fill a whole application <em>in seconds.</em></h2></div>
-        <div class="formdemo">
-          <div class="fd-copy">
-            <p class="lede" style="margin-top:0">The form you’d dread takes Iris a moment: text fields, dropdowns, checkboxes and open questions, all from your profile.</p>
-            <ul><li>Your details, filled in exactly as you wrote them</li><li>The right resume attached for the role</li><li>Screening questions answered from your profile</li><li>Every application logged, so you can check it later</li></ul>
-          </div>
-          <div>
-            <div class="fd-win" id="fd" aria-label="Animated example of Iris filling in a job application">
-              <div class="fd-bar" aria-hidden="true"><i></i><i></i><i></i><span>job-boards.greenhouse.io/stripe</span><b id="fd-status">Iris is filling this in</b></div>
-              <div class="fd-p"><i id="fd-prog"></i></div>
-              <div class="fd-form" aria-hidden="true">
-                <div class="fd-head"><img src="/media/ats/greenhouse.png" alt="Greenhouse" width="34" height="34" loading="lazy"><div><b>Senior Frontend Engineer</b><small>Stripe · Bengaluru · Full-time</small></div></div>
-                <div class="fd-f" data-fd="text" data-v="Asha"><label>First name</label><div class="in"></div></div>
-                <div class="fd-f" data-fd="text" data-v="Rao"><label>Last name</label><div class="in"></div></div>
-                <div class="fd-f fd-mw" data-fd="text" data-v="asha@example.com"><label>Email</label><div class="in"></div></div>
-                <div class="fd-f fd-mw" data-fd="text" data-v="+91 98765 00000"><label>Phone number</label><div class="in"></div></div>
-                <div class="fd-f fd-mw" data-fd="text" data-v="linkedin.com/in/asharao"><label>LinkedIn</label><div class="in"></div></div>
-                <div class="fd-f fd-mw" data-fd="text" data-v="Bengaluru, India"><label>Location</label><div class="in"></div></div>
-                <div class="fd-f" data-fd="text" data-v="6"><label>Years of experience</label><div class="in"></div></div>
-                <div class="fd-f" data-fd="text" data-v="30 days"><label>Notice period</label><div class="in"></div></div>
-                <div class="fd-f fd-wide"><span class="fd-l">Authorized to work in India?</span><div class="fd-opts radio" data-fd="opt" data-pick="0"><span><s></s>Yes</span><span><s></s>No</span></div></div>
-                <div class="fd-f fd-wide"><span class="fd-l">Which of these have you used?</span><div class="fd-opts" data-fd="opt" data-pick="0,1,3"><span><s></s>React</span><span><s></s>TypeScript</span><span><s></s>Ruby</span><span><s></s>GraphQL</span></div></div>
-                <div class="fd-f fd-wide" data-fd="text" data-v="asha_rao_resume.pdf"><label>Resume</label><div class="in"></div></div>
-                <div class="fd-f fd-wide fd-area" data-fd="text" data-fast="1" data-v="I’ve spent six years building React products, and Stripe’s developer-first work is exactly what I want to do next."><label>Why do you want to work here?</label><div class="in"></div></div>
-                <div class="fd-f fd-wide"><div class="fd-opts" data-fd="opt" data-pick="0"><span><s></s>I confirm this information is accurate</span></div></div>
-                <div class="fd-submit" id="fd-submit">Submit application</div>
-              </div>
-              <svg class="fd-cur" id="fd-cur" viewBox="0 0 24 24" fill="#5536c4" stroke="#fff" stroke-width="1.5" aria-hidden="true"><path d="M5 3l14 9-6 1.5L9.5 20z"/></svg>
-            </div>
-            <p class="fd-note">An example application, shown in about five seconds</p>
-          </div>
-        </div>
-      </section>
 
       <section class="webx" aria-label="Iris on the web">
         <div class="webx-pin" id="webx">
@@ -1444,12 +1475,11 @@
     })();
 
     // A whole form filled in about five seconds, while it is on screen.
-    (function formDemo() {
-      var win = document.getElementById('fd');
-      if (!win) return;
-      var RUN = 5400, HOLD = 2200;
-      var cur = document.getElementById('fd-cur'), prog = document.getElementById('fd-prog');
-      var sub = document.getElementById('fd-submit'), status = document.getElementById('fd-status');
+    // Runs for every .fd-win: the full demo in "See it happen" and the mini one in the hero.
+    [].slice.call(document.querySelectorAll('.fd-win')).forEach(function formDemo(win) {
+      var RUN = win.classList.contains('fd-mini') ? 4200 : 5400, HOLD = 2200;
+      var cur = win.querySelector('.fd-cur'), prog = win.querySelector('.fd-p i');
+      var sub = win.querySelector('.fd-submit'), status = win.querySelector('.fd-bar b');
       var items = [].slice.call(win.querySelectorAll('[data-fd]'));
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var running = false, onScreen = false, timers = [];
@@ -1492,7 +1522,7 @@
         onScreen = es[0].isIntersecting;
         if (onScreen) run();
       }, { threshold: 0.35 }).observe(win);
-    })();
+    });
 
     // Website screenshots: scrolling down moves them sideways on desktop; phones swipe.
     (function webCarousel() {
