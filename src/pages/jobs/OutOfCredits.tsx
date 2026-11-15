@@ -7,6 +7,7 @@ import { fetchRegion, startCheckout, useWebPlan, webPlanUsable } from '@web/lib/
 import { TRIAL_PLAN } from '@/lib/billing';
 import type { Entitlements } from '@/lib/entitlements';
 import { getPlanDisplayName } from '@/lib/subscription';
+import { TimeSaved } from '@web/ui/TimeSaved';
 
 function countdown(resetAt: number) {
   const ms = resetAt - Date.now();
@@ -43,6 +44,7 @@ export function OutOfCredits({ open, onClose, entitlements, resetAt }: { open: b
         <button className="btn secondary" onClick={onClose}>Not now</button>
         <Link to="/app/plans" className="btn" onClick={onClose}>See plans</Link>
       </>}>
+      <TimeSaved compact />
       <ul className="bullets" style={{ marginTop: 0 }}>
         <li>75 to 500 applications a month</li>
         <li>Iris auto-apply works through your matches every morning</li>

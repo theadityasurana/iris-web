@@ -11,6 +11,7 @@ import { JobTile, JobTileSkeleton } from '@web/pages/jobs/JobParts';
 import { EMPTY_FILTERS, useFeed } from '@web/pages/jobs/useFeed';
 import { useJobActions } from '@web/pages/jobs/useJobActions';
 import { OutOfCredits } from '@web/pages/jobs/OutOfCredits';
+import { TimeSaved } from '@web/ui/TimeSaved';
 
 const NO_TAGS: string[] = [];
 const GOAL_LABEL: Record<string, string> = {
@@ -123,6 +124,7 @@ export default function Home() {
             <Link to="/app/applications" className="link t-callout">See all</Link>
           </div>
         </div>
+        <TimeSaved />
         <div className="card table-card">
           {apps.isLoading ? <SkeletonList n={4} /> : recent.length === 0 ? (
             <Empty icon={ClipboardList} title={q ? 'No matches' : 'No applications yet'} body={q ? undefined : 'Apply to a job above and it shows up here.'} />
