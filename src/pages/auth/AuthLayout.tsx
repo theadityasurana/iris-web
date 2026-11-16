@@ -2,11 +2,11 @@ import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Logo } from '@web/ui/bits';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useAuth, APPLE_WEB_ENABLED, type OAuthProvider } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 
-export function AuthLayout({ title, subtitle, children, footer, showStores = true }: { title: string; subtitle?: ReactNode; children: ReactNode; footer?: ReactNode; showStores?: boolean }) {
+export function AuthLayout({ title, subtitle, children, footer }: { title: string; subtitle?: ReactNode; children: ReactNode; footer?: ReactNode }) {
   useEffect(() => { document.title = `${title} | Iris`; }, [title]);
   return (
     <div className="auth">
@@ -21,15 +21,13 @@ export function AuthLayout({ title, subtitle, children, footer, showStores = tru
           <div style={{ marginTop: 28 }}>{children}</div>
         </div>
         {footer && <div className="auth-foot t-callout muted">{footer}</div>}
-        {showStores && <div className="auth-stores">
+        <div className="auth-stores">
           <span className="t-overline muted">Or get the app</span>
           <div>
-            {/* Temporarily points at the maintenance page while the iOS app is unavailable.
-                Restore the App Store link (https://apps.apple.com/in/app/nextquark/id6761863089) to undo. */}
-            <Link to="/app/ios" className="btn outline"><AppleMark />Download on iOS</Link>
+            <a href="https://apps.apple.com/in/app/nextquark/id6761863089" target="_blank" rel="noopener" className="btn outline"><AppleMark />Download on iOS</a>
             <a href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener" className="btn outline"><PlayMark />Get it on Google Play</a>
           </div>
-        </div>}
+        </div>
       </div>
       <aside className="auth-aside" aria-hidden="true">
         <video src="/media/auth-clouds.mp4" autoPlay muted loop playsInline preload="metadata" poster="/media/auth-clouds-poster.webp" />

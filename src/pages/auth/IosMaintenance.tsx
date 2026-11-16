@@ -1,15 +1,9 @@
-import { Link } from 'react-router-dom';
-import { AuthLayout } from '@web/pages/auth/AuthLayout';
+import { useEffect } from 'react';
 
-/** Shown in place of the App Store while the iOS app is under maintenance. */
+const APP_STORE = 'https://apps.apple.com/in/app/nextquark/id6761863089';
+
+/** The iOS app is back: old /app/ios links forward to the App Store. */
 export default function IosMaintenance() {
-  return (
-    <AuthLayout
-      title="The iOS app is under maintenance"
-      subtitle="We're working on the iPhone app and it'll be back soon. Until then, Iris works fully in your browser with the same account."
-      showStores={false}
-    >
-      <Link to="/app/sign-up" className="btn lg block">Continue on web</Link>
-    </AuthLayout>
-  );
+  useEffect(() => { window.location.replace(APP_STORE); }, []);
+  return null;
 }
