@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { displayMatchScore } from '@/lib/match-scoring';
 import { Link } from 'react-router-dom';
 import { MapPin, Briefcase, Clock, Users, Building2, ExternalLink, GraduationCap, Banknote, Globe2, Bookmark, Sparkles } from 'lucide-react';
 import type { Job } from '@/types';
@@ -38,7 +39,9 @@ export function ApplyFlip({ phase, company, children }: { phase: ApplyPhase; com
   );
 }
 
-export function matchTone(score: number) {
+export function matchTone(realScore: number) {
+  // Coloured by the displayed (80–100%) score.
+  const score = displayMatchScore(realScore);
   if (score >= 75) return 'green';
   if (score >= 50) return 'amber';
   return '';
@@ -81,7 +84,7 @@ export function JobTile({ job, onSave, onPass, onApply, busy }: { job: Job; onSa
         </div>
         {job.matchScore > 0 && (
           <div className="tile-score">
-            <div className="tile-pct"><b className="num">{job.matchScore}</b><small>%</small></div>
+            <div className="tile-pct"><b className="num">{displayMatchScore(job.matchScore)}</b><small>%</small></div>
             <span className={`tile-band ${band.strong ? 'strong' : ''}`}>{band.label}</span>
           </div>
         )}
@@ -133,7 +136,7 @@ export function JobCard({ job }: { job: Job }) {
           <div className="t-callout muted ellipsis">{job.companyName}</div>
           <h2 className="t-heading clamp-2" style={{ marginTop: 2 }}>{job.jobTitle}</h2>
         </div>
-        {job.matchScore > 0 && <span className={`badge ${matchTone(job.matchScore)}`}>{job.matchScore}% match</span>}
+        {job.matchScore > 0 && <span className={`badge ${matchTone(job.matchScore)}`}>{displayMatchScore(job.matchScore)}% match</span>}
       </header>
       <JobFacts job={job} />
       {job.fitWriteup && (
@@ -178,7 +181,7 @@ export function JobDetail({ job, compact, embedded }: { job: Job; compact?: bool
         <section className="jd-section">
           <div className="row between">
             <h3 className="t-sub">Your match</h3>
-            <span className={`badge ${matchTone(job.matchScore)}`}>{job.matchScore}%</span>
+            <span className={`badge ${matchTone(job.matchScore)}`}>{displayMatchScore(job.matchScore)}%</span>
           </div>
           {job.fitWriteup && <p className="t-body soft" style={{ marginTop: 8 }}>{job.fitWriteup}</p>}
         </section>

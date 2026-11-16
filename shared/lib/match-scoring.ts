@@ -518,3 +518,14 @@ export function computeMatchScores(profile: UserProfile | null, jobs: Job[]): Jo
 
   return scored;
 }
+
+/**
+ * The match score users see on cards and badges: the real score (10–100)
+ * mapped onto 80–100%, same order (60 → 91, 100 → 100). Ranking, score bands
+ * and the auto-apply threshold keep using the real score.
+ */
+export function displayMatchScore(score: number | null | undefined): number {
+  if (!score || score <= 0) return 0;
+  const s = Math.min(100, Math.max(10, score));
+  return Math.round(80 + ((s - 10) * 20) / 90);
+}

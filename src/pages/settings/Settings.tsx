@@ -155,8 +155,8 @@ function JobPreferences() {
         </dl>
         <div className="t-overline muted" style={{ marginTop: 18 }}>Score bands</div>
         <div className="bands">
-          <div><span>85%+</span><b>Best match</b></div><div><span>70–84%</span><b>Top pick</b></div>
-          <div><span>60–69%</span><b>Strong fit</b></div><div><span>Below 60%</span><b>Worth applying</b></div>
+          <div><span>97%+</span><b>Best match</b></div><div><span>93–96%</span><b>Top pick</b></div>
+          <div><span>91–92%</span><b>Strong fit</b></div><div><span>Below 91%</span><b>Worth applying</b></div>
         </div>
       </section>
       <Chips label="Target titles" items={profile?.desiredRoles} to="/app/profile/edit/desiredroles" />

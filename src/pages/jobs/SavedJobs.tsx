@@ -6,7 +6,7 @@ import { useToast } from '@web/ui/Toast';
 import { CompanyLogo, Empty, SkeletonRows } from '@web/ui/bits';
 import { supabase } from '@/lib/supabase';
 import { mapSupabaseJobToJob, unsaveJob } from '@/lib/jobs';
-import { computeMatchScores } from '@/lib/match-scoring';
+import { computeMatchScores, displayMatchScore } from '@/lib/match-scoring';
 import { matchTone } from './JobParts';
 
 export default function SavedJobs() {
@@ -52,7 +52,7 @@ export default function SavedJobs() {
                   <div className="t-callout muted ellipsis">{j.companyName} · {j.location}</div>
                 </div>
               </Link>
-              {j.matchScore > 0 && <span className={`badge ${matchTone(j.matchScore)}`}>{j.matchScore}%</span>}
+              {j.matchScore > 0 && <span className={`badge ${matchTone(j.matchScore)}`}>{displayMatchScore(j.matchScore)}%</span>}
               <button className="icon-btn" onClick={() => remove(j.id)} aria-label="Remove"><Trash2 /></button>
             </div>
           ))}
