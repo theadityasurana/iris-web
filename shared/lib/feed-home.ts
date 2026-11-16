@@ -16,7 +16,8 @@
  * outside home means the current request has no more home jobs ("crossed").
  */
 import { LOCATION_MAPPINGS } from '@/constants/location-mappings';
-import { locationTier } from '@/lib/feed-search';
+import { locationTier, type FeedRung } from '@/lib/feed-search';
+import type { BatchFetchParams } from '@/lib/feed-engine';
 import { getEscalatedLevels, MAX_ROLE_BREADTH, type RoleBreadth } from '@/lib/feed-policy';
 import type { Job, UserProfile } from '@/types';
 
@@ -112,6 +113,34 @@ export function nextWalk(s: WalkState, c: WalkContext): WalkState | null {
   if (inHome) return { ...base, phase: 'world', roleBreadth: 0, escalated: [] };
   if (s.recycles >= 1) return null;
   return { ...base, recycles: s.recycles + 1, roleBreadth: 0, escalated: [] };
+}
+
+// ─── Phase-aware request ─────────────────────────────────────────────────────
+
+export interface HomeRequestContext { inHome: boolean; homeFirst: boolean; near: NearLocations }
+
+/**
+ * What to ask search_jobs for in each phase. Measured on the live database
+ * (Bangalore, Software Engineer, cold cache): nearest-first over every country
+ * took ~10s (its "everywhere else" step reads thousands of rows), past the 8s
+ * statement timeout.
+ *   home  → only the home cities / countries (indexed location filter), still
+ *           city first: ~1.6s cold. It is all the home phase keeps anyway.
+ *   world → no nearest-first ordering: home is used up by then, ~3.3s cold.
+ */
+export function phaseParams(p: BatchFetchParams, h: HomeRequestContext): BatchFetchParams {
+  if (!h.homeFirst) return p;
+  if (h.inHome) {
+    const home = [...h.near.countries, ...h.near.cities];
+    return { ...p, filters: { ...p.filters, locations: home } };
+  }
+  return { ...p, nearLocations: undefined };
+}
+
+/** The ladder's rungs with phase-aware requests. */
+export function withPhase(rungs: FeedRung[], h: HomeRequestContext): FeedRung[] {
+  if (!h.homeFirst) return rungs;
+  return rungs.map(r => ({ ...r, params: (offset: number) => phaseParams(r.params(offset), h) }));
 }
 
 export function worldNotice(near: NearLocations): string | null {

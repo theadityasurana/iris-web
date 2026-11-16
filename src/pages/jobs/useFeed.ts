@@ -88,7 +88,8 @@ export function useFeed(profile: UserProfile | null, swipedJobIds: string[], sea
     pageSize: PAGE,
     filteredPageSize: FILTERED_PAGE,
     homeCompanyCap: rc('feed').home_company_cap,
-  }), [searchTags, filters, baselineLevels]);
+    home: { inHome: walk.current.phase === 'home' && homeFirst(), homeFirst: homeFirst(), near: nearRef.current },
+  }), [searchTags, filters, baselineLevels, homeFirst]);
 
   /** Fetch the next page, walking the ladder past empty rungs. */
   const load = useCallback(async (append: boolean): Promise<number> => {

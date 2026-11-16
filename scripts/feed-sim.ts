@@ -80,7 +80,7 @@ async function fetchTimed(p: Parameters<typeof fetchJobsBatch>[0]) {
 /** Mirrors useFeed.load(append = true). Returns ms spent. */
 async function load(): Promise<number> {
   let spent = 0;
-  const ladderArgs = { searchTags: tags, knownCompanies: [], filters: EMPTY, desiredRoles: profile.desiredRoles, baselineLevels, nearTexts, excludeIds: swiped, pageSize: PAGE, filteredPageSize: FILTERED_PAGE, homeCompanyCap: HOME_COMPANY_CAP };
+  const ladderArgs = { searchTags: tags, knownCompanies: [], filters: EMPTY, desiredRoles: profile.desiredRoles, baselineLevels, nearTexts, excludeIds: swiped, pageSize: PAGE, filteredPageSize: FILTERED_PAGE, homeCompanyCap: HOME_COMPANY_CAP, home: { inHome: walk.phase === 'home' && homeFirstOn, homeFirst: homeFirstOn, near } };
   const steps = walkLadder(walk, ladderArgs);
   let r = Math.min(walk.rung, steps.length - 1);
   let off = offset;
@@ -106,7 +106,7 @@ async function load(): Promise<number> {
 const started = Date.now();
 const SECONDS_PER_CARD = 3;
 let errorScreens = 0, waitedLoads = 0;
-const ladderArgsNow = () => ({ searchTags: tags, knownCompanies: [], filters: EMPTY, desiredRoles: profile.desiredRoles, baselineLevels, nearTexts, excludeIds: swiped, pageSize: PAGE, filteredPageSize: FILTERED_PAGE, homeCompanyCap: HOME_COMPANY_CAP });
+const ladderArgsNow = () => ({ searchTags: tags, knownCompanies: [], filters: EMPTY, desiredRoles: profile.desiredRoles, baselineLevels, nearTexts, excludeIds: swiped, pageSize: PAGE, filteredPageSize: FILTERED_PAGE, homeCompanyCap: HOME_COMPANY_CAP, home: { inHome: walk.phase === 'home' && homeFirstOn, homeFirst: homeFirstOn, near } });
 /** A load that started with `left` cards on screen: the user waits only for the part not covered by swiping them. */
 const account = (spent: number, left: number, failedEmpty: boolean) => {
   const wait = Math.max(0, spent - left * SECONDS_PER_CARD * 1000);

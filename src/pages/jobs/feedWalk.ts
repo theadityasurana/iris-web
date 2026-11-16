@@ -11,7 +11,7 @@
 import type { Job } from '@/types';
 import { buildFeedLadder, locationTier, type FeedPanelFilters, type FeedRung } from '@/lib/feed-search';
 import { fitsLevels, interleaveAdjacent, titleMatchesKeyword } from '@/lib/feed-policy';
-import { applyHomePhase, type NearLocations, type WalkState } from '@/lib/feed-home';
+import { applyHomePhase, withPhase, type HomeRequestContext, type NearLocations, type WalkState } from '@/lib/feed-home';
 
 // The walk itself (nextWalk, WalkState, START_WALK) is shared with the app: lib/feed-home.
 export { nextWalk, START_WALK, WALK_AHEAD, type WalkState } from '@/lib/feed-home';
@@ -28,10 +28,12 @@ export interface LadderArgs {
   pageSize: number;
   filteredPageSize: number;
   homeCompanyCap: number;
+  /** Home-country phase context: shapes each request (see phaseParams). */
+  home?: HomeRequestContext;
 }
 
 export function walkLadder(s: WalkState, a: LadderArgs): FeedRung[] {
-  return buildFeedLadder({
+  const rungs = buildFeedLadder({
     searchTags: a.searchTags,
     knownCompanies: a.knownCompanies,
     filters: a.filters,
@@ -44,6 +46,7 @@ export function walkLadder(s: WalkState, a: LadderArgs): FeedRung[] {
     filteredPageSize: a.filteredPageSize,
     homeCompanyCap: a.homeCompanyCap,
   });
+  return a.home ? withPhase(rungs, a.home) : rungs;
 }
 
 export interface ShapeOptions {
