@@ -12,6 +12,7 @@ import { EMPTY_FILTERS, useFeed } from '@web/pages/jobs/useFeed';
 import { useJobActions } from '@web/pages/jobs/useJobActions';
 import { OutOfCredits } from '@web/pages/jobs/OutOfCredits';
 import { TimeSaved } from '@web/ui/TimeSaved';
+import { AutoInstallSheet } from '@web/ui/InstallSheet';
 
 const NO_TAGS: string[] = [];
 const GOAL_LABEL: Record<string, string> = {
@@ -57,6 +58,7 @@ export default function Home() {
 
   return (
     <div className="page wide">
+      <AutoInstallSheet />
       <section className="hero-card">
         <img src="/media/onboarding/final.webp" alt="" width={880} height={1100} />
         <div className="hero-copy">

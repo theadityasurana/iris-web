@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Check, CreditCard, Eye, EyeOff, LogOut, Mail, Moon, SlidersHorizontal, Smartphone, Sun, Trash2, User, WandSparkles, type LucideIcon } from 'lucide-react';
+import { Check, CreditCard, SquarePlus, Eye, EyeOff, LogOut, Mail, Moon, SlidersHorizontal, Smartphone, Sun, Trash2, User, WandSparkles, type LucideIcon } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useFreeSwipes, useEntitlements, useSubscription, useTransactions } from '@web/lib/queries';
 import { useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
 import { ConfirmModal } from '@web/ui/Modal';
+import { InstallSheet } from '@web/ui/InstallSheet';
+import { useInstall } from '@web/lib/pwa';
 import { useToast } from '@web/ui/Toast';
 import { Avatar, formatDate } from '@web/ui/bits';
 import { getPlanDisplayName } from '@/lib/subscription';
@@ -43,6 +45,8 @@ function Personal() {
   const [theme, setTheme] = useTheme();
   const [confirm, setConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const installMode = useInstall();
+  const [installOpen, setInstallOpen] = useState(false);
   const remove = async () => {
     setDeleting(true);
     const { success, error } = await deleteAccount();
@@ -72,6 +76,7 @@ function Personal() {
         <h3 className="p-card-title">Get the mobile app</h3>
         <p className="t-callout muted">Same account, same applications.</p>
         <div className="row gap-8 wrap" style={{ marginTop: 12 }}>
+          {installMode !== 'none' && <button className="btn sm" onClick={() => setInstallOpen(true)}><SquarePlus />Add to home screen</button>}
           <a className="btn outline sm" href="https://apps.apple.com/in/app/nextquark/id6761863089" target="_blank" rel="noopener"><Smartphone />App Store</a>
           <a className="btn outline sm" href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener"><Smartphone />Google Play</a>
         </div>
@@ -80,6 +85,7 @@ function Personal() {
         <a className="link" href="/privacy/" target="_blank" rel="noopener">Privacy</a> · <a className="link" href="/terms/" target="_blank" rel="noopener">Terms</a> · <a className="link" href="mailto:support@nextquark.com">support@nextquark.com</a>
       </p>
       <ConfirmModal open={confirm} onClose={() => setConfirm(false)} onConfirm={remove} busy={deleting} danger title="Delete your account?" confirmLabel="Delete everything" body="This permanently deletes your Iris account and data on the web and in the app. It can't be undone." />
+      <InstallSheet open={installOpen} onClose={() => setInstallOpen(false)} />
       <AccountActions onDelete={() => setConfirm(true)} logout={logout} />
     </>
   );

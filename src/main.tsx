@@ -6,6 +6,8 @@ import { persistOptions, queryClient } from '@web/lib/cache';
 import { AuthProvider } from '@web/auth/AuthProvider';
 import { ToastProvider } from '@web/ui/Toast';
 import { App } from '@web/App';
+// Registers the install-prompt listener before anything mounts (Chrome fires it once, early).
+import '@web/lib/pwa';
 import '@web/styles/app.css';
 import '@web/styles/onboarding.css';
 import '@web/styles/pages.css';
