@@ -1,6 +1,5 @@
 import { supabase } from './supabase';
 import { fetchJobsBatch, addToLiveApplicationQueue, incrementRightSwipe } from './jobs';
-import { computeMatchScore } from './match-scoring';
 import { validateIrisJobsWithGPT } from './gpt-ranking';
 import { Job, UserProfile } from '@/types';
 
@@ -224,14 +223,8 @@ export async function runIrisAutoApply(userId: string, profile: UserProfile): Pr
 
   if (jobs.length === 0) return 0;
 
-  // Sanity check: score each job against user profile, only apply if score >= 60
-  const MIN_MATCH_SCORE = 60;
-  let qualifiedJobs = jobs.filter(job => {
-    const score = computeMatchScore(profile, job);
-    return score >= MIN_MATCH_SCORE;
-  }).slice(0, remaining);
+  let qualifiedJobs = jobs.slice(0, remaining);
 
-  if (qualifiedJobs.length === 0) return 0;
 
   // GPT sanity check: validate qualified jobs before auto-applying
   qualifiedJobs = await validateIrisJobsWithGPT(profile, qualifiedJobs);
