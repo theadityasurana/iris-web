@@ -6,8 +6,9 @@
 import { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@web/auth/AuthProvider';
-import { useEntitlements, useFreeSwipes } from '@web/lib/queries';
-import { useWebPlan, webPlanUsable } from '@web/lib/webBilling';
+import { useApplications, useEntitlements, useFreeSwipes } from '@web/lib/queries';
+import { REGION_QUERY, africaAllowanceQuery, useAfricaAllowance, useRegion, useWebPlan, webPlanUsable } from '@web/lib/webBilling';
+import { AF_FREE_APPLICATIONS } from '@/lib/billing';
 import { supabase } from '@/lib/supabase';
 import { canApply } from '@/lib/entitlements';
 import { decrementApplicationCount } from '@/lib/subscription';
@@ -40,10 +41,25 @@ export function useJobActions() {
   const freeLeft = free?.remaining ?? 0;
   const { data: webPlan } = useWebPlan();
   const webCredits = webPlanUsable(webPlan) ? webPlan.credits_remaining : 0;
+  const { data: region } = useRegion();
+  const paying = webCredits > 0 || entitlements.usesCredits;
+  const { data: cachedApps } = useApplications();
+  // Africa (website only): a free user gets the onboarding application plus earned credits, then must pay.
+  const { data: allowance = AF_FREE_APPLICATIONS } = useAfricaAllowance(region === 'AF');
+  const africaLocked = region === 'AF' && !paying && (cachedApps?.length ?? 0) >= allowance;
 
   const apply = useCallback(async (job: Job): Promise<ApplyOutcome> => {
     if (!userId || !profile) return 'failed';
     if (webCredits <= 0 && !canApply(entitlements, freeLeft)) { setOutOfCredits(true); return 'no-credits'; }
+    if (!paying) {
+      const r = region ?? await qc.fetchQuery(REGION_QUERY).catch(() => 'INTL');
+      if (r === 'AF') {
+        // Always read fresh: the cached list can lag right after the onboarding application.
+        const earlier = await fetchUserApplications(userId).catch(() => cachedApps ?? []);
+        const limit = await qc.fetchQuery(africaAllowanceQuery(userId)).catch(() => AF_FREE_APPLICATIONS);
+        if (earlier.length >= limit) { setOutOfCredits(true); return 'no-credits'; }
+      }
+    }
 
     // Website credits are spent first and live in their own table.
     let charged = false;
@@ -69,7 +85,7 @@ export function useJobActions() {
       window.dispatchEvent(new CustomEvent(FIRST_APPLY_EVENT, { detail }));
     }
     return ok ? 'applied' : 'failed';
-  }, [userId, profile, entitlements, freeLeft, webCredits, addSwipedJobId, qc]);
+  }, [userId, profile, entitlements, freeLeft, webCredits, paying, region, cachedApps, addSwipedJobId, qc]);
 
   const skip = useCallback((job: Job) => { addSwipedJobId(job.id); }, [addSwipedJobId]);
 
@@ -82,7 +98,7 @@ export function useJobActions() {
   }, [userId, addSwipedJobId, qc]);
 
   /** Same pre-check apply() runs first; lets the UI skip the applying animation when it would just open the paywall. */
-  const hasCredits = webCredits > 0 || canApply(entitlements, freeLeft);
+  const hasCredits = (webCredits > 0 || canApply(entitlements, freeLeft)) && !africaLocked;
 
   return { apply, hasCredits, skip, save, outOfCredits, setOutOfCredits, entitlements, freeLeft, freeResetAt: free?.resetAt ?? 0 };
 }

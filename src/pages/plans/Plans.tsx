@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { Check, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useSubscription } from '@web/lib/queries';
-import { fetchRegion, openBillingPortal, startCheckout, useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
+import { useRegion, openBillingPortal, startCheckout, useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
 import { useToast } from '@web/ui/Toast';
 import { formatDate } from '@web/ui/bits';
 import { PLAN_CONFIGS, TRIAL_PLAN } from '@/lib/billing';
@@ -24,7 +24,7 @@ export default function Plans() {
   const { data: webPlan, isLoading: webLoading } = useWebPlan();
   const [period, setPeriod] = useState<'monthly' | 'quarterly'>('monthly');
   const [busy, setBusy] = useState<string | null>(null);
-  const { data: region = 'INTL' } = useQuery({ queryKey: ['pricing-region'], queryFn: fetchRegion, staleTime: 60 * 60_000 });
+  const { data: region = 'INTL' } = useRegion();
 
   const returned = params.get('checkout') === 'done';
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function Plans() {
       <div className="plans-head">
         <h1 className="t-display">Plans for the website</h1>
         <p className="soft">Apply to more jobs from your browser. Cancel any time.</p>
-        <div className="px-low">Apply for as low as {region === 'IN' ? '₹4' : 'under $0.10'} per application</div>
+        <div className="px-low">Apply for as low as {region === 'IN' ? '₹4' : region === 'AF' ? 'under $0.05' : 'under $0.10'} per application</div>
         <div className="segmented" role="group" aria-label="Billing period" style={{ marginTop: 18 }}>
           <button className={period === 'monthly' ? 'on' : ''} aria-pressed={period === 'monthly'} onClick={() => setPeriod('monthly')}>Monthly</button>
           <button className={period === 'quarterly' ? 'on' : ''} aria-pressed={period === 'quarterly'} onClick={() => setPeriod('quarterly')}>Quarterly</button>

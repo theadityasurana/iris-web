@@ -1529,19 +1529,19 @@
       layout();
     })();
 
-    // Pricing: shown in the visitor's region. Amounts match the Plans page.
+    // Pricing: shown in the visitor's region. Africa (AF) pays the Indian price in USD. Amounts match the Plans page.
     (function pricing() {
       var grid = document.getElementById('pr-grid');
       if (!grid) return;
       var PLANS = [
-        { label: 'Starter', credits: 75, IN: { monthly: 499, quarterly: 1199, currency: '₹' }, INTL: { monthly: 19.99, quarterly: 47.99, currency: '$' } },
-        { label: 'Pro', credits: 200, popular: true, IN: { monthly: 999, quarterly: 2399, currency: '₹' }, INTL: { monthly: 39.99, quarterly: 95.99, currency: '$' } },
-        { label: 'Ultra', credits: 500, IN: { monthly: 2199, quarterly: 5999, currency: '₹' }, INTL: { monthly: 59.99, quarterly: 143.99, currency: '$' } }
+        { label: 'Starter', credits: 75, IN: { monthly: 499, quarterly: 1199, currency: '₹' }, INTL: { monthly: 19.99, quarterly: 47.99, currency: '$' }, AF: { monthly: 4.99, quarterly: 12.99, currency: '$' } },
+        { label: 'Pro', credits: 200, popular: true, IN: { monthly: 999, quarterly: 2399, currency: '₹' }, INTL: { monthly: 39.99, quarterly: 95.99, currency: '$' }, AF: { monthly: 9.99, quarterly: 24.99, currency: '$' } },
+        { label: 'Ultra', credits: 500, IN: { monthly: 2199, quarterly: 5999, currency: '₹' }, INTL: { monthly: 59.99, quarterly: 143.99, currency: '$' }, AF: { monthly: 22.99, quarterly: 62.99, currency: '$' } }
       ];
-      var TRIAL = { credits: 30, days: 14, IN: { price: 199, currency: '₹' }, INTL: { price: 9.99, currency: '$' } };
+      var TRIAL = { credits: 30, days: 14, IN: { price: 199, currency: '₹' }, INTL: { price: 9.99, currency: '$' }, AF: { price: 1.99, currency: '$' } };
       var INCLUDED = ['Job feed, search and swipe', 'Applications submitted for you', 'Your own application inbox', 'Application tracking and replies'];
       var tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (_) {}
-      var region = /Calcutta|Kolkata/.test(tz) ? 'IN' : 'INTL', period = 'monthly';
+      var region = /Calcutta|Kolkata/.test(tz) ? 'IN' : /^Africa\//.test(tz) ? 'AF' : 'INTL', period = 'monthly';
       function money(c, n) { return c + (Number.isInteger(n) ? n.toLocaleString(c === '₹' ? 'en-IN' : 'en-US') : n.toFixed(2)); }
       function unit(c, n) { return c + (c === '₹' ? String(Math.round(n * 100) / 100) : n.toFixed(2)); }
       function render() {
@@ -1569,7 +1569,7 @@
         });
       });
       render();
-      fetch('/api/dodo/checkout').then(function(r) { return r.json(); }).then(function(d) { if (d.region && d.region !== region) { region = d.region; render(); } }).catch(function() {});
+      fetch('/api/dodo/checkout').then(function(r) { return r.json(); }).then(function(d) { if (d.region && PLANS[0][d.region] && d.region !== region) { region = d.region; render(); } }).catch(function() {});
     })();
 
     setupStoreButton();

@@ -13,6 +13,8 @@ try {
 export type PlanId = 'free' | 'starter' | 'pro' | 'ultra';
 export type BillingPeriod = 'monthly' | 'quarterly';
 export type PricingRegion = 'IN' | 'INTL';
+/** Website-only regions. 'AF' (African continent) pays the Indian price converted to USD. */
+export type WebPricingRegion = PricingRegion | 'AF';
 
 export interface PlanEntitlement {
   plan: PlanId;
@@ -87,6 +89,7 @@ export interface PlanConfig {
   pricing: {
     IN: { monthly: number; quarterly: number; currency: '₹' };
     INTL: { monthly: number; quarterly: number; currency: '$' };
+    AF: { monthly: number; quarterly: number; currency: '$' };
   };
   skus: { monthly: SubscriptionSku; quarterly: SubscriptionSku };
 }
@@ -100,6 +103,7 @@ export const PLAN_CONFIGS: PlanConfig[] = [
     pricing: {
       IN: { monthly: 499, quarterly: 1199, currency: '₹' },
       INTL: { monthly: 19.99, quarterly: 47.99, currency: '$' },
+      AF: { monthly: 4.99, quarterly: 12.99, currency: '$' },
     },
     skus: { monthly: SUBSCRIPTION_SKUS.starter_monthly, quarterly: SUBSCRIPTION_SKUS.starter_quarterly },
   },
@@ -112,6 +116,7 @@ export const PLAN_CONFIGS: PlanConfig[] = [
     pricing: {
       IN: { monthly: 999, quarterly: 2399, currency: '₹' },
       INTL: { monthly: 39.99, quarterly: 95.99, currency: '$' },
+      AF: { monthly: 9.99, quarterly: 24.99, currency: '$' },
     },
     skus: { monthly: SUBSCRIPTION_SKUS.pro_monthly, quarterly: SUBSCRIPTION_SKUS.pro_quarterly },
   },
@@ -123,6 +128,7 @@ export const PLAN_CONFIGS: PlanConfig[] = [
     pricing: {
       IN: { monthly: 2199, quarterly: 5999, currency: '₹' },
       INTL: { monthly: 59.99, quarterly: 143.99, currency: '$' },
+      AF: { monthly: 22.99, quarterly: 62.99, currency: '$' },
     },
     skus: { monthly: SUBSCRIPTION_SKUS.ultra_monthly, quarterly: SUBSCRIPTION_SKUS.ultra_quarterly },
   },
@@ -137,10 +143,14 @@ export const TRIAL_PLAN = {
   pricing: {
     IN: { price: 199, currency: '₹' as const },
     INTL: { price: 9.99, currency: '$' as const },
+    AF: { price: 1.99, currency: '$' as const },
   },
 };
 
 export const FREE_CREDITS_PER_MONTH = 10;
+
+/** Website, Africa only: free applications before the paywall (the one Iris sends during onboarding). */
+export const AF_FREE_APPLICATIONS = 1;
 
 /** Display-only FX. Store / billing amounts stay in the regional currency. */
 export const INR_PER_USD = 95.96;

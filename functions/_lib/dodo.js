@@ -48,4 +48,9 @@ export function db(env, path, init = {}) {
   });
 }
 
-export const regionOf = request => (request.cf?.country === 'IN' ? 'IN' : 'INTL');
+/** IN = India, AF = anywhere on the African continent (the Indian price, in USD), INTL = everyone else. */
+export const regionOf = request => {
+  if (request.cf?.country === 'IN') return 'IN';
+  if (request.cf?.continent === 'AF') return 'AF';
+  return 'INTL';
+};
