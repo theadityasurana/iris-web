@@ -52,6 +52,8 @@ Note: nothing stops a partner using their own code on their own purchase (they'd
 
 ## 3. How purchases and money are counted
 
+**Website only:** codes work only when the buyer upgrades on irisjobs.live and pays at the Dodo checkout. In-app (iPhone/Android) purchases can't take a code and never count. Every partner dashboard and the join page say this.
+
 **A purchase** = a Dodo subscription bought with the influencer's code whose first payment went through. Pending or failed checkouts don't count.
 
 **Only the purchase counts.** Renewals and plan changes earn the influencer nothing. Each subscriber counts once, for their first payment.
