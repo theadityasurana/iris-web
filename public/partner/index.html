@@ -44,6 +44,10 @@
   .wrow { display: flex; gap: 8px; }
   .wrow input { flex: 1; min-width: 0; font: 13px var(--mono); padding: 10px 12px; border: 1px solid #d6cdf6; border-radius: 10px; background: #fff; color: var(--ink); }
   .wrow button { font: 600 14px var(--sans); background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 0 16px; cursor: pointer; white-space: nowrap; }
+  .must { background: #fff6e6; border: 1px solid #f0d9ae; border-left: 4px solid #c9821f; border-radius: 12px; padding: 16px 18px; margin: 0 0 22px; font-size: 14.5px; color: var(--ink-2); }
+  .must b.h { display: block; color: var(--ink); font-size: 15.5px; margin-bottom: 4px; }
+  .must ol { margin: 8px 0 0; padding-left: 20px; }
+  .must li { margin-bottom: 3px; }
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
   .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
   .tile b { display: block; font: 500 32px/1 var(--serif); font-variant-numeric: tabular-nums; }
@@ -83,10 +87,21 @@
     <div class="welcome" id="welcome" hidden>
       <b>You’re in. Your code is <span class="code" id="wcode"></span></b>
       <p>This page is your private dashboard. <strong>Save this link now</strong> (bookmark it or copy it somewhere safe): it’s the only way back in, and there’s no login. Don’t share it publicly; share your code instead.</p>
+      <p><strong>Tell your followers:</strong> upgrade on the website, irisjobs.live, and enter your code at checkout. Upgrades inside the iPhone or Android app can’t use your code and won’t count.</p>
       <div class="wrow"><input id="wlink" readonly><button id="wcopy" type="button">Copy link</button></div>
     </div>
     <h1>Hi <em id="name"></em>.</h1>
     <p class="sub">Every purchase made with your code <span class="code" id="code"></span> shows up here.</p>
+    <div class="must">
+      <b class="h">Your followers must upgrade on the website for it to count</b>
+      Your code only works when someone upgrades their plan on <b>irisjobs.live</b> and pays through the website checkout (Dodo Payments). Tell them:
+      <ol>
+        <li>Go to <b>irisjobs.live</b> in a browser and choose a plan.</li>
+        <li>At checkout, enter <span class="code" id="code3"></span> in the discount code box.</li>
+        <li>Pay on that checkout page.</li>
+      </ol>
+      Upgrades made inside the iPhone or Android app can’t use your code and won’t show up here or earn you money.
+    </div>
 
     <div class="hero">
       <div><b id="buyers">0</b><div class="label">people bought Iris with your code</div></div>
@@ -108,7 +123,7 @@
     <div class="two">
       <div class="card"><h2>Plans they chose</h2><div id="plans" class="plans"></div></div>
       <div class="card"><h2>How it works</h2>
-        <p style="margin:0 0 8px">Your followers enter <span class="code" id="code2"></span> at checkout on irisjobs.live. Each purchase counts here once its first payment goes through.</p>
+        <p style="margin:0 0 8px">Your followers upgrade on the website, irisjobs.live, and enter <span class="code" id="code2"></span> at the Dodo Payments checkout. In-app upgrades on iPhone or Android don’t count. Each purchase counts here once its first payment goes through.</p>
         <p style="margin:0 0 8px">You earn <b id="pct2"></b>% of what Iris actually receives from each purchase made with your code, after taxes and payment-processing fees. Renewals aren't included. Amounts are in US dollars.</p>
         <p class="muted small" style="margin:0;font-size:13px">Names and emails are never shown, to protect buyers' privacy.</p>
       </div>
@@ -149,7 +164,7 @@
       $('wcopy').addEventListener('click', async () => { try { await navigator.clipboard.writeText(clean); $('wcopy').textContent = 'Copied'; } catch { $('wlink').select(); } });
     }
     $('name').textContent = d.name.split(' ')[0];
-    $('code').textContent = $('code2').textContent = d.promo_code;
+    $('code').textContent = $('code2').textContent = $('code3').textContent = d.promo_code;
     $('buyers').textContent = d.buyers;
     $('active').textContent = d.active;
     $('last7').textContent = d.last7;
