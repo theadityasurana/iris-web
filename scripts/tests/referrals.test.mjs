@@ -105,3 +105,16 @@ test('sample dashboard earnings stay between $700 and $800', async () => {
   assert.equal(d.dueCents, d.earnedCents - d.paidCents);
   assert.equal(d.buyers, d.recent.length > 0 ? d.buyers : -1);
 });
+
+test('self-serve join: validation and code candidates', async () => {
+  const { cleanJoin, codeCandidates } = await import('../../functions/api/referrals/join.js');
+  assert.deepEqual(cleanJoin({ name: '  Priya   Kapoor ', email: ' Priya@Example.com ', social: '@priya' }).fields, { name: 'Priya Kapoor', email: 'priya@example.com', social: '@priya' });
+  assert.ok(cleanJoin({ name: 'P', email: 'a@b.co', social: '@x' }).error);
+  assert.ok(cleanJoin({ name: 'Priya', email: 'nope', social: '@x' }).error);
+  assert.ok(cleanJoin({ name: 'Priya', email: 'a@b.co', social: '' }).error);
+  const c = codeCandidates('Priya Kapoor', () => 0.5);
+  assert.deepEqual(c.slice(0, 3), ['PRIYA10', 'PRIYAK10', 'PRIYAKAPOOR10']);
+  assert.ok(c.every(x => /^[A-Z0-9]{2,64}$/.test(x)));
+  assert.equal(codeCandidates('Zoë', () => 0.5)[0], 'ZOE10');
+  assert.match(codeCandidates('अमित', () => 0.5)[0], /^IRIS\d{3}$/);
+});

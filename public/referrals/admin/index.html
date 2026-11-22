@@ -208,12 +208,14 @@
       const flags = [
         !s.discountFound && '<span class="pill warn">code not found in Dodo</span>',
         !p.active && '<span class="pill off">dashboard off</span>',
+        p.source === 'self' && '<span class="pill">signed up themselves</span>',
       ].filter(Boolean).join('');
       const row = `<tr class="${i === 0 && s.buyers ? 'top1' : ''}">
         <td class="rank">${i + 1}</td>
         <td><div class="name">${esc(p.name)} <span class="code">${esc(p.promo_code)}</span></div>
           ${flags ? `<div style="margin-top:6px">${flags}</div>` : ''}
           <div class="url"><a href="${esc(partnerUrl(p.slug))}" target="_blank" rel="noopener">${esc(partnerUrl(p.slug).replace(/^https?:\/\//, ''))}</a><button class="link small" data-copy="${esc(partnerUrl(p.slug))}">Copy</button></div>
+          ${p.email || p.social ? `<div class="muted small" style="margin-top:4px">${p.email ? `<a href="mailto:${esc(p.email)}" style="color:inherit">${esc(p.email)}</a>` : ''}${p.email && p.social ? ' · ' : ''}${p.social ? (/^https?:\/\//i.test(p.social) ? `<a href="${esc(p.social)}" target="_blank" rel="noopener" style="color:inherit">${esc(p.social.replace(/^https?:\/\/(www\.)?/i, ''))}</a>` : esc(p.social)) : ''}</div>` : ''}
           ${p.notes ? `<div class="muted small">${esc(p.notes)}</div>` : ''}</td>
         <td class="num big">${s.buyers}</td>
         <td class="num">${s.active}</td>
