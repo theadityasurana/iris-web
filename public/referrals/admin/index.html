@@ -30,7 +30,7 @@
   .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
   .kpi b { display: block; font: 500 30px/1.1 var(--serif); font-variant-numeric: tabular-nums; }
   .kpi span { color: var(--muted); font-size: 13px; }
-  form.add { display: grid; grid-template-columns: 1.2fr 1fr 1.6fr auto; gap: 10px; align-items: end; }
+  form.add { display: grid; grid-template-columns: 1.2fr 1fr .6fr 1.6fr auto; gap: 10px; align-items: end; }
   label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .04em; }
   input { width: 100%; font: inherit; padding: 9px 11px; border: 1px solid var(--line-2); border-radius: 9px; background: #fff; color: var(--ink); }
   input:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
@@ -47,7 +47,7 @@
   .msg { margin-top: 10px; font-size: 14px; min-height: 1em; }
   .msg.err { color: var(--bad); } .msg.ok { color: var(--ok); }
   .table-scroll { overflow-x: auto; margin: 0 -20px; padding: 0 20px; }
-  table { width: 100%; border-collapse: collapse; min-width: 900px; }
+  table { width: 100%; border-collapse: collapse; min-width: 1080px; }
   th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; padding: 0 10px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
   td { padding: 14px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
   tr:last-child td { border-bottom: 0; }
@@ -70,7 +70,7 @@
   .unassigned { margin-top: 12px; font-size: 13px; color: var(--muted); }
   .unassigned button { font-family: var(--mono); font-size: 12px; padding: 2px 8px; margin: 2px; }
   .edit-row td { background: var(--sunken); }
-  .edit-grid { display: grid; grid-template-columns: 1fr 1fr 1.5fr 1.5fr auto; gap: 10px; align-items: end; }
+  .edit-grid { display: grid; grid-template-columns: 1fr 1fr 1.3fr .6fr .8fr 1.3fr auto; gap: 10px; align-items: end; }
   [hidden] { display: none !important; }
   @media (max-width: 820px) {
     .kpis { grid-template-columns: repeat(2, 1fr); }
@@ -100,8 +100,8 @@
     <div class="kpis">
       <div class="kpi"><b id="k-partners">–</b><span>Influencers</span></div>
       <div class="kpi"><b id="k-buyers">–</b><span>Purchases via codes</span></div>
-      <div class="kpi"><b id="k-active">–</b><span>Active subscriptions</span></div>
-      <div class="kpi"><b id="k-30">–</b><span>Purchases, last 30 days</span></div>
+      <div class="kpi"><b id="k-net">–</b><span>Net revenue from codes</span></div>
+      <div class="kpi"><b id="k-due">–</b><span>Owed to influencers now</span></div>
     </div>
 
     <div class="card">
@@ -109,6 +109,7 @@
       <form class="add" id="add-form">
         <div><label for="f-name">Name</label><input id="f-name" placeholder="Priya Sharma" required maxlength="80"></div>
         <div><label for="f-code">Promo code (same as Dodo)</label><input id="f-code" placeholder="PRIYA20" required list="codes" autocomplete="off" style="text-transform:uppercase"></div>
+        <div><label for="f-pct">Share %</label><input id="f-pct" type="number" min="0" max="100" step="0.5" value="20" required></div>
         <div><label for="f-slug">Their dashboard URL</label><div class="slug"><span>irisjobs.live/partner/</span><input id="f-slug" placeholder="auto if blank" autocomplete="off"></div></div>
         <button class="primary">Add</button>
       </form>
@@ -122,12 +123,12 @@
       <div class="table-scroll">
         <table>
           <thead><tr>
-            <th>#</th><th>Influencer</th><th class="num">Purchases</th><th class="num">Active</th><th class="num">7 days</th><th class="num">30 days</th><th class="num">Revenue</th><th>Plans</th><th></th>
+            <th>#</th><th>Influencer</th><th class="num">Purchases</th><th class="num">Active</th><th class="num">30 days</th><th class="num">Net revenue</th><th class="num">Share</th><th class="num">They earn</th><th class="num">Paid</th><th class="num">Due</th><th>Plans</th><th></th>
           </tr></thead>
           <tbody id="rows"></tbody>
         </table>
       </div>
-      <p class="muted small" style="margin:14px 0 0">A purchase is a subscription bought with the code (first payment went through). Revenue is every successful payment on those subscriptions, renewals included, minus full refunds. Data is cached for up to a minute.</p>
+      <p class="muted small" style="margin:14px 0 0">A purchase is a subscription bought with the code (first payment went through). <b>Net revenue</b> is what actually reached you, in USD, from every payment by those subscribers (renewals included): the amount charged minus tax (GST/VAT) and Dodo's real fees, read from Dodo's ledger for each payment. Fully refunded payments are left out. <b>They earn</b> = net revenue × their share. <b>Due</b> = earned − paid. Data is cached for up to a minute.</p>
     </div>
   </main>
 </div>
@@ -144,8 +145,10 @@
   let data = null;
   let editing = null;
   let pendingDelete = null;
+  let pendingPaid = null;
 
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const usd = c => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format((c || 0) / 100);
   const money = rev => {
     const parts = Object.entries(rev || {}).filter(([, v]) => v > 0).map(([cur, v]) => {
       try { return new Intl.NumberFormat('en-IN', { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(v / 100); }
@@ -180,7 +183,7 @@
       $('gate').hidden = true; $('app').hidden = false;
       render();
     } catch (e) {
-      if (e.message !== 'auth') { $('gate').hidden = true; $('app').hidden = false; $('rows').innerHTML = `<tr><td colspan="9" class="empty">${esc(e.message)}</td></tr>`; }
+      if (e.message !== 'auth') { $('gate').hidden = true; $('app').hidden = false; $('rows').innerHTML = `<tr><td colspan="12" class="empty">${esc(e.message)}</td></tr>`; }
     } finally { $('refresh').disabled = false; }
   }
 
@@ -189,8 +192,8 @@
     const sum = k => ps.reduce((n, p) => n + p.stats[k], 0);
     $('k-partners').textContent = ps.length;
     $('k-buyers').textContent = sum('buyers');
-    $('k-active').textContent = sum('active');
-    $('k-30').textContent = sum('last30');
+    $('k-net').textContent = usd(sum('netCents'));
+    $('k-due').textContent = usd(sum('dueCents'));
     $('updated').textContent = `Dodo data as of ${new Date(data.updatedAt).toLocaleString()}`;
 
     $('codes').innerHTML = data.unassignedCodes.map(c => `<option value="${esc(c.code)}">`).join('');
@@ -198,7 +201,7 @@
     $('unassigned').hidden = !un.length;
     $('unassigned').innerHTML = un.length ? `Codes in Dodo not linked to anyone yet: ${un.map(c => `<button type="button" data-code="${esc(c.code)}">${esc(c.code)}${c.timesUsed ? ` · ${c.timesUsed} used` : ''}</button>`).join('')}` : '';
 
-    if (!ps.length) { $('rows').innerHTML = '<tr><td colspan="9" class="empty">No influencers yet. Add one above.</td></tr>'; return; }
+    if (!ps.length) { $('rows').innerHTML = '<tr><td colspan="12" class="empty">No influencers yet. Add one above.</td></tr>'; return; }
     $('rows').innerHTML = ps.map((p, i) => {
       const s = p.stats;
       const plans = Object.entries(s.byPlan).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<span class="pill">${esc(k)} ${v}</span>`).join('');
@@ -214,16 +217,21 @@
           ${p.notes ? `<div class="muted small">${esc(p.notes)}</div>` : ''}</td>
         <td class="num big">${s.buyers}</td>
         <td class="num">${s.active}</td>
-        <td class="num">${s.last7}</td>
         <td class="num">${s.last30}</td>
-        <td class="num">${money(s.revenue)}</td>
+        <td class="num" title="Gross charged: ${esc(money(s.revenue).replace(/<br>/g, ' + ').replace(/<[^>]+>/g, ''))}">${usd(s.netCents)}${s.unsettled ? `<div class="muted small">+${s.unsettled} settling</div>` : ''}</td>
+        <td class="num">${+s.commissionPercent}%</td>
+        <td class="num"><b>${usd(s.earnedCents)}</b></td>
+        <td class="num">${usd(s.paidCents)}</td>
+        <td class="num">${s.dueCents ? `<b style="color:var(--accent)">${usd(s.dueCents)}</b><div><button class="link small" data-paid="${p.id}">Mark paid</button></div>` : '<span class="muted">–</span>'}</td>
         <td>${plans || '<span class="muted">–</span>'}</td>
         <td class="actions"><button class="link" data-edit="${p.id}">Edit</button><button class="link" data-toggle="${p.id}">${p.active ? 'Turn off' : 'Turn on'}</button><button class="link danger" data-del="${p.id}">${pendingDelete === p.id ? 'Confirm delete' : 'Delete'}</button></td>
       </tr>`;
-      const edit = editing === p.id ? `<tr class="edit-row"><td></td><td colspan="8"><form class="edit-grid" data-form="${p.id}">
+      const edit = editing === p.id ? `<tr class="edit-row"><td></td><td colspan="11"><form class="edit-grid" data-form="${p.id}">
         <div><label>Name</label><input name="name" value="${esc(p.name)}" required maxlength="80"></div>
         <div><label>Promo code</label><input name="promo_code" value="${esc(p.promo_code)}" required style="text-transform:uppercase"></div>
         <div><label>URL</label><div class="slug"><span>/partner/</span><input name="slug" value="${esc(p.slug)}" required></div></div>
+        <div><label>Share %</label><input name="commission_percent" type="number" min="0" max="100" step="0.5" value="${+p.commission_percent}" required></div>
+        <div><label>Paid so far (USD)</label><input name="paid_out" type="number" min="0" step="0.01" value="${(p.paid_out_cents / 100).toFixed(2)}" required></div>
         <div><label>Notes (only you see these)</label><input name="notes" value="${esc(p.notes || '')}" maxlength="500"></div>
         <div class="row"><button class="primary">Save</button><button type="button" data-cancel>Cancel</button></div>
       </form><div class="msg err" data-msg="${p.id}"></div></td></tr>` : '';
@@ -248,7 +256,7 @@
     e.preventDefault();
     const msg = $('add-msg'); msg.className = 'msg'; msg.textContent = 'Saving…';
     try {
-      const { partner } = await api('POST', { name: $('f-name').value, promo_code: $('f-code').value, slug: $('f-slug').value.trim() || undefined });
+      const { partner } = await api('POST', { name: $('f-name').value, promo_code: $('f-code').value, slug: $('f-slug').value.trim() || undefined, commission_percent: $('f-pct').value });
       e.target.reset();
       msg.className = 'msg ok';
       msg.innerHTML = `Added. Share this link with ${esc(partner.name)}: <a href="${esc(partnerUrl(partner.slug))}" target="_blank" rel="noopener">${esc(partnerUrl(partner.slug))}</a> <button class="link" data-copy="${esc(partnerUrl(partner.slug))}">Copy</button>`;
@@ -264,6 +272,13 @@
     }
     if (t.dataset.edit) { editing = editing === t.dataset.edit ? null : t.dataset.edit; pendingDelete = null; render(); return; }
     if ('cancel' in t.dataset) { editing = null; render(); return; }
+    if (t.dataset.paid) {
+      const p = data.partners.find(x => x.id === t.dataset.paid);
+      if (pendingPaid !== p.id) { pendingPaid = p.id; t.textContent = `Confirm ${usd(p.stats.dueCents)} paid`; setTimeout(() => { if (pendingPaid === p.id) { pendingPaid = null; t.textContent = 'Mark paid'; } }, 4000); return; }
+      pendingPaid = null; t.disabled = true;
+      try { await api('PATCH', { id: p.id, paid_out: p.stats.earnedCents / 100 }); await load(); } catch {}
+      return;
+    }
     if (t.dataset.toggle) {
       const p = data.partners.find(x => x.id === t.dataset.toggle);
       t.disabled = true;
@@ -283,7 +298,7 @@
     const f = new FormData(e.target);
     const msg = document.querySelector(`[data-msg="${id}"]`);
     try {
-      await api('PATCH', { id, name: f.get('name'), promo_code: f.get('promo_code'), slug: f.get('slug'), notes: f.get('notes') });
+      await api('PATCH', { id, name: f.get('name'), promo_code: f.get('promo_code'), slug: f.get('slug'), notes: f.get('notes'), commission_percent: f.get('commission_percent'), paid_out: f.get('paid_out') });
       editing = null; await load();
     } catch (err) { if (msg && err.message !== 'auth') msg.textContent = err.message; }
   });

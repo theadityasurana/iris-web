@@ -19,7 +19,7 @@ export async function onRequestGet({ request, env }) {
     const owned = new Set(partners.map(p => p.promo_code));
     return json({
       updatedAt: sales.fetchedAt,
-      partners: partners.map(p => ({ ...p, stats: partnerStats(p.promo_code, sales) })),
+      partners: partners.map(p => ({ ...p, stats: partnerStats(p, sales) })),
       unassignedCodes: sales.discounts.filter(d => !owned.has(d.code)).map(d => ({ code: d.code, timesUsed: d.timesUsed })),
     });
   } catch (err) {
@@ -46,6 +46,16 @@ export function cleanFields(body, { partial }) {
     out.slug = slug;
   } else if (!partial) {
     out.slug = slugify(out.name);
+  }
+  if ('commission_percent' in body && body.commission_percent !== '' && body.commission_percent !== undefined) {
+    const pct = Number(body.commission_percent);
+    if (!Number.isFinite(pct) || pct < 0 || pct > 100) return { error: 'Revenue share must be between 0 and 100%.' };
+    out.commission_percent = Math.round(pct * 100) / 100;
+  }
+  if ('paid_out' in body && body.paid_out !== '' && body.paid_out !== undefined) {
+    const usd = Number(body.paid_out);
+    if (!Number.isFinite(usd) || usd < 0) return { error: 'Paid so far must be a positive dollar amount.' };
+    out.paid_out_cents = Math.round(usd * 100);
   }
   if ('notes' in body) out.notes = body.notes ? String(body.notes).slice(0, 500) : null;
   if ('active' in body) out.active = !!body.active;

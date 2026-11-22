@@ -30,6 +30,13 @@
   .hero b { display: block; font: 500 clamp(64px, 14vw, 96px)/.9 var(--serif); font-variant-numeric: tabular-nums; }
   .hero .label { color: var(--muted); margin-top: 8px; }
   .hero .delta { background: var(--ok-soft); color: var(--ok); font-weight: 600; font-size: 14px; padding: 6px 12px; border-radius: 99px; }
+  .earn { background: var(--ink); color: #fbf8f2; border-radius: 18px; padding: 26px 28px; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 14px; }
+  .earn .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #c9bff3; }
+  .earn b { display: block; font: 500 clamp(44px, 9vw, 64px)/1 var(--serif); margin: 6px 0 8px; font-variant-numeric: tabular-nums; }
+  .earn .label { color: #cfc8bb; font-size: 14px; }
+  .earn .split { display: flex; gap: 28px; }
+  .earn .split span { display: block; font-size: 12.5px; color: #cfc8bb; }
+  .earn .split strong { font: 500 26px/1.2 var(--serif); font-variant-numeric: tabular-nums; }
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
   .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
   .tile b { display: block; font: 500 32px/1 var(--serif); font-variant-numeric: tabular-nums; }
@@ -79,12 +86,18 @@
       <div class="tile"><b id="last30">0</b><span>Last 30 days</span></div>
     </div>
 
+    <div class="earn">
+      <div><span class="eyebrow">Your earnings</span><b id="earned">$0.00</b><div class="label">Your <span id="pct"></span>% share of what Iris received from your buyers</div></div>
+      <div class="split"><div><span>Paid to you</span><strong id="paid">$0.00</strong></div><div><span>Pending payout</span><strong id="due">$0.00</strong></div></div>
+    </div>
+
     <div class="card"><h2>Purchases by month</h2><div id="months"></div></div>
 
     <div class="two">
       <div class="card"><h2>Plans they chose</h2><div id="plans" class="plans"></div></div>
       <div class="card"><h2>How it works</h2>
         <p style="margin:0 0 8px">Your followers enter <span class="code" id="code2"></span> at checkout on irisjobs.live. Each purchase counts here once its first payment goes through.</p>
+        <p style="margin:0 0 8px">You earn <b id="pct2"></b>% of what Iris actually receives from every payment those subscribers make, renewals included, after taxes and payment-processing fees. Amounts are in US dollars.</p>
         <p class="muted small" style="margin:0;font-size:13px">Names and emails are never shown, to protect buyers' privacy.</p>
       </div>
     </div>
@@ -101,6 +114,7 @@
   const PLAN = { starter: 'Starter', pro: 'Pro', ultra: 'Ultra', trial: 'Trial' };
   const PERIOD = { monthly: 'monthly', quarterly: 'quarterly', biweekly: '14-day' };
   const STATUS = { active: 'Subscribed', cancelled: 'Cancelled', expired: 'Ended', on_hold: 'Payment due', past_due: 'Payment due', paused: 'Paused' };
+  const usd = c => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format((c || 0) / 100);
   const slug = location.pathname.replace(/^\/partner\/?/, '').replace(/\/$/, '').toLowerCase();
 
   async function load() {
@@ -121,6 +135,10 @@
     $('active').textContent = d.active;
     $('last7').textContent = d.last7;
     $('last30').textContent = d.last30;
+    $('earned').textContent = usd(d.earnedCents);
+    $('paid').textContent = usd(d.paidCents);
+    $('due').textContent = usd(d.dueCents);
+    $('pct').textContent = $('pct2').textContent = +d.commissionPercent;
     if (d.last7 > 0) { $('delta').hidden = false; $('delta').textContent = `+${d.last7} this week`; }
 
     // Last 6 months, including months with zero.
@@ -139,14 +157,14 @@
       : '<div class="empty">No purchases yet</div>';
 
     $('recent').innerHTML = d.recent.length
-      ? `<table><thead><tr><th>Date</th><th>Plan</th><th class="hide-sm">Region</th><th>Status</th></tr></thead><tbody>${d.recent.slice(0, 20).map(r => `<tr>
+      ? `<table><thead><tr><th>Date</th><th>Plan</th><th class="hide-sm">Region</th><th>Status</th><th style="text-align:right">You earned</th></tr></thead><tbody>${d.recent.slice(0, 20).map(r => `<tr>
           <td>${new Date(r.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
           <td>${esc(PLAN[r.plan] || cap(r.plan) || '–')}${r.period ? ` <span style="color:var(--muted)">${esc(PERIOD[r.period] || r.period)}</span>` : ''}</td>
           <td class="hide-sm">${esc({ IN: 'India', AF: 'Africa', INTL: 'International' }[r.region] || '–')}</td>
-          <td><span class="st ${r.status === 'active' ? 'active' : ''}">${esc(STATUS[r.status] || cap(r.status))}</span></td></tr>`).join('')}</tbody></table>`
+          <td><span class="st ${r.status === 'active' ? 'active' : ''}">${esc(STATUS[r.status] || cap(r.status))}</span></td><td style="text-align:right;font-variant-numeric:tabular-nums">${usd(r.earnedCents)}</td></tr>`).join('')}</tbody></table>`
       : '<div class="empty">Your first purchase will show up here.</div>';
 
-    $('foot').textContent = `Partner since ${new Date(d.since).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}. Numbers update within a minute of each purchase.`;
+    $('foot').textContent = `Partner since ${new Date(d.since).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}. Numbers update within a minute of each purchase; earnings appear once Dodo settles the payment.${d.unsettled ? ` ${d.unsettled} payment(s) are still settling.` : ''}`;
     $('state').hidden = true; $('main').hidden = false;
   }
   load();
