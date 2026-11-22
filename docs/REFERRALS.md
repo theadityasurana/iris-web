@@ -11,8 +11,9 @@ How to run the influencer promo-code program on irisjobs.live.
 |---|---|---|
 | Admin dashboard | https://irisjobs.live/referrals/admin/ | You only (password protected) |
 | Influencer dashboard | `https://irisjobs.live/partner/<their-url>` | The influencer you send it to |
+| Self-serve sign-up | https://irisjobs.live/partners/join/ ("Become a partner" in every footer) | Anyone |
 
-Both pages are hidden from search engines. Neither page is linked from anywhere on the website.
+The dashboards are hidden from search engines; the sign-up page is public and in the sitemap. Neither page is linked from anywhere on the website.
 
 - **Admin dashboard:** leaderboard of every influencer, with purchases, net revenue, share %, earned, paid and due. You add, edit, pause and delete influencers here and record payouts.
 - **Influencer dashboard:** that one influencer's purchases, plans chosen, recent purchases, and their own earnings (earned, paid, pending). They never see buyer names or emails, your gross revenue or other influencers' numbers.
@@ -32,6 +33,20 @@ Both pages are hidden from search engines. Neither page is linked from anywhere 
 4. Click **Add** → copy the link it shows → send it to the influencer.
 
 If the row shows **"code not found in Dodo"**, the code was typed differently or doesn't exist in Dodo yet. Fix it in Dodo or click **Edit**.
+
+### 2b. Self-serve sign-up (no work for you)
+
+Anyone can click **Become a partner** in the site footer → `/partners/join/` → enter name, email and the social profile they'll post from. Instantly:
+
+1. A **10%-off Dodo code** is created from their name (same settings as your hand-made codes): `PRIYA10`, or `PRIYAK10` / `PRIYAKAPOOR10` / `PRIYA472` if taken.
+2. They're added to your leaderboard at the default **20%** share, tagged **"signed up themselves"**, with their email and social shown so you can pay them.
+3. They land on their dashboard with a banner telling them to save the link. There's no login, so the link is their only way back in. Lost links: they DM @irisjobs.live and you send it from the admin page.
+
+Spam limits: hidden bot-trap field, max 3 sign-ups per network per day, 100 per day overall, one account per email.
+
+To remove a junk sign-up: **Delete** on the admin page, then also delete its code in Dodo (Discounts), since deleting a partner leaves the Dodo code active.
+
+Note: nothing stops a partner using their own code on their own purchase (they'd get 10% off plus their share). Check the admin page now and then for odd patterns.
 
 ---
 
@@ -111,6 +126,8 @@ Changing the share % recalculates **all** of that person's earnings, not just fu
 | Sales, fees, tax | Read live from the Dodo API: discounts, subscriptions, payments and the balance ledger. Nothing is copied into the database. |
 | Shared logic (matching codes, first-payment rule, net/earnings math) | `functions/_lib/referrals.js` |
 | Admin API (`X-Admin-Key` header required) | `functions/api/referrals/admin.js` |
+| Self-serve sign-up API (creates the Dodo code + partner) | `functions/api/referrals/join.js`; page `public/partners/join/index.html`; footer link also in `scripts/site_parts.py` (blog template) |
+| Sample dashboard (fictional "Riya Malhotra") | `functions/_lib/referral-demo.js` |
 | Public influencer API | `functions/api/referrals/partner/[slug].js` |
 | Pages | `public/referrals/admin/index.html`, `public/partner/index.html` (served for `/partner/*` via `public/_redirects`) |
 | Tests | `scripts/tests/referrals.test.mjs` (run `npm test`) |
