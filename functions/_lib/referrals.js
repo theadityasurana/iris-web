@@ -6,7 +6,7 @@
  */
 import { dodo, db, json } from './dodo.js';
 
-const CACHE_KEY = 'https://irisjobs.live/__cache/referral-sales-v2';
+const CACHE_KEY = 'https://irisjobs.live/__cache/referral-sales-v3';
 const CACHE_SECONDS = 60;
 const PAGE_SIZE = 100;
 const MAX_PAGES = 50;
@@ -93,6 +93,25 @@ async function netUsdCents(env, paymentId) {
   }
 }
 
+/**
+ * Pure: the one purchase payment per subscription. Dodo marks it
+ * charge_type "new"; if that's missing, the earliest payment is the purchase.
+ * A refunded purchase stays the purchase, so a renewal never takes its place.
+ */
+export function firstPayments(payments, subOf = p => p.subscription_id) {
+  const bySub = new Map();
+  for (const p of payments) {
+    const sub = subOf(p);
+    if (!sub) continue;
+    const cur = bySub.get(sub);
+    const better = !cur
+      || (p.charge_type === 'new' && cur.charge_type !== 'new')
+      || ((p.charge_type === 'new') === (cur.charge_type === 'new') && new Date(p.created_at) < new Date(cur.created_at));
+    if (better) bySub.set(sub, p);
+  }
+  return [...bySub.values()];
+}
+
 /** Discounts, subscriptions and payments from Dodo, cached for a minute so public pages can't hammer the API. */
 export async function loadSales(env, { fresh = false } = {}) {
   const cache = typeof caches !== 'undefined' ? caches.default : null;
@@ -108,7 +127,9 @@ export async function loadSales(env, { fresh = false } = {}) {
   const products = productMap(env);
   const codedSubs = new Set(subscriptions.filter(s => s.discount_id || s.discounts?.length).map(s => s.subscription_id));
   const subOf = p => p.subscription_id || p.subscription_ids?.[0] || null;
-  const codedPayments = payments.filter(p => codedSubs.has(subOf(p)) && p.refund_status !== 'full');
+  // Influencers are paid on the purchase only, never renewals or plan changes.
+  const firsts = firstPayments(payments.filter(p => codedSubs.has(subOf(p))), subOf);
+  const codedPayments = firsts.filter(p => p.refund_status !== 'full');
   const nets = await mapLimit(codedPayments, 5, p => netUsdCents(env, p.payment_id));
   const netById = Object.fromEntries(codedPayments.map((p, i) => [p.payment_id, nets[i]]));
   const data = {
@@ -128,7 +149,7 @@ export async function loadSales(env, { fresh = false } = {}) {
         discountIds: [...ids],
       };
     }),
-    payments: payments.filter(p => codedSubs.has(subOf(p))).map(p => ({
+    payments: firsts.map(p => ({
       id: p.payment_id, subscriptionId: subOf(p), createdAt: p.created_at, amount: p.total_amount || 0, currency: p.currency,
       refund: p.refund_status || null, netUsd: netById[p.payment_id] ?? null,
     })),
@@ -141,8 +162,8 @@ export async function loadSales(env, { fresh = false } = {}) {
 
 /**
  * Pure: one partner's numbers from the sales snapshot. Money is in USD cents:
- * net = what reached you after tax and Dodo fees, on every payment (renewals
- * included) from subscribers who bought with the code; earned = net x share.
+ * net = what reached you after tax and Dodo fees, on the purchase payment
+ * only (renewals don't count) of subscribers who used the code; earned = net x share.
  */
 export function partnerStats(partner, sales, now = Date.now()) {
   const pct = Number(partner.commission_percent ?? 0);

@@ -6,3 +6,6 @@ dist/
 .wrangler/
 supabase/.temp/
 __pycache__/
+
+# Local-only secrets (referral admin password etc.)
+*.private.md

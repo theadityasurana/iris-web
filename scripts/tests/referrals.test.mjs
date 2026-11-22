@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isAdmin, netFromLedger, partnerStats, slugify, SLUG_RE } from '../../functions/_lib/referrals.js';
+import { firstPayments, isAdmin, netFromLedger, partnerStats, slugify, SLUG_RE } from '../../functions/_lib/referrals.js';
 import { cleanFields } from '../../functions/api/referrals/admin.js';
 
 const NOW = Date.parse('2026-11-22T00:00:00Z');
@@ -83,4 +83,16 @@ test('share and paid amounts are validated', () => {
   assert.deepEqual(cleanFields({ commission_percent: '22.5', paid_out: '10.004' }, { partial: true }).fields, { commission_percent: 22.5, paid_out_cents: 1000 });
   assert.ok(cleanFields({ commission_percent: 120 }, { partial: true }).error);
   assert.ok(cleanFields({ paid_out: -1 }, { partial: true }).error);
+});
+
+test('only the purchase payment counts, never renewals', () => {
+  const pays = [
+    { payment_id: 'r2', subscription_id: 's1', charge_type: 'renewal', created_at: day(1) },
+    { payment_id: 'n1', subscription_id: 's1', charge_type: 'new', created_at: day(60) },
+    { payment_id: 'r1', subscription_id: 's1', charge_type: 'renewal', created_at: day(30) },
+    { payment_id: 'x2', subscription_id: 's2', created_at: day(5) },
+    { payment_id: 'x1', subscription_id: 's2', created_at: day(40) },
+    { payment_id: 'z', subscription_id: null, created_at: day(1) },
+  ];
+  assert.deepEqual(firstPayments(pays).map(p => p.payment_id).sort(), ['n1', 'x1']);
 });
