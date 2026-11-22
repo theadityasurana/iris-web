@@ -4,9 +4,11 @@
  */
 import { json } from '../../../_lib/dodo.js';
 import { SLUG_RE, listPartners, loadSales, partnerStats, serverError } from '../../../_lib/referrals.js';
+import { DEMO_SLUG, demoStats } from '../../../_lib/referral-demo.js';
 
 export async function onRequestGet({ params, env }) {
   const slug = String(params.slug || '').toLowerCase();
+  if (slug === DEMO_SLUG) return json(demoStats());
   if (!SLUG_RE.test(slug)) return json({ error: 'Not found' }, 404);
   try {
     const [partner] = await listPartners(env, `&slug=eq.${encodeURIComponent(slug)}&active=is.true`);

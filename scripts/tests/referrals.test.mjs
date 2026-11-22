@@ -96,3 +96,12 @@ test('only the purchase payment counts, never renewals', () => {
   ];
   assert.deepEqual(firstPayments(pays).map(p => p.payment_id).sort(), ['n1', 'x1']);
 });
+
+test('sample dashboard earnings stay between $700 and $800', async () => {
+  const { demoStats } = await import('../../functions/_lib/referral-demo.js');
+  const d = demoStats(NOW);
+  assert.equal(d.sample, true);
+  assert.ok(d.earnedCents >= 70000 && d.earnedCents <= 80000, `earned ${d.earnedCents}`);
+  assert.equal(d.dueCents, d.earnedCents - d.paidCents);
+  assert.equal(d.buyers, d.recent.length > 0 ? d.buyers : -1);
+});
