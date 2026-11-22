@@ -39,7 +39,7 @@ export const DEFAULT_REMOTE_CONFIG = {
   social: {
     links: {
       instagram: 'https://www.instagram.com/irisapp.si/',
-      twitter: 'https://x.com/irisapp_si',
+      twitter: 'https://x.com/irisjobslive',
       linkedin: 'https://www.linkedin.com/company/tryiris/posts/?viewAsMember=true',
     } as Record<string, string>,
     follow_items: [

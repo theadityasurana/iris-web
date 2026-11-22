@@ -23,7 +23,7 @@ FOOTER_LINKS = [
     ("Product", [("How it works", "/#how"), ("Browse jobs", "/jobs/"), ("Pricing", "/#pricing"), ("Continue on web", "https://irisjobs.live/app/sign-up"), ("WhatsApp", "/whatsapp/")]),
     ("Company", [("About us", "/about/"), ("Wall of love", "/love/"), ("Our mission", "/mission/"), ("Blog", "/blog/"), ("Tinder for jobs", "/tinder-for-jobs/"), ("Become a partner", "/partners/join/")]),
     ("Get the app", [("App Store", APP_STORE), ("Google Play", PLAY_STORE)]),
-    ("Social", [("Instagram", "https://www.instagram.com/irisjobs.live/"), ("X", "https://x.com/irisjobs_live"), ("LinkedIn", "https://www.linkedin.com/company/tryiris/about/")]),
+    ("Social", [("Instagram", "https://www.instagram.com/irisjobs.live/"), ("X", "https://x.com/irisjobslive"), ("LinkedIn", "https://www.linkedin.com/company/tryiris/about/")]),
 ]
 
 

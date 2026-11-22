@@ -187,7 +187,7 @@ def review_card(r, i):
 
 
 shots = "".join(f'<figure class="post shot"><img src="{e(s["image"])}" alt="{e(s["alt"])}" width="{s["w"]}" height="{s["h"]}" loading="lazy"><figcaption>Message to the founder · name hidden for privacy</figcaption></figure>' for s in SCREENSHOTS)
-tweet = "https://x.com/intent/tweet?text=" + "I%27m%20using%20%40irisjobs_live%20to%20apply%20to%20jobs.%20Swipe%20right%2C%20AI%20applies.%20https%3A%2F%2Firisjobs.live"
+tweet = "https://x.com/intent/tweet?text=" + "I%27m%20using%20%40irisjobslive%20to%20apply%20to%20jobs.%20Swipe%20right%2C%20AI%20applies.%20https%3A%2F%2Firisjobs.live"
 page("love", "Wall of Love: What Job Seekers Say About Iris", "Real reviews and posts from people using Iris, the Tinder for jobs. See what job seekers say, and share your own story.", """
 .lv-h { padding-top: 72px; text-align: center; }
 .lv-h h1 { margin-top: 12px; }

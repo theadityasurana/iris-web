@@ -300,7 +300,7 @@ def jsonld(*objs):
 
 
 ORG = {"@type": "Organization", "name": "Iris", "url": SITE, "logo": f"{ASSETS}/logo.png",
-       "sameAs": ["https://www.instagram.com/irisjobs.live/", "https://x.com/irisjobs_live", "https://www.linkedin.com/company/tryiris/about/"]}
+       "sameAs": ["https://www.instagram.com/irisjobs.live/", "https://x.com/irisjobslive", "https://www.linkedin.com/company/tryiris/about/"]}
 
 
 def page(title, description, url, image, body, kind="website", extra_head=""):
@@ -577,7 +577,7 @@ def write_discovery_files(posts):
         "## Blog",
     ]
     lines += [f"- [{p['title']}]({SITE}/blog/{p['slug']}/): {p['description']}" for p in posts]
-    lines += ["", "## Social", "- [Instagram](https://www.instagram.com/irisjobs.live/)", "- [X](https://x.com/irisjobs_live)",
+    lines += ["", "## Social", "- [Instagram](https://www.instagram.com/irisjobs.live/)", "- [X](https://x.com/irisjobslive)",
               "- [LinkedIn](https://www.linkedin.com/company/tryiris/)", ""]
     (pub / "llms.txt").write_text("\n".join(lines))
 
