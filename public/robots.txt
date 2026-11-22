@@ -31,5 +31,7 @@ Allow: /
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /partner/
+Disallow: /referrals/
 
 Sitemap: https://irisjobs.live/sitemap.xml

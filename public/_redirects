@@ -11,3 +11,4 @@
 /app/logo.png  /app/logo.png  200
 /app/logo.webp  /app/logo.webp  200
 /app/*  /app/  200
+/partner/*  /partner/  200
