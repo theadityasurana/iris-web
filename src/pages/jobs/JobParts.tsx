@@ -72,7 +72,6 @@ export function matchBand(score: number) {
 /** Feed card: used by Home and the Jobs grid. */
 export function JobTile({ job, onSave, onPass, onApply, busy }: { job: Job; onSave: () => void; onPass: () => void; onApply: () => void; busy?: boolean }) {
   const salary = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency, job.salaryPeriod, job.salaryRangeRaw);
-  const band = matchBand(job.matchScore);
   const exp = job.experienceLevel && job.experienceLevel !== 'Not specified' ? job.experienceLevel : null;
   return (
     <article className="tile">
@@ -82,12 +81,6 @@ export function JobTile({ job, onSave, onPass, onApply, busy }: { job: Job; onSa
           <Link to={`/app/companies/${encodeURIComponent(job.companyName)}`} className="tile-company ellipsis">{job.companyName}</Link>
           {job.industry && <div className="t-caption muted ellipsis">{job.industry}</div>}
         </div>
-        {job.matchScore > 0 && (
-          <div className="tile-score">
-            <div className="tile-pct"><b className="num">{displayMatchScore(job.matchScore)}</b><small>%</small></div>
-            <span className={`tile-band ${band.strong ? 'strong' : ''}`}>{band.label}</span>
-          </div>
-        )}
       </header>
       <div className="tile-body">
         <h3 className="tile-title"><Link to={`/app/jobs/${job.id}`}>{job.jobTitle}</Link></h3>
@@ -136,7 +129,6 @@ export function JobCard({ job }: { job: Job }) {
           <div className="t-callout muted ellipsis">{job.companyName}</div>
           <h2 className="t-heading clamp-2" style={{ marginTop: 2 }}>{job.jobTitle}</h2>
         </div>
-        {job.matchScore > 0 && <span className={`badge ${matchTone(job.matchScore)}`}>{displayMatchScore(job.matchScore)}% match</span>}
       </header>
       <JobFacts job={job} />
       {job.fitWriteup && (
@@ -177,13 +169,10 @@ export function JobDetail({ job, compact, embedded }: { job: Job; compact?: bool
       )}
       {!compact && <JobFacts job={job} />}
 
-      {job.matchScore > 0 && (
+      {job.fitWriteup && (
         <section className="jd-section">
-          <div className="row between">
-            <h3 className="t-sub">Your match</h3>
-            <span className={`badge ${matchTone(job.matchScore)}`}>{displayMatchScore(job.matchScore)}%</span>
-          </div>
-          {job.fitWriteup && <p className="t-body soft" style={{ marginTop: 8 }}>{job.fitWriteup}</p>}
+          <h3 className="t-sub">Why it fits you</h3>
+          <p className="t-body soft" style={{ marginTop: 8 }}>{job.fitWriteup}</p>
         </section>
       )}
 

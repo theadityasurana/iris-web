@@ -3,7 +3,6 @@
  * and offers to apply. Everything shown comes from the job and the person's profile.
  */
 import { useEffect, useMemo, useState } from 'react';
-import { displayMatchScore } from '@/lib/match-scoring';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { ArrowRight, Banknote, Check, Globe2, GraduationCap, MapPin } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
@@ -84,7 +83,6 @@ export default function FirstJob() {
               <header>
                 <CompanyLogo name={job.companyName} url={job.companyLogo} website={job.companyWebsite} />
                 <div className="grow"><b className="ellipsis">{job.companyName}</b>{job.industry && <div className="t-caption muted ellipsis">{job.industry}</div>}</div>
-                {job.matchScore > 0 && <div className="tile-pct"><b className="num">{displayMatchScore(job.matchScore)}</b><small>%</small></div>}
               </header>
               <div className="fj-body">
                 <h2 className="tile-title">{job.jobTitle}</h2>
