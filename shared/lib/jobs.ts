@@ -1,7 +1,8 @@
 import { supabase } from '@/lib/supabase';
 import { Job, UserProfile } from '@/types';
 import COMPANY_LOGOS from '@/constants/company-logos';
-import { runFeedBatch, withTimeout, JobsTimeoutError, companyNameFilter, type BatchFetchParams, type JobsFetchFailure, type RawBatchResult, type FeedCompany } from '@/lib/feed-engine';
+import { runFeedBatch, withTimeout, JobsTimeoutError, companyNameFilter, type BatchFetchParams, type JobsFetchFailure, type RawBatchResult, type FeedCompany, type FeedRow } from '@/lib/feed-engine';
+import { appendServerJobCache } from '@/lib/server-job-cache';
 import { rc } from '@/lib/remote-config';
 import { isNetworkError } from '@/lib/offline';
 export { MAX_ROLE_BREADTH, type RoleBreadth } from '@/lib/feed-policy';
@@ -314,10 +315,16 @@ async function fetchRawFromServer(params: BatchFetchParams): Promise<RawBatchRes
  * falling back to the phone if the function fails, so switching is safe.
  */
 export async function fetchJobsBatch(params: BatchFetchParams): Promise<BatchFetchResult> {
+  // Late keyword groups of the plain home feed (no search, company or role
+  // filter) go straight into the person's server job cache, so they load
+  // instantly next time (see lib/feed-engine: Progressive pages).
+  const plainFeed = params.tab === 'unified' && !(params.searchTags?.length) && !(params.filters?.companies?.length) && !(params.filters?.roles?.length);
+  const onLateRows = plainFeed ? (rows: FeedRow[]) => { void cacheLateRows(rows); } : undefined;
   const local = () => runFeedBatch(params, {
     searchJobs: (p) => supabase.rpc('search_jobs', p),
     fetchCompanies,
     log: (...a) => console.log(...a),
+    onLateRows,
   });
   const raw = (rc('features').feed_source === 'server' ? await fetchRawFromServer(params) : null) ?? await local();
 
@@ -333,6 +340,21 @@ export async function fetchJobsBatch(params: BatchFetchParams): Promise<BatchFet
     failure: raw.failure,
     degraded: raw.degraded,
   };
+}
+
+/** Late feed rows → Job objects → appended to the signed-in person's server job cache. */
+async function cacheLateRows(rows: FeedRow[]) {
+  try {
+    const { data } = await supabase.auth.getSession();
+    const userId = data.session?.user.id;
+    if (!userId || !rows.length) return;
+    const names = [...new Set(rows.map(r => r.company_name).filter((n): n is string => !!n))];
+    const companies = names.length ? await fetchCompanies(names).catch(() => []) : [];
+    const jobs = enrichWithCompanyData(rows as unknown as SupabaseJob[], companyDataMapFrom(companies));
+    await appendServerJobCache(userId, jobs);
+  } catch (e) {
+    console.log('[SERVER_CACHE] late rows not cached:', e);
+  }
 }
 
 // Legacy functions kept for any other callers

@@ -7,6 +7,7 @@ import { supabase, getProfilePictureUrl } from '@/lib/supabase';
 import type { UserProfile } from '@/types';
 import type { OnboardingData } from '@/types/onboarding';
 
+import { defaultAvatar } from './avatar';
 export function stripNullBytes<T>(value: T): T {
   return JSON.parse(JSON.stringify(value).replace(/\\u0000/g, ''));
 }
@@ -102,7 +103,7 @@ export function mapDbToUserProfile(profile: Record<string, any>, userId: string)
     location: profile.location || '',
     avatar: profile.avatar_url && !profile.avatar_url.includes('images.unsplash.com')
       ? getProfilePictureUrl(profile.avatar_url)
-      : `https://api.dicebear.com/9.x/adventurer/png?seed=${encodeURIComponent(profile.full_name || profile.first_name || profile.email || 'user')}&size=200`,
+      : defaultAvatar(profile.email),
     bio: profile.bio || '',
     profileCompletion: Math.round((completionScore / total) * 100),
     totalApplications: 0,

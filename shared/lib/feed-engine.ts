@@ -84,6 +84,8 @@ export interface FeedDeps {
   searchJobs: (params: Record<string, unknown>) => PromiseLike<{ data: unknown; error: { message?: string; code?: string } | null }>;
   fetchCompanies: (names: string[]) => Promise<FeedCompany[]>;
   log?: (...args: unknown[]) => void;
+  /** Rows from keyword groups that answered after the page was returned (see Progressive pages). */
+  onLateRows?: (rows: FeedRow[]) => void;
 }
 
 /** Raised when the job query exceeds the configured RPC timeout. */
@@ -176,6 +178,30 @@ function buildTitleKeywords(params: BatchFetchParams): { titleKeywords: string[]
 
 let nearUnsupported = false;
 
+// ─── Progressive pages: late keyword groups carry over to the next page ──────
+// A page returns once its first groups answer; groups still running finish in
+// the background and their rows wait here, keyed by the request without its
+// offset, to be added to the next page of the same feed (which the deck
+// prefetches before it runs out). The caller saves pages to the server job
+// cache as usual, so late rows reach it too.
+const CARRY_TTL_MS = 10 * 60 * 1000;
+const carried = new Map<string, { rows: FeedRow[]; at: number }>();
+function carryKey(rpcParams: Record<string, unknown>, keywords: string[]): string {
+  const { p_offset: _o, p_exclude_ids: _x, p_title_keywords: _k, ...rest } = rpcParams;
+  return JSON.stringify({ rest, keywords });
+}
+function addCarried(key: string, rows: FeedRow[]) {
+  const prev = carried.get(key);
+  const fresh = prev && Date.now() - prev.at < CARRY_TTL_MS ? prev.rows : [];
+  carried.set(key, { rows: [...fresh, ...rows], at: Date.now() });
+}
+function takeCarried(key: string, exclude: Set<string>): FeedRow[] {
+  const entry = carried.get(key);
+  carried.delete(key);
+  if (!entry || Date.now() - entry.at > CARRY_TTL_MS) return [];
+  return entry.rows.filter(r => r?.id && !exclude.has(r.id));
+}
+
 export async function runFeedBatch(params: BatchFetchParams, deps: FeedDeps): Promise<RawBatchResult> {
   const log = deps.log ?? (() => {});
   const T = FEED_TUNING;
@@ -195,6 +221,7 @@ export async function runFeedBatch(params: BatchFetchParams, deps: FeedDeps): Pr
   };
 
   try {
+    let groupMaxRows = 0;
     let { titleKeywords, adjacentKeywords } = buildTitleKeywords(params);
 
     // Experience: exact enum values when we have them, the fuzzy list only otherwise.
@@ -247,21 +274,22 @@ export async function runFeedBatch(params: BatchFetchParams, deps: FeedDeps): Pr
         ).then(r => (r.error ? [] : ((r.data as FeedRow[]) ?? []))).catch(() => [])
       : Promise.resolve([]);
 
-    // Progressive degradation: when the query is too slow, retry with fewer
-    // keywords; the last rung has none (generic recent jobs) so the user still
-    // sees cards. A clean empty answer stops the ladder: the caller widens
-    // levels/roles in order instead.
-    const ladder: string[][] = titleKeywords.length > 0
-      ? [titleKeywords, titleKeywords.slice(0, T.fallback_keyword_count), []]
-      : [[]];
-
+    // Keywords are split into small groups queried in parallel and merged:
+    // one big ILIKE query with every keyword hit the database statement
+    // timeout, and the old fallback then kept only the first few keywords,
+    // silently dropping the rest of the person's desired roles. Groups are
+    // dealt round-robin from a list that starts with the person's own roles,
+    // so every desired role is searched. A group that fails is split in two
+    // and retried, never dropped. Only if every group fails does the
+    // keyword-less rescue run (flagged `degraded`, never cached).
+    // Every group pages with the same offset/limit, so the caller advancing by
+    // the largest group's row count keeps each group's paging exact.
     let data: FeedRow[] | null = null;
     let error: unknown = null;
     let usedKeywords = titleKeywords;
     const requestedKeywords = titleKeywords;
 
-    for (let rung = 0; rung < ladder.length; rung++) {
-      const kws = ladder[rung];
+    const runQuery = async (kws: string[], label: string): Promise<FeedRow[] | null> => {
       const attemptParams = { ...rpcParams };
       if (kws.length > 0) attemptParams.p_title_keywords = kws;
       else delete attemptParams.p_title_keywords;
@@ -269,18 +297,121 @@ export async function runFeedBatch(params: BatchFetchParams, deps: FeedDeps): Pr
       try {
         const res = await withTimeout(searchJobs(attemptParams), timeoutMs);
         const rows = (res.data as FeedRow[] | null) ?? [];
-        log(`[FEED:${tab}] attempt ${rung + 1}/${ladder.length} (${kws.length} kw): ${res.error ? `error ${res.error.message}` : `${rows.length} rows`} in ${Date.now() - t0}ms`);
-        if (!res.error) {
-          data = rows;
-          error = null;
-          usedKeywords = kws;
-          break;
-        }
-        error = res.error;
+        log(`[FEED:${tab}] ${label} (${kws.length} kw): ${res.error ? `error ${res.error.message}` : `${rows.length} rows`} in ${Date.now() - t0}ms`);
+        if (res.error) { error = res.error; return null; }
+        return rows;
       } catch (e) {
         error = e;
-        log(`[FEED:${tab}] attempt ${rung + 1} timed out after ${Date.now() - t0}ms`);
+        log(`[FEED:${tab}] ${label} timed out after ${Date.now() - t0}ms`);
+        return null;
       }
+    };
+
+    // A failed group is retried once, as-is, after a short random pause (so
+    // groups that failed together don't retry together). It is never split:
+    // splitting multiplied the queries and made a struggling database worse.
+    // A group that still fails is simply searched again on the next page.
+    const runGroup = async (kws: string[], label: string): Promise<FeedRow[][] | null> => {
+      const first = await runQuery(kws, label);
+      if (first) return [first];
+      await new Promise(r => setTimeout(r, 300 + Math.floor(Math.random() * 500)));
+      const again = await runQuery(kws, `${label} retry`);
+      return again ? [again] : null;
+    };
+
+    let groupsPending = false;
+    if (titleKeywords.length > 0) {
+      // Chunks of a few keywords in the person's own order, so the first
+      // chunk holds their top roles. At most `max_parallel_queries` run at
+      // once; the rest queue behind. The page returns as soon as the
+      // top-roles chunk has answered with jobs (plus a short grace for chunks
+      // finishing alongside it), or at `first_page_budget_ms` if anything has
+      // answered by then, or when every chunk is done; never empty while
+      // chunks are still running. Chunks still running carry over.
+      const perQuery = Math.max(1, T.keywords_per_query ?? 5);
+      const parallel = Math.max(1, T.max_parallel_queries ?? 3);
+      const budgetMs = T.first_page_budget_ms ?? 3000;
+      const graceMs = 300;
+      const groups: string[][] = [];
+      for (let i = 0; i < titleKeywords.length; i += perQuery) groups.push(titleKeywords.slice(i, i + perQuery));
+      const key = carryKey(rpcParams, titleKeywords);
+      const exclude = new Set(excludeIds ?? []);
+
+      const settled: (FeedRow[][] | null | undefined)[] = groups.map(() => undefined);
+      let returned = false;
+      let next = 0;
+      let wake: () => void = () => {};
+      const startNext = (): Promise<void> | null => {
+        if (next >= groups.length) return null;
+        const i = next++;
+        return runGroup(groups[i], `group ${i + 1}/${groups.length}`).then(res => {
+          settled[i] = res;
+          if (returned && res) {
+            const late = res.flat().filter(r => r?.id && !exclude.has(r.id));
+            if (late.length) {
+              addCarried(key, late);
+              log(`[FEED:${tab}] group ${i + 1}/${groups.length} late: ${late.length} rows carried to the next page`);
+              try { deps.onLateRows?.(late); } catch { /* caching is best effort */ }
+            }
+          }
+          wake();
+          return startNext() ?? undefined;
+        });
+      };
+      for (let k = 0; k < Math.min(parallel, groups.length); k++) void startNext();
+
+      // Rows carried from the previous page of this feed: taken up front so
+      // they count as jobs already in hand (the page can return at the budget).
+      const carriedRows = takeCarried(key, exclude);
+
+      await new Promise<void>(resolve => {
+        let finished = false;
+        const timers: ReturnType<typeof setTimeout>[] = [];
+        const finish = () => { if (finished) return; finished = true; timers.forEach(clearTimeout); resolve(); };
+        let graceSet = false;
+        const hasRows = () => carriedRows.length > 0 || settled.some(r => r && r.some(l => l.length > 0));
+        const check = () => {
+          if (settled.every(r => r !== undefined)) return finish();
+          // Top-roles chunk answered with jobs: show it (after a short grace).
+          if (!graceSet && settled[0] && settled[0].some(l => l.length > 0)) { graceSet = true; timers.push(setTimeout(finish, graceMs)); }
+        };
+        // Budget: return then if anything has jobs; otherwise keep waiting.
+        timers.push(setTimeout(function budget() {
+          if (hasRows()) finish(); else timers.push(setTimeout(budget, 250));
+        }, budgetMs));
+        wake = check;
+        check();
+      });
+      returned = true;
+      groupsPending = settled.some(r => r === undefined);
+
+      // Rows carried from the previous page of this feed come first.
+      const lists = [carriedRows, ...settled.filter((r): r is FeedRow[][] => !!r).flat()].filter(l => l.length > 0);
+      if (lists.length > 0) {
+        // Round-robin merge so every group (and so every role) is represented.
+        const seen = new Set<string>();
+        const merged: FeedRow[] = [];
+        const longest = Math.max(...lists.map(l => l.length));
+        for (let i = 0; i < longest; i++) {
+          for (const list of lists) {
+            const row = list[i];
+            if (row?.id && !seen.has(row.id)) { seen.add(row.id); merged.push(row); }
+          }
+        }
+        data = merged;
+        error = null;
+        const groupLists = settled.filter((r): r is FeedRow[][] => !!r).flat();
+        const maxRows = groupLists.length ? Math.max(...groupLists.map(l => l.length)) : 0;
+        // Every group pages with the same offset/limit: advance by a full page
+        // while any group is still running (it may have a full page).
+        groupMaxRows = groupsPending ? limit : maxRows;
+        if (carriedRows.length) log(`[FEED:${tab}] +${carriedRows.length} rows carried from the previous page`);
+      }
+      if (groupsPending) log(`[FEED:${tab}] returned with ${settled.filter(r => r === undefined).length}/${groups.length} groups still running`);
+    }
+    if (data === null) {
+      const rows = await runQuery([], titleKeywords.length > 0 ? 'rescue' : 'attempt 1/1');
+      if (rows) { data = rows; error = null; usedKeywords = []; groupMaxRows = rows.length; }
     }
     titleKeywords = usedKeywords;
 
@@ -292,7 +423,8 @@ export async function runFeedBatch(params: BatchFetchParams, deps: FeedDeps): Pr
       return { rows: [], adjacentRows: [], companies: [], serverHadMore: false, serverRowCount: 0, titleKeywords };
     }
 
-    const serverRowCount = data.length;
+    // The largest group's page size: the caller's next offset (see above).
+    const serverRowCount = groupMaxRows;
     // Rows with no id can't be deduped or tracked.
     const rows = data.filter(r => !!r?.id);
 

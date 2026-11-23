@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowDown, ChevronRight, ScrollText, Search, Send, Sparkles } from 'lucide-react';
+import { ArrowDown, ChevronRight, Search, Send, Sparkles } from 'lucide-react';
 import { useApplications } from '@web/lib/queries';
 import { CompanyLogo, Empty, StatusBadge, timeAgo } from '@web/ui/bits';
 
@@ -79,7 +79,6 @@ export default function Applications() {
           <h1 className="t-title">Applications</h1>
           <p>Everything Iris has sent, and how each submission is going. Replies land in Tracker.</p>
         </div>
-        <Link to="/app/applications/logs" className="btn outline"><ScrollText />Activity log</Link>
       </div>
 
       <section className="summary-card">

@@ -16,6 +16,7 @@ import { clearDeviceCache, readCachedProfile, writeCachedProfile } from '@web/li
 import type { UserProfile } from '@/types';
 import { defaultOnboardingData, type OnboardingData } from '@/types/onboarding';
 
+import { rememberAuthPhoto } from '@/lib/avatar';
 export type OAuthProvider = 'google' | 'linkedin_oidc' | 'apple';
 
 /** Apple web sign-in needs a Services ID + secret in Supabase; flip on once set. */
@@ -145,6 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     const handle = async (s: Session | null) => {
       if (cancelled) return;
+      rememberAuthPhoto(s?.user);
       setSession(s);
       if (!s) {
         userIdRef.current = null;

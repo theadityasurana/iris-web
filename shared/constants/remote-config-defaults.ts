@@ -38,7 +38,7 @@ export const DEFAULT_REMOTE_CONFIG = {
   /** Social accounts users are asked to follow. */
   social: {
     links: {
-      instagram: 'https://www.instagram.com/irisapp.si/',
+      instagram: 'https://www.instagram.com/irisjobs.live/',
       twitter: 'https://x.com/irisjobslive',
       linkedin: 'https://www.linkedin.com/company/tryiris/posts/?viewAsMember=true',
     } as Record<string, string>,
@@ -203,6 +203,12 @@ export const DEFAULT_REMOTE_CONFIG = {
     default_company_cap: 2,
     home_company_cap: 1,
     fallback_keyword_count: 8,
+    /** Keywords per parallel feed query; every keyword is always searched. */
+    keywords_per_query: 5,
+    /** Most feed keyword groups searched at once (groups of keywords_per_query, in the person's role order). */
+    max_parallel_queries: 3,
+    /** First feed page returns by this time (ms) if any group has jobs; later groups carry over. */
+    first_page_budget_ms: 3000,
     adjacent_share: 0.2,
     adjacent_keywords_cap: 20,
     adjacent_core_ratio: 4,

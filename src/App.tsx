@@ -25,7 +25,6 @@ const SavedJobs = lazy(() => import('@web/pages/jobs/SavedJobs'));
 const CompanyPage = lazy(() => import('@web/pages/jobs/CompanyPage'));
 const Applications = lazy(() => import('@web/pages/applications/Applications'));
 const ApplicationDetails = lazy(() => import('@web/pages/applications/ApplicationDetails'));
-const ApplicationLogs = lazy(() => import('@web/pages/applications/ApplicationLogs'));
 const Inbox = lazy(() => import('@web/pages/inbox/Inbox'));
 const Iris = lazy(() => import('@web/pages/iris/Iris'));
 const IrisReport = lazy(() => import('@web/pages/iris/IrisReport'));
@@ -97,7 +96,6 @@ export function App() {
           <Route path="/app/saved" element={<SavedJobs />} />
           <Route path="/app/companies/:name" element={<CompanyPage />} />
           <Route path="/app/applications" element={<Applications />} />
-          <Route path="/app/applications/logs" element={<ApplicationLogs />} />
           <Route path="/app/applications/:id" element={<ApplicationDetails />} />
           <Route path="/app/inbox" element={<Inbox />} />
           <Route path="/app/inbox/:threadId" element={<Inbox />} />

@@ -45,6 +45,24 @@ export async function writeServerJobCache(userId: string, jobs: Job[]): Promise<
   }
 }
 
+/**
+ * Add jobs to the cache without replacing it (feed groups that answered after
+ * their page was shown): new jobs go after the cached ones, duplicates are
+ * skipped, and the list is capped so the cache stays small.
+ */
+export async function appendServerJobCache(userId: string, jobs: Job[], cap = CACHE_MAX * 2): Promise<void> {
+  if (!jobs.length) return;
+  try {
+    const cached = await readServerJobCache(userId);
+    const seen = new Set(cached.map(j => j.id));
+    const fresh = jobs.filter(j => j?.id && !seen.has(j.id));
+    if (!fresh.length) return;
+    await writeServerJobCache(userId, [...cached, ...fresh].slice(0, cap));
+  } catch (e) {
+    console.log(`[SERVER_CACHE] ❌ Exception appending:`, e);
+  }
+}
+
 // Remove a single job from the cache after it's been swiped
 export async function removeJobFromServerCache(userId: string, jobId: string): Promise<void> {
   try {
