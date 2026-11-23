@@ -16,7 +16,7 @@ export function previewFor(job, origin, id) {
   return {
     title,
     description: [facts, about].filter(Boolean).join('. ').slice(0, 190) || 'See the role and apply.',
-    image: `${origin}/og/job/${encodeURIComponent(id)}.jpg`,
+    image: `${origin}/og/job/${encodeURIComponent(id)}.jpg?iv=3`,
   };
 }
 

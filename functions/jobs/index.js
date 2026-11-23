@@ -30,7 +30,8 @@ export function searchPreview(filters, raw, origin) {
   return {
     title: phrase,
     description: `Open roles: ${phrase}. See them all and apply.`,
-    image: `${origin}/og/search/preview.jpg?${searchParams(filters, raw)}`,
+    // `iv` = image version: bumping it gives every share a fresh image past all caches.
+    image: `${origin}/og/search/preview.jpg?${searchParams(filters, raw)}&iv=3`,
   };
 }
 
