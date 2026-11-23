@@ -14,6 +14,7 @@ import { useAuth } from '@web/auth/AuthProvider';
 import { fetchJobsBatch } from '@/lib/jobs';
 import { getDefaultJobLevelsFromExperience } from '@/lib/feed-policy';
 import { nearFromProfile } from '@/lib/feed-home';
+import { readServerJobCache } from '@/lib/server-job-cache';
 import type { Job } from '@/types';
 
 interface Card { id: string; title: string; company: string; website: string | null; location: string; type: string | null; experience: string | null; salary: string | null; posted: string | null; postedText?: string; skills: string[]; ats: string | null }
@@ -42,7 +43,27 @@ const toCard = (j: Job): Card => ({
   salary: j.salaryRangeRaw || null, posted: null, postedText: j.postedDate || undefined,
   skills: j.skills ?? [], ats: atsOf(j.portalUrl),
 });
-const PERSONAL_PAGE = 20;
+const PERSONAL_PAGE = 24;
+/** Cards shown at a time; "Load more" reveals the next set. */
+const SHOW_STEP = 8;
+
+// ── Personal Browse cache: shows instantly, refreshes in the background ──────
+type Mine = { cards: Card[]; offset: number; hasMore: boolean; world: boolean };
+const MINE_EMPTY: Mine = { cards: [], offset: 0, hasMore: true, world: false };
+const MINE_TTL_MS = 12 * 60 * 60 * 1000;   // usable for 12 hours
+const MINE_STALE_MS = 20 * 60 * 1000;      // refreshed quietly after 20 minutes
+const mineKey = (uid: string, roles: string[]) => `iris_browse_mine_v1:${uid}:${roles.join('|')}`;
+function readMine(key: string): { at: number; mine: Mine } | null {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const v = JSON.parse(raw);
+    return v?.mine?.cards?.length && Date.now() - v.at < MINE_TTL_MS ? v : null;
+  } catch { return null; }
+}
+function writeMine(key: string, mine: Mine) {
+  try { localStorage.setItem(key, JSON.stringify({ at: Date.now(), mine })); } catch { /* private mode / full */ }
+}
 
 async function fetchPage(qs: string): Promise<Page> {
   const res = await fetch(`/api/jobs?${qs}`);
@@ -86,40 +107,93 @@ export default function BrowseJobs() {
   const { profile, swipedJobIds } = useAuth();
   const roles = profile?.desiredRoles ?? [];
   const personal = qs.length === 0 && roles.length > 0;
-  const [mine, setMine] = useState<{ cards: Card[]; offset: number; hasMore: boolean; world: boolean }>({ cards: [], offset: 0, hasMore: true, world: false });
+  const { userId } = useAuth();
+  const [mine, setMine] = useState<Mine>(MINE_EMPTY);
   const [mineLoading, setMineLoading] = useState(false);
   const [mineError, setMineError] = useState(false);
-  const loadMine = async (reset: boolean) => {
-    if (!profile) return;
-    setMineLoading(true); setMineError(false);
-    const prev = reset ? { cards: [], offset: 0, hasMore: true, world: false } : mine;
+  const [shown, setShown] = useState(SHOW_STEP);
+  useEffect(() => { setShown(SHOW_STEP); }, [qs]);
+  const key = userId ? mineKey(userId, roles) : '';
+
+  /** One page of the person's own feed (their country first, then anywhere), retried once. */
+  const fetchMine = async (prev: Mine): Promise<Mine | null> => {
+    if (!profile) return null;
     const near = nearFromProfile(profile);
     const home = [...near.countries, ...near.cities];
     const levels = getDefaultJobLevelsFromExperience(profile.experienceLevel);
-    const shown = prev.cards.map(c => c.id);
     const run = (world: boolean, offset: number) => fetchJobsBatch({
       tab: 'unified', limit: PERSONAL_PAGE, offset, companyCap: 1, desiredRoles: roles,
-      excludeIds: [...swipedJobIds, ...shown],
+      excludeIds: [...swipedJobIds, ...prev.cards.map(c => c.id)],
       filters: { jobLevels: levels.length ? levels : undefined, ...(!world && home.length ? { locations: home } : {}) },
     });
-    try {
-      let world = prev.world || home.length === 0;
-      let res = await run(world, prev.offset);
-      // Their country has nothing (more): carry on with everywhere else.
-      if (!world && res.jobs.length === 0 && !res.failure) { world = true; res = await run(true, 0); }
-      if (res.failure && res.jobs.length === 0) { setMineError(true); return; }
-      const ids = new Set(prev.cards.map(c => c.id));
-      const cards = [...prev.cards, ...res.jobs.filter(j => !ids.has(j.id)).map(toCard)];
-      const nextOffset = (world && !prev.world ? 0 : prev.offset) + res.serverRowCount;
-      setMine({ cards, offset: nextOffset, hasMore: res.serverHadMore || (!world && home.length > 0), world });
-    } catch {
-      setMineError(true);
-    } finally {
-      setMineLoading(false);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        let world = prev.world || home.length === 0;
+        let res = await run(world, prev.offset);
+        if (!world && res.jobs.length === 0 && !res.failure) { world = true; res = await run(true, 0); }
+        if (res.failure && res.jobs.length === 0) throw new Error(res.failure);
+        const ids = new Set(prev.cards.map(c => c.id));
+        const cards = [...prev.cards, ...res.jobs.filter(j => !ids.has(j.id)).map(toCard)];
+        const offset = (world && !prev.world ? 0 : prev.offset) + res.serverRowCount;
+        return { cards, offset, hasMore: res.serverHadMore || (!world && home.length > 0), world };
+      } catch {
+        if (attempt === 0) await new Promise(r => setTimeout(r, 800));
+      }
     }
+    return null;
   };
+
+  /** Backup: the site's edge-cached search for their top role. */
+  const fetchBackup = async (): Promise<Mine | null> => {
+    try {
+      const page = await fetchPage(new URLSearchParams({ q: roles[0] }).toString());
+      return page.jobs.length ? { cards: page.jobs, offset: 0, hasMore: false, world: true } : null;
+    } catch { return null; }
+  };
+
+  const loadMine = async (reset: boolean) => {
+    if (!profile || mineLoading) return;
+    setMineLoading(true); setMineError(false);
+    const prev = reset ? MINE_EMPTY : mine;
+    const next = await fetchMine(prev);
+    if (next) {
+      setMine(next);
+      if (key) writeMine(key, next);
+    } else if (reset && mine.cards.length === 0) {
+      const backup = await fetchBackup();
+      if (backup) setMine(backup); else setMineError(true);
+    } else if (!reset) {
+      setMine(m => ({ ...m, hasMore: false }));
+    }
+    setMineLoading(false);
+  };
+
   useEffect(() => {
-    if (personal && profile) void loadMine(true);
+    if (!personal || !profile) return;
+    let cancelled = false;
+    (async () => {
+      // 1. This device's cache: instant.
+      const cached = key ? readMine(key) : null;
+      if (cached) {
+        setMine(cached.mine);
+        if (Date.now() - cached.at < MINE_STALE_MS) return;
+      } else if (userId) {
+        // 2. The person's server job cache (shared with the app) while fresh jobs load.
+        const server = await readServerJobCache(userId).catch(() => []);
+        if (!cancelled && server.length) setMine({ ...MINE_EMPTY, cards: server.map(toCard) });
+      }
+      // 3. Fresh jobs (quietly replaces the cached ones only on the first screen).
+      const fresh = await fetchMine(MINE_EMPTY);
+      if (cancelled) return;
+      if (fresh) { setMine(prev => (prev.cards.length > SHOW_STEP && cached ? prev : fresh)); if (key) writeMine(key, fresh); return; }
+      if (!cached) {
+        const backup = await fetchBackup();
+        if (cancelled) return;
+        setMine(prev => (prev.cards.length ? prev : backup ?? prev));
+        if (!backup) setMineError(true);
+      }
+    })();
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [personal, profile?.id, roles.join('|')]);
 
@@ -197,30 +271,36 @@ export default function BrowseJobs() {
       </div>
 
       {personal ? (
-        mine.cards.length === 0 && (mineLoading || !mineError) ? (
-          <div className="bj-grid" role="status" aria-label="Loading jobs">{Array.from({ length: 10 }, (_, i) => <div key={i} className="bj-card" aria-hidden="true"><div className="sk" style={{ height: 12, width: '50%' }} /><div className="sk" style={{ height: 24, width: '85%', marginTop: 14 }} /><div className="sk" style={{ height: 24, width: '60%', marginTop: 12, borderRadius: 99 }} /><div className="sk" style={{ height: 34, marginTop: 'auto' }} /></div>)}</div>
+        mine.cards.length === 0 && !mineError ? (
+          <div className="bj-grid" role="status" aria-label="Loading jobs">{Array.from({ length: SHOW_STEP }, (_, i) => <div key={i} className="bj-card" aria-hidden="true"><div className="sk" style={{ height: 12, width: '50%' }} /><div className="sk" style={{ height: 24, width: '85%', marginTop: 14 }} /><div className="sk" style={{ height: 24, width: '60%', marginTop: 12, borderRadius: 99 }} /><div className="sk" style={{ height: 34, marginTop: 'auto' }} /></div>)}</div>
         ) : mine.cards.length === 0 ? (
           <div className="card"><Empty icon={WifiOff} title="We couldn’t load jobs" body="Check your connection and try again." action={<button className="btn" onClick={() => loadMine(true)}><RotateCcw />Try again</button>} /></div>
         ) : (
           <>
-            <div className="bj-grid">{mine.cards.map((j, i) => <JobCard key={j.id} job={j} index={i} />)}</div>
-            {mine.hasMore && (
-              <div className="bj-more"><button className="btn outline lg" disabled={mineLoading} onClick={() => loadMine(false)}>{mineLoading ? <span className="spinner" /> : 'Show more'}</button></div>
+            <div className="bj-grid">{mine.cards.slice(0, shown).map((j, i) => <JobCard key={j.id} job={j} index={i} />)}</div>
+            {(shown < mine.cards.length || mine.hasMore) && (
+              <div className="bj-more"><button className="btn outline lg" disabled={mineLoading} onClick={() => {
+                setShown(n => n + SHOW_STEP);
+                if (shown + SHOW_STEP > mine.cards.length - SHOW_STEP && mine.hasMore) void loadMine(false);
+              }}>{mineLoading && shown >= mine.cards.length ? <span className="spinner" /> : 'Load more'}</button></div>
             )}
           </>
         )
       ) : first.isLoading ? (
-        <div className="bj-grid" role="status" aria-label="Loading jobs">{Array.from({ length: 10 }, (_, i) => <div key={i} className="bj-card" aria-hidden="true"><div className="sk" style={{ height: 12, width: '50%' }} /><div className="sk" style={{ height: 24, width: '85%', marginTop: 14 }} /><div className="sk" style={{ height: 24, width: '60%', marginTop: 12, borderRadius: 99 }} /><div className="sk" style={{ height: 34, marginTop: 'auto' }} /></div>)}</div>
+        <div className="bj-grid" role="status" aria-label="Loading jobs">{Array.from({ length: SHOW_STEP }, (_, i) => <div key={i} className="bj-card" aria-hidden="true"><div className="sk" style={{ height: 12, width: '50%' }} /><div className="sk" style={{ height: 24, width: '85%', marginTop: 14 }} /><div className="sk" style={{ height: 24, width: '60%', marginTop: 12, borderRadius: 99 }} /><div className="sk" style={{ height: 34, marginTop: 'auto' }} /></div>)}</div>
       ) : first.isError ? (
         <div className="card"><Empty icon={WifiOff} title="We couldn’t load jobs" body="Check your connection and try again." action={<button className="btn" onClick={() => first.refetch()}><RotateCcw />Try again</button>} /></div>
       ) : jobs.length === 0 ? (
         <div className="card"><Empty icon={Search} title="No roles match that yet" body="Try fewer filters or a broader search." action={<button className="btn" onClick={clear}>Clear all</button>} /></div>
       ) : (
-        <div className={`bj-grid ${first.isFetching ? 'is-stale' : ''}`}>{jobs.map((j, i) => <JobCard key={j.id} job={j} index={i} />)}</div>
+        <div className={`bj-grid ${first.isFetching ? 'is-stale' : ''}`}>{jobs.slice(0, shown).map((j, i) => <JobCard key={j.id} job={j} index={i} />)}</div>
       )}
 
-      {filtered && hasMore && jobs.length > 0 && (
-        <div className="bj-more"><button className="btn outline lg" disabled={more.isFetching} onClick={() => setOffset(o => o + 10)}>{more.isFetching ? <span className="spinner" /> : 'Show more'}</button></div>
+      {!personal && jobs.length > 0 && (shown < jobs.length || (filtered && hasMore)) && (
+        <div className="bj-more"><button className="btn outline lg" disabled={more.isFetching} onClick={() => {
+          setShown(n => n + SHOW_STEP);
+          if (filtered && hasMore && shown + SHOW_STEP >= jobs.length) setOffset(o => o + 10);
+        }}>{more.isFetching && shown >= jobs.length ? <span className="spinner" /> : 'Load more'}</button></div>
       )}
     </div>
   );

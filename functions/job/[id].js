@@ -14,8 +14,8 @@ export function previewFor(job, origin, id) {
   const facts = [job.location, job.type].map(text).filter(Boolean).join(' · ');
   const about = text(job.description).slice(0, 110);
   return {
-    title: `${title} | Apply in one swipe on Iris`,
-    description: [facts, about].filter(Boolean).join('. ').slice(0, 190) || 'Apply to this job in one swipe with Iris.',
+    title,
+    description: [facts, about].filter(Boolean).join('. ').slice(0, 190) || 'See the role and apply.',
     image: `${origin}/og/job/${encodeURIComponent(id)}.jpg`,
   };
 }

@@ -1,15 +1,15 @@
 /** Draws a job's share image as SVG, with text already turned into shapes. Quick enough for free-tier limits. */
 import { BG, LOGO, SANS, SERIF } from './og-assets.js';
 
-const clean = v => String(v ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
-const widthOf = (font, text, size, track = 0) => {
+export const clean = v => String(v ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+export const widthOf = (font, text, size, track = 0) => {
   let w = 0;
   for (const ch of text) w += ((font.g[ch] ?? font.g[' '])[0] / font.upm) * size + track;
   return w;
 };
 
 /** One line of text as one path, with its left edge at x and baseline at y. */
-function line(font, text, x, y, size, fill, track = 0) {
+export function line(font, text, x, y, size, fill, track = 0) {
   const k = size / font.upm;
   let cx = 0, out = '';
   for (const ch of text) {
@@ -20,9 +20,9 @@ function line(font, text, x, y, size, fill, track = 0) {
   }
   return `<g fill="${fill}" transform="translate(${x.toFixed(1)} ${y}) scale(${k.toFixed(5)} ${(-k).toFixed(5)})">${out}</g>`;
 }
-const centred = (font, text, cx, y, size, fill, track = 0) => line(font, text, cx - widthOf(font, text, size, track) / 2, y, size, fill, track);
+export const centred = (font, text, cx, y, size, fill, track = 0) => line(font, text, cx - widthOf(font, text, size, track) / 2, y, size, fill, track);
 
-function fit(font, text, size, max) {
+export function fit(font, text, size, max) {
   if (widthOf(font, text, size) <= max) return text;
   let t = text;
   while (t && widthOf(font, `${t}…`, size) > max) t = t.slice(0, -1);
@@ -30,7 +30,7 @@ function fit(font, text, size, max) {
 }
 
 /** Wraps to at most two lines. */
-function wrap(font, text, size, max) {
+export function wrap(font, text, size, max) {
   if (widthOf(font, text, size) <= max) return [text];
   const words = text.split(' ');
   let first = '', i = 0;
@@ -242,10 +242,10 @@ export function companyDomain(job) {
 /** The company's icon as a data URL, or null so the image shows its initial instead. */
 export async function fetchLogo(job) {
   try {
-    const res = await fetch(`https://www.google.com/s2/favicons?domain=${encodeURIComponent(companyDomain(job))}&sz=128`, { signal: AbortSignal.timeout(2500), cf: { cacheTtl: 604800, cacheEverything: true } });
+    const res = await fetch(`https://www.google.com/s2/favicons?domain=${encodeURIComponent(companyDomain(job))}&sz=256`, { signal: AbortSignal.timeout(2500), cf: { cacheTtl: 604800, cacheEverything: true } });
     if (!res.ok) return null;
     const bytes = new Uint8Array(await res.arrayBuffer());
-    if (bytes.length < 200 || bytes.length > 60000) return null;
+    if (bytes.length < 200 || bytes.length > 90000) return null;
     let s = '';
     for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
     return `data:${res.headers.get('content-type') || 'image/png'};base64,${btoa(s)}`;

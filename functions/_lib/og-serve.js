@@ -17,15 +17,20 @@ export async function serveJpeg({ request, env, waitUntil }, svgPath, cachePath,
   const key = new Request(url.origin + cachePath);
   const hit = await cache?.match(key);
   if (hit) return request.method === 'HEAD' ? new Response(null, { headers: hit.headers }) : hit;
-  try {
-    const res = await fetch(converterUrl(url.host, svgPath), { signal: AbortSignal.timeout(9000) });
-    if (!res.ok || !(res.headers.get('content-type') || '').includes('image')) throw new Error(`converter ${res.status}`);
-    const out = new Response(await res.arrayBuffer(), { headers });
-    if (cache) { const put = cache.put(key, out.clone()); if (waitUntil) waitUntil(put); else await put; }
-    return request.method === 'HEAD' ? new Response(null, { headers }) : out;
-  } catch (e) {
+  // One design after another (svgPath may be a list); the site's image only if all fail.
+  for (const path of Array.isArray(svgPath) ? svgPath : [svgPath]) {
+    try {
+      const res = await fetch(converterUrl(url.host, path), { signal: AbortSignal.timeout(9000) });
+      if (!res.ok || !(res.headers.get('content-type') || '').includes('image')) throw new Error(`converter ${res.status}`);
+      const out = new Response(await res.arrayBuffer(), { headers });
+      if (cache) { const put = cache.put(key, out.clone()); if (waitUntil) waitUntil(put); else await put; }
+      return request.method === 'HEAD' ? new Response(null, { headers }) : out;
+    } catch (e) {
+      console.error('share image design failed', path, e);
+    }
+  }
+  {
     // Never leave a link with no image: use the site's preview, without caching the failure for long.
-    console.error('share image failed', e);
     const asset = await env.ASSETS.fetch(new Request(new URL(FALLBACK, url)));
     return new Response(request.method === 'HEAD' ? null : asset.body, { headers: { 'Content-Type': 'image/jpeg', 'Cache-Control': 'public, max-age=300' } });
   }

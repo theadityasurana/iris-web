@@ -28,8 +28,8 @@ export function searchPreview(filters, raw, origin) {
   const lead = [words && words[0].toUpperCase() + words.slice(1), role].filter(Boolean).join(' ');
   const phrase = `${lead || 'Open'} jobs${place ? ` in ${place}` : ''}`;
   return {
-    title: `${phrase} | Iris`,
-    description: `Browse ${phrase} on Iris, and apply to any of them in a single swipe. The Tinder for jobs, free to try.`,
+    title: phrase,
+    description: `Open roles: ${phrase}. See them all and apply.`,
     image: `${origin}/og/search/preview.jpg?${searchParams(filters, raw)}`,
   };
 }
