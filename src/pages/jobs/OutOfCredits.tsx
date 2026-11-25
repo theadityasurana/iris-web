@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Modal } from '@web/ui/Modal';
 import { useToast } from '@web/ui/Toast';
@@ -9,30 +9,7 @@ import { getPlanDisplayName } from '@/lib/subscription';
 import { TimeSaved } from '@web/ui/TimeSaved';
 import { HiringCarousel } from '@web/ui/HiringCarousel';
 
-const RELEVANT_JOBS_BASE = 900 + Math.floor(Math.random() * 900); // 900–1800, stable per session
-
-function useLiveCounters(active: boolean) {
-  const [companies, setCompanies] = useState(14000);
-  const [jobs, setJobs] = useState(2000000);
-  const [relevant, setRelevant] = useState(RELEVANT_JOBS_BASE);
-  const started = useRef(false);
-
-  useEffect(() => {
-    if (!active || started.current) return;
-    const delay = setTimeout(() => {
-      started.current = true;
-      const tick = setInterval(() => {
-        setCompanies(n => n + (Math.floor(Math.random() * 3) + 1));
-        setJobs(n => n + (Math.floor(Math.random() * 3) + 1) * 10);
-        setRelevant(n => n + 1);
-      }, 1000);
-      return () => clearInterval(tick);
-    }, 5000);
-    return () => clearTimeout(delay);
-  }, [active]);
-
-  return { companies, jobs, relevant };
-}
+const RELEVANT_JOBS = 900 + Math.floor(Math.random() * 900); // fixed per session, 900–1800
 
 function countdown(resetAt: number) {
   const ms = resetAt - Date.now();
@@ -50,11 +27,9 @@ export function OutOfCredits({ open, onClose, entitlements, resetAt }: { open: b
   const [busy, setBusy] = useState<string | false>(false);
   const { data: webPlan } = useWebPlan();
   const { data: region = 'INTL' } = useRegion();
-  // Offer the trial to anyone not already on a website plan.
   const showTrial = !webPlanUsable(webPlan);
   const t = TRIAL_PLAN.pricing[region];
   const trialPrice = `${t.currency}${Number.isInteger(t.price) ? t.price : t.price.toFixed(2)}`;
-  const { companies, jobs, relevant } = useLiveCounters(open);
   const pay = async (plan: string, period: string) => {
     setBusy(plan);
     try { window.location.href = (await startCheckout(plan, period)).url; }
@@ -72,21 +47,21 @@ export function OutOfCredits({ open, onClose, entitlements, resetAt }: { open: b
         <button className="btn secondary" onClick={onClose}>Not now</button>
         <Link to="/app/plans" className="btn" onClick={onClose}>See plans</Link>
       </>}>
-      <div className="ooc-counters">
-        <div className="ooc-counter">
-          <b className="ooc-num">{companies.toLocaleString()}+</b>
+      <div className="ooc-stats">
+        <div className="ooc-stat">
+          <b>14,000+</b>
           <span>companies hiring via Iris</span>
         </div>
-        <div className="ooc-counter">
-          <b className="ooc-num">{(jobs / 1000000).toFixed(1)}M+</b>
+        <div className="ooc-stat">
+          <b>2M+</b>
           <span>live jobs on platform</span>
         </div>
-        <div className="ooc-counter">
-          <b className="ooc-num">{relevant.toLocaleString()}</b>
+        <div className="ooc-stat">
+          <b>{RELEVANT_JOBS.toLocaleString()}</b>
           <span>jobs relevant for you</span>
         </div>
       </div>
-      <div className="ooc-proof">🏆 <b>80% of paid users</b> land interviews, DSA tests, or offers via Iris. Get hired faster.</div>
+      <p className="ooc-proof">80% of paid users land an interview, DSA test, or offer through Iris.</p>
       <HiringCarousel />
       <TimeSaved compact />
       <ul className="bullets" style={{ marginTop: 0 }}>
@@ -100,7 +75,7 @@ export function OutOfCredits({ open, onClose, entitlements, resetAt }: { open: b
             <div className="t-caption muted">Try Iris for {TRIAL_PLAN.days} days for {trialPrice}. Renews every {TRIAL_PLAN.days} days, cancel anytime.</div>
           </div>
           <button className="btn outline" onClick={startTrial} disabled={!!busy}>
-            {busy === TRIAL_PLAN.id ? <span className="spinner" /> : `Start trial · ${trialPrice}`}
+            {busy === TRIAL_PLAN.id ? <span className="spinner" /> : `Start trial \u00b7 ${trialPrice}`}
           </button>
         </div>
       )}
@@ -110,7 +85,6 @@ export function OutOfCredits({ open, onClose, entitlements, resetAt }: { open: b
 
 const usd = (n: number) => `$${n.toFixed(2)}`;
 
-/** Africa (website only): the onboarding application was the free one, so go straight to paying. */
 function AfricaPaywall({ open, onClose, busy, pay, trialPrice }: { open: boolean; onClose: () => void; busy: string | false; pay: (plan: string, period: string) => void; trialPrice: string }) {
   return (
     <Modal open={open} onClose={onClose}
@@ -142,7 +116,7 @@ function AfricaPaywall({ open, onClose, busy, pay, trialPrice }: { open: boolean
           <div className="t-caption muted">{TRIAL_PLAN.credits} applications for {TRIAL_PLAN.days} days at {trialPrice}. Cancel anytime.</div>
         </div>
         <button className="btn outline" onClick={() => pay(TRIAL_PLAN.id, 'biweekly')} disabled={!!busy}>
-          {busy === TRIAL_PLAN.id ? <span className="spinner" /> : `Start trial · ${trialPrice}`}
+          {busy === TRIAL_PLAN.id ? <span className="spinner" /> : `Start trial \u00b7 ${trialPrice}`}
         </button>
       </div>
     </Modal>
