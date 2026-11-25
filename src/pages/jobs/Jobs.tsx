@@ -11,7 +11,6 @@ import { useFeed, EMPTY_FILTERS, activeFilterCount } from './useFeed';
 import { useJobActions } from './useJobActions';
 import { ApplyFlip, APPLY_FLIP_MS, APPLY_OUT_MS, JobCard, JobDetail, JobTile, JobTileSkeleton, type ApplyPhase } from './JobParts';
 import { FiltersModal } from './FiltersModal';
-import { OutOfCredits } from './OutOfCredits';
 
 type Dir = 'left' | 'right' | 'up';
 const THRESHOLD = 110;
@@ -286,7 +285,6 @@ export default function Jobs() {
       </div>}
 
       <FiltersModal open={filtersOpen} onClose={() => setFiltersOpen(false)} value={filters} onApply={setFilters} companies={companies} />
-      <OutOfCredits open={actions.outOfCredits} onClose={() => actions.setOutOfCredits(false)} entitlements={actions.entitlements} resetAt={actions.freeResetAt} />
     </div>
   );
 }

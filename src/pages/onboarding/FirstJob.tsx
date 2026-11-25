@@ -12,7 +12,6 @@ import { titleMatchesKeyword } from '@/lib/feed-policy';
 import type { Job } from '@/types';
 import { EMPTY_FILTERS, useFeed } from '@web/pages/jobs/useFeed';
 import { useJobActions } from '@web/pages/jobs/useJobActions';
-import { OutOfCredits } from '@web/pages/jobs/OutOfCredits';
 import { FirstApplyShow } from '@web/pages/jobs/FirstApplyShow';
 
 const NO_TAGS: string[] = [];
@@ -118,7 +117,6 @@ export default function FirstJob() {
         <p className="fj-note">This is a real application. Iris submits it to the company’s own job portal for you, using one credit.</p>
         <Link to="/app/home" className="link t-caption">Go to my dashboard</Link>
       </div>
-      <OutOfCredits open={actions.outOfCredits} onClose={() => { actions.setOutOfCredits(false); navigate('/app/home'); }} entitlements={actions.entitlements} resetAt={actions.freeResetAt} />
       {applied && <FirstApplyFallback onDone={() => navigate('/app/home')} />}
       <FirstApplyShow />
     </div>

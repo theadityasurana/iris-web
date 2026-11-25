@@ -3,7 +3,8 @@
  * handler: charge first (paid credit or free swipe), and only a charged swipe
  * becomes a live_application_queue row.
  */
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useApplications, useEntitlements, useFreeSwipes } from '@web/lib/queries';
@@ -36,7 +37,8 @@ export function useJobActions() {
   const entitlements = useEntitlements();
   const { data: free } = useFreeSwipes();
   const qc = useQueryClient();
-  const [outOfCredits, setOutOfCredits] = useState(false);
+  const navigate = useNavigate();
+  const goToPlans = () => navigate('/app/plans');
 
   const freeLeft = free?.remaining ?? 0;
   const { data: webPlan } = useWebPlan();
@@ -50,14 +52,14 @@ export function useJobActions() {
 
   const apply = useCallback(async (job: Job): Promise<ApplyOutcome> => {
     if (!userId || !profile) return 'failed';
-    if (webCredits <= 0 && !canApply(entitlements, freeLeft)) { setOutOfCredits(true); return 'no-credits'; }
+    if (webCredits <= 0 && !canApply(entitlements, freeLeft)) { goToPlans(); return 'no-credits'; }
     if (!paying) {
       const r = region ?? await qc.fetchQuery(REGION_QUERY).catch(() => 'INTL');
       if (r === 'AF') {
         // Always read fresh: the cached list can lag right after the onboarding application.
         const earlier = await fetchUserApplications(userId).catch(() => cachedApps ?? []);
         const limit = await qc.fetchQuery(africaAllowanceQuery(userId)).catch(() => AF_FREE_APPLICATIONS);
-        if (earlier.length >= limit) { setOutOfCredits(true); return 'no-credits'; }
+        if (earlier.length >= limit) { goToPlans(); return 'no-credits'; }
       }
     }
 
@@ -73,7 +75,7 @@ export function useJobActions() {
     }
     qc.invalidateQueries({ queryKey: ['subscription-status', userId] });
     qc.invalidateQueries({ queryKey: ['daily-swipes', userId] });
-    if (!charged) { setOutOfCredits(true); return 'no-credits'; }
+    if (!charged) { goToPlans(); return 'no-credits'; }
 
     const first = await isFirstApplication(userId, qc.getQueryData<unknown[]>(['user-applications', userId]));
     addSwipedJobId(job.id);
@@ -100,5 +102,5 @@ export function useJobActions() {
   /** Same pre-check apply() runs first; lets the UI skip the applying animation when it would just open the paywall. */
   const hasCredits = (webCredits > 0 || canApply(entitlements, freeLeft)) && !africaLocked;
 
-  return { apply, hasCredits, skip, save, outOfCredits, setOutOfCredits, entitlements, freeLeft, freeResetAt: free?.resetAt ?? 0 };
+  return { apply, hasCredits, skip, save, entitlements, freeLeft, freeResetAt: free?.resetAt ?? 0 };
 }

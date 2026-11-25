@@ -10,7 +10,6 @@ import type { Job } from '@/types';
 import { JobTile, JobTileSkeleton } from '@web/pages/jobs/JobParts';
 import { EMPTY_FILTERS, useFeed } from '@web/pages/jobs/useFeed';
 import { useJobActions } from '@web/pages/jobs/useJobActions';
-import { OutOfCredits } from '@web/pages/jobs/OutOfCredits';
 import { TimeSaved } from '@web/ui/TimeSaved';
 import { AutoInstallSheet } from '@web/ui/InstallSheet';
 
@@ -141,7 +140,6 @@ export default function Home() {
         </div>
       </section>
 
-      <OutOfCredits open={actions.outOfCredits} onClose={() => actions.setOutOfCredits(false)} entitlements={actions.entitlements} resetAt={actions.freeResetAt} />
     </div>
   );
 }

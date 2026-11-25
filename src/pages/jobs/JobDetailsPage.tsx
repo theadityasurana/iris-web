@@ -10,7 +10,6 @@ import { computeMatchScores } from '@/lib/match-scoring';
 import { jobShareLink } from '@/constants/links';
 import { JobDetail } from './JobParts';
 import { useJobActions } from './useJobActions';
-import { OutOfCredits } from './OutOfCredits';
 
 export default function JobDetailsPage() {
   const { id = '' } = useParams();
@@ -81,7 +80,6 @@ export default function JobDetailsPage() {
           </button>
         )}
       </div>
-      <OutOfCredits open={actions.outOfCredits} onClose={() => actions.setOutOfCredits(false)} entitlements={actions.entitlements} resetAt={actions.freeResetAt} />
     </div>
   );
 }
