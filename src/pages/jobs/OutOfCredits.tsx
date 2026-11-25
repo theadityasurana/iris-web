@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Modal } from '@web/ui/Modal';
 import { useToast } from '@web/ui/Toast';
@@ -7,6 +7,32 @@ import { PLAN_CONFIGS, TRIAL_PLAN } from '@/lib/billing';
 import type { Entitlements } from '@/lib/entitlements';
 import { getPlanDisplayName } from '@/lib/subscription';
 import { TimeSaved } from '@web/ui/TimeSaved';
+import { HiringCarousel } from '@web/ui/HiringCarousel';
+
+const RELEVANT_JOBS_BASE = 900 + Math.floor(Math.random() * 900); // 900–1800, stable per session
+
+function useLiveCounters(active: boolean) {
+  const [companies, setCompanies] = useState(14000);
+  const [jobs, setJobs] = useState(2000000);
+  const [relevant, setRelevant] = useState(RELEVANT_JOBS_BASE);
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (!active || started.current) return;
+    const delay = setTimeout(() => {
+      started.current = true;
+      const tick = setInterval(() => {
+        setCompanies(n => n + (Math.floor(Math.random() * 3) + 1));
+        setJobs(n => n + (Math.floor(Math.random() * 3) + 1) * 10);
+        setRelevant(n => n + 1);
+      }, 1000);
+      return () => clearInterval(tick);
+    }, 5000);
+    return () => clearTimeout(delay);
+  }, [active]);
+
+  return { companies, jobs, relevant };
+}
 
 function countdown(resetAt: number) {
   const ms = resetAt - Date.now();
@@ -28,6 +54,7 @@ export function OutOfCredits({ open, onClose, entitlements, resetAt }: { open: b
   const showTrial = !webPlanUsable(webPlan);
   const t = TRIAL_PLAN.pricing[region];
   const trialPrice = `${t.currency}${Number.isInteger(t.price) ? t.price : t.price.toFixed(2)}`;
+  const { companies, jobs, relevant } = useLiveCounters(open);
   const pay = async (plan: string, period: string) => {
     setBusy(plan);
     try { window.location.href = (await startCheckout(plan, period)).url; }
@@ -37,7 +64,7 @@ export function OutOfCredits({ open, onClose, entitlements, resetAt }: { open: b
   if (region === 'AF' && !paid) return <AfricaPaywall open={open} onClose={onClose} busy={busy} pay={pay} trialPrice={trialPrice} />;
   return (
     <Modal open={open} onClose={onClose}
-      title={paid ? 'You’ve used this month’s credits' : 'You’ve used your free applications'}
+      title={paid ? 'You\u2019ve used this month\u2019s credits' : 'You\u2019ve used your free applications'}
       subtitle={paid
         ? `Your ${getPlanDisplayName(entitlements.plan)} credits refill with your next billing cycle. Move up a plan to keep applying today.`
         : left ? `Your free applications come back in ${left}. Upgrade to keep applying now.` : 'Upgrade to keep applying now.'}
@@ -45,6 +72,22 @@ export function OutOfCredits({ open, onClose, entitlements, resetAt }: { open: b
         <button className="btn secondary" onClick={onClose}>Not now</button>
         <Link to="/app/plans" className="btn" onClick={onClose}>See plans</Link>
       </>}>
+      <div className="ooc-counters">
+        <div className="ooc-counter">
+          <b className="ooc-num">{companies.toLocaleString()}+</b>
+          <span>companies hiring via Iris</span>
+        </div>
+        <div className="ooc-counter">
+          <b className="ooc-num">{(jobs / 1000000).toFixed(1)}M+</b>
+          <span>live jobs on platform</span>
+        </div>
+        <div className="ooc-counter">
+          <b className="ooc-num">{relevant.toLocaleString()}</b>
+          <span>jobs relevant for you</span>
+        </div>
+      </div>
+      <div className="ooc-proof">🏆 <b>80% of paid users</b> land interviews, DSA tests, or offers via Iris. Get hired faster.</div>
+      <HiringCarousel />
       <TimeSaved compact />
       <ul className="bullets" style={{ marginTop: 0 }}>
         <li>75 to 500 applications a month</li>

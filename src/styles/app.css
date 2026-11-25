@@ -352,6 +352,22 @@ kbd { display: inline-block; min-width: 20px; padding: 0 5px; border-radius: 5px
 .trial-offer { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 18px; padding: 14px 16px; border-radius: var(--r-3); background: var(--bg-sunken); box-shadow: inset 0 0 0 1px var(--line); }
 .trial-offer .btn { flex-shrink: 0; }
 @media (max-width: 520px) { .trial-offer { flex-direction: column; align-items: stretch; } }
+.ooc-counters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.ooc-counter { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 12px 8px; border-radius: var(--r-3); background: var(--surface-2); }
+.ooc-num { font-family: var(--serif); font-size: 22px; font-weight: 500; line-height: 1.1; color: var(--brand-ink); font-variant-numeric: tabular-nums; }
+.ooc-counter span { margin-top: 4px; font-size: 12px; color: var(--ink-3); line-height: 1.3; }
+.ooc-proof { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 14px; padding: 11px 14px; border-radius: var(--r-3); background: var(--ok-soft); color: var(--ok); font-size: 13.5px; line-height: 1.45; }
+@media (max-width: 420px) { .ooc-counters { grid-template-columns: 1fr; } }
+/* ── Hiring carousel ── */
+.hc-wrap { margin: 18px -24px 4px; overflow: hidden; }
+.hc-label { padding: 0 24px; margin-bottom: 10px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.hc-rows { display: flex; flex-direction: column; gap: 8px; }
+.hc-row-wrap { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.hc-track { display: flex; gap: 8px; width: max-content; animation: hc-scroll 28s linear infinite; }
+.hc-reverse { animation-direction: reverse; }
+@keyframes hc-scroll { to { transform: translateX(-50%); } }
+.hc-item { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); white-space: nowrap; font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.hc-item img { width: 18px; height: 18px; border-radius: 4px; object-fit: contain; flex-shrink: 0; }
 .af-plans { display: flex; flex-direction: column; gap: 10px; }
 .af-plan { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: var(--r-3); box-shadow: inset 0 0 0 1px var(--line); }
 .af-plan.pop { box-shadow: inset 0 0 0 1.5px var(--brand, var(--ink)); }
