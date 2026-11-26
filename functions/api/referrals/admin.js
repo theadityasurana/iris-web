@@ -11,15 +11,29 @@ import { SLUG_RE, isAdmin, listPartners, loadSales, normCode, partnerStats, serv
 
 const deny = () => json({ error: 'Wrong admin password.' }, 401);
 
+/**
+ * Link clicks: landing-page visits through irisjobs.live/?code=CODE. The landing page
+ * records the code as the visit's campaign in download_link_visits (any letter case).
+ */
+async function clickCount(env, code) {
+  const variants = [...new Set([code, code.toLowerCase()])].map(v => `"${v}"`).join(',');
+  const res = await db(env, `download_link_visits?select=campaign&campaign=in.(${encodeURIComponent(variants)})`, {
+    method: 'HEAD', headers: { Prefer: 'count=exact', Range: '0-0' },
+  });
+  const total = Number((res.headers.get('content-range') || '').split('/')[1]);
+  return Number.isFinite(total) ? total : 0;
+}
+
 export async function onRequestGet({ request, env }) {
   if (!isAdmin(request, env)) return deny();
   try {
     const fresh = new URL(request.url).searchParams.get('fresh') === '1';
     const [partners, sales] = await Promise.all([listPartners(env), loadSales(env, { fresh })]);
     const owned = new Set(partners.map(p => p.promo_code));
+    const clicks = await Promise.all(partners.map(p => clickCount(env, p.promo_code).catch(() => 0)));
     return json({
       updatedAt: sales.fetchedAt,
-      partners: partners.map(p => ({ ...p, stats: partnerStats(p, sales) })),
+      partners: partners.map((p, i) => ({ ...p, clicks: clicks[i], stats: partnerStats(p, sales) })),
       unassignedCodes: sales.discounts.filter(d => !owned.has(d.code)).map(d => ({ code: d.code, timesUsed: d.timesUsed })),
     });
   } catch (err) {

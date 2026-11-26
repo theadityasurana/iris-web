@@ -99,6 +99,7 @@
 
     <div class="kpis">
       <div class="kpi"><b id="k-partners">–</b><span>Influencers</span></div>
+      <div class="kpi"><b id="k-clicks">–</b><span>Link clicks</span></div>
       <div class="kpi"><b id="k-buyers">–</b><span>Purchases via codes</span></div>
       <div class="kpi"><b id="k-net">–</b><span>Net revenue from codes</span></div>
       <div class="kpi"><b id="k-due">–</b><span>Owed to influencers now</span></div>
@@ -123,7 +124,7 @@
       <div class="table-scroll">
         <table>
           <thead><tr>
-            <th>#</th><th>Influencer</th><th class="num">Purchases</th><th class="num">Active</th><th class="num">30 days</th><th class="num">Net revenue</th><th class="num">Share</th><th class="num">They earn</th><th class="num">Paid</th><th class="num">Due</th><th>Plans</th><th></th>
+            <th>#</th><th>Influencer</th><th class="num">Link clicks</th><th class="num">Purchases</th><th class="num">Active</th><th class="num">30 days</th><th class="num">Net revenue</th><th class="num">Share</th><th class="num">They earn</th><th class="num">Paid</th><th class="num">Due</th><th>Plans</th><th></th>
           </tr></thead>
           <tbody id="rows"></tbody>
         </table>
@@ -156,6 +157,7 @@
     });
     return parts.length ? parts.join('<br>') : '<span class="muted">–</span>';
   };
+  const promoUrl = code => `https://irisjobs.live/?code=${encodeURIComponent(code)}`;
   const partnerUrl = slug => `${location.origin}/partner/${slug}`;
 
   async function api(method, body, query = '') {
@@ -183,7 +185,7 @@
       $('gate').hidden = true; $('app').hidden = false;
       render();
     } catch (e) {
-      if (e.message !== 'auth') { $('gate').hidden = true; $('app').hidden = false; $('rows').innerHTML = `<tr><td colspan="12" class="empty">${esc(e.message)}</td></tr>`; }
+      if (e.message !== 'auth') { $('gate').hidden = true; $('app').hidden = false; $('rows').innerHTML = `<tr><td colspan="13" class="empty">${esc(e.message)}</td></tr>`; }
     } finally { $('refresh').disabled = false; }
   }
 
@@ -192,6 +194,7 @@
     const sum = k => ps.reduce((n, p) => n + p.stats[k], 0);
     $('k-partners').textContent = ps.length;
     $('k-buyers').textContent = sum('buyers');
+    $('k-clicks').textContent = ps.reduce((n, p) => n + (p.clicks || 0), 0).toLocaleString();
     $('k-net').textContent = usd(sum('netCents'));
     $('k-due').textContent = usd(sum('dueCents'));
     $('updated').textContent = `Dodo data as of ${new Date(data.updatedAt).toLocaleString()}`;
@@ -201,7 +204,7 @@
     $('unassigned').hidden = !un.length;
     $('unassigned').innerHTML = un.length ? `Codes in Dodo not linked to anyone yet: ${un.map(c => `<button type="button" data-code="${esc(c.code)}">${esc(c.code)}${c.timesUsed ? ` · ${c.timesUsed} used` : ''}</button>`).join('')}` : '';
 
-    if (!ps.length) { $('rows').innerHTML = '<tr><td colspan="12" class="empty">No influencers yet. Add one above.</td></tr>'; return; }
+    if (!ps.length) { $('rows').innerHTML = '<tr><td colspan="13" class="empty">No influencers yet. Add one above.</td></tr>'; return; }
     $('rows').innerHTML = ps.map((p, i) => {
       const s = p.stats;
       const plans = Object.entries(s.byPlan).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<span class="pill">${esc(k)} ${v}</span>`).join('');
@@ -215,8 +218,10 @@
         <td><div class="name">${esc(p.name)} <span class="code">${esc(p.promo_code)}</span></div>
           ${flags ? `<div style="margin-top:6px">${flags}</div>` : ''}
           <div class="url"><a href="${esc(partnerUrl(p.slug))}" target="_blank" rel="noopener">${esc(partnerUrl(p.slug).replace(/^https?:\/\//, ''))}</a><button class="link small" data-copy="${esc(partnerUrl(p.slug))}">Copy</button></div>
+          <div class="url"><span class="muted small">Bio link:</span> <a href="${esc(promoUrl(p.promo_code))}" target="_blank" rel="noopener">${esc(promoUrl(p.promo_code).replace(/^https?:\/\//, ''))}</a><button class="link small" data-copy="${esc(promoUrl(p.promo_code))}">Copy</button></div>
           ${p.email || p.social ? `<div class="muted small" style="margin-top:4px">${p.email ? `<a href="mailto:${esc(p.email)}" style="color:inherit">${esc(p.email)}</a>` : ''}${p.email && p.social ? ' · ' : ''}${p.social ? (/^https?:\/\//i.test(p.social) ? `<a href="${esc(p.social)}" target="_blank" rel="noopener" style="color:inherit">${esc(p.social.replace(/^https?:\/\/(www\.)?/i, ''))}</a>` : esc(p.social)) : ''}</div>` : ''}
           ${p.notes ? `<div class="muted small">${esc(p.notes)}</div>` : ''}</td>
+        <td class="num big">${(p.clicks || 0).toLocaleString()}${p.clicks ? `<div class="muted small">${s.buyers ? ((s.buyers / p.clicks) * 100).toFixed(1) + '% bought' : 'no buys yet'}</div>` : ''}</td>
         <td class="num big">${s.buyers}</td>
         <td class="num">${s.active}</td>
         <td class="num">${s.last30}</td>
@@ -228,7 +233,7 @@
         <td>${plans || '<span class="muted">–</span>'}</td>
         <td class="actions"><button class="link" data-edit="${p.id}">Edit</button><button class="link" data-toggle="${p.id}">${p.active ? 'Turn off' : 'Turn on'}</button><button class="link danger" data-del="${p.id}">${pendingDelete === p.id ? 'Confirm delete' : 'Delete'}</button></td>
       </tr>`;
-      const edit = editing === p.id ? `<tr class="edit-row"><td></td><td colspan="11"><form class="edit-grid" data-form="${p.id}">
+      const edit = editing === p.id ? `<tr class="edit-row"><td></td><td colspan="12"><form class="edit-grid" data-form="${p.id}">
         <div><label>Name</label><input name="name" value="${esc(p.name)}" required maxlength="80"></div>
         <div><label>Promo code</label><input name="promo_code" value="${esc(p.promo_code)}" required style="text-transform:uppercase"></div>
         <div><label>URL</label><div class="slug"><span>/partner/</span><input name="slug" value="${esc(p.slug)}" required></div></div>
