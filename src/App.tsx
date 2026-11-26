@@ -34,6 +34,7 @@ const Resumes = lazy(() => import('@web/pages/profile/Resumes'));
 const ProfilePreview = lazy(() => import('@web/pages/profile/ProfilePreview'));
 const Plans = lazy(() => import('@web/pages/plans/Plans'));
 const FreeCredits = lazy(() => import('@web/pages/plans/FreeCredits'));
+const OutOfSwipes = lazy(() => import('@web/pages/upgrade/OutOfSwipes'));
 const Settings = lazy(() => import('@web/pages/settings/Settings'));
 const Help = lazy(() => import('@web/pages/settings/Help'));
 const InboxSettingsPage = lazy(() => import('@web/pages/settings/InboxSettingsPage'));
@@ -84,6 +85,7 @@ export function App() {
         <Route path="/app/onboarding" element={<OnboardingGate><Onboarding /></OnboardingGate>} />
 
         <Route path="/app/first-job" element={<RequireUser><FirstJob /></RequireUser>} />
+        <Route path="/app/upgrade" element={<RequireUser><OutOfSwipes /></RequireUser>} />
 
         <Route element={<RequireUser><AppShell /></RequireUser>}>
           <Route path="/app/home" element={<Home />} />

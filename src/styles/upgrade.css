@@ -1,0 +1,105 @@
+/* Out-of-swipes page (/app/upgrade). Mobile first: notifications, then the opened email.
+   From 1040px: pitch card + lock-screen phone + mail phone over clouds. */
+.oc { position: relative; min-height: 100svh; overflow-x: hidden; color: #23201b; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
+.oc-bg { position: fixed; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(248,245,239,0) 45%, rgba(248,245,239,.92) 100%), url(/media/auth-clouds-poster.webp) 50% 30% / cover no-repeat, #9ec3ea; }
+.oc-back { position: absolute; top: 18px; left: 16px; z-index: 5; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 0; background: rgba(255,253,249,.85); backdrop-filter: blur(10px); font: inherit; font-size: 14px; color: #23201b; cursor: pointer; }
+.oc-grid { padding: 66px 14px 0; }
+.oc-pitch { display: none; }
+.oc-blink { position: relative; flex: none; width: 8px; height: 8px; border-radius: 50%; background: #34a853; animation: oc-blink 1.6s ease-in-out infinite; }
+.oc-blink::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: #34a853; animation: oc-pulse 1.6s ease-out infinite; }
+@keyframes oc-blink { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes oc-pulse { 0% { transform: scale(.6); opacity: .5; } 100% { transform: scale(1.9); opacity: 0; } }
+
+/* Notification cards (iOS + Gmail) */
+.oc-n { display: grid; grid-template-columns: 40px 1fr; gap: 11px; align-items: start; padding: 12px 14px; border-radius: 22px; background: rgba(246,244,240,.86); -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); color: #111; text-align: left; box-shadow: 0 10px 30px -14px rgba(0,0,0,.35); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif; }
+.oc-av { position: relative; width: 40px; height: 40px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
+.oc-av > svg { width: 26px; height: 26px; }
+.oc-av.full > svg { width: 40px; height: 40px; border-radius: 50%; }
+.oc-av i { position: absolute; right: -4px; bottom: -4px; width: 20px; height: 20px; border-radius: 6px; background: #fff; display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.oc-av i svg { width: 15px; height: 15px; }
+.oc-tr { display: flex; justify-content: space-between; gap: 8px; }
+.oc-tr b { font-size: 14px; font-weight: 600; }
+.oc-tr span { font-size: 12px; color: #6b6b70; white-space: nowrap; }
+.oc-sj { font-size: 13.5px; font-weight: 500; margin-top: 1px; }
+.oc-n p { font-size: 13.5px; color: #3c3c43; line-height: 1.3; margin: 1px 0 0; }
+.oc-notifs-m { display: grid; gap: 8px; margin-bottom: 18px; }
+.oc-notifs-m .oc-n:nth-child(2) { opacity: .94; }
+.oc-notifs-m .oc-n:nth-child(3) { opacity: .86; }
+
+/* Phones: on mobile only the mail screen shows, as a plain sheet */
+.oc-lock { display: none; }
+.oc-mail .oc-screen { background: #fff; border-radius: 24px 24px 0 0; box-shadow: 0 -10px 30px -18px rgba(0,0,0,.3); padding: 18px 20px 30px; }
+.oc-mail .oc-status, .oc-mail .oc-island, .oc-mail .oc-home { display: none; }
+.oc-nav { display: flex; justify-content: space-between; color: #0a7cff; font-size: 16px; margin-bottom: 14px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; }
+
+/* The email */
+.oc-em { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif; font-size: 15px; line-height: 1.5; color: #2b2b2e; }
+.oc-subj { font-size: 21px; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; color: #111; }
+.oc-from { display: flex; align-items: center; gap: 10px; margin: 14px 0 16px; padding-bottom: 14px; border-bottom: 1px solid #e6e6e9; }
+.oc-fav { width: 38px; height: 38px; border-radius: 50%; border: 1px solid #e6e6e9; display: grid; place-items: center; background: #fff; flex: none; }
+.oc-fav img { width: 24px; height: 24px; }
+.oc-from b { font-size: 14.5px; color: #111; }
+.oc-from span { font-size: 13px; color: #8a8a8e; display: block; }
+.oc-from .oc-tm { margin-left: auto; }
+.oc-q { font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-size: 21px; line-height: 1.3; color: #111; border-left: 3px solid #6d4ae0; padding: 2px 0 2px 14px; margin-bottom: 16px; }
+.oc-em p { margin: 0 0 13px; }
+.oc-live { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #2f7a55; background: #e9f5ee; border-radius: 10px; padding: 9px 12px; margin-bottom: 14px; }
+.oc-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 2px 0 15px; }
+.oc-stats div { background: #f4f1eb; border-radius: 11px; padding: 9px 10px; }
+.oc-stats b { display: block; font-size: 17px; color: #111; letter-spacing: -.01em; }
+.oc-stats span { font-size: 11.5px; color: #6b6760; }
+.oc-code { font-weight: 700; color: #5536c4; background: #efeafc; padding: 1px 7px; border-radius: 6px; }
+.oc-cta { display: block; width: 100%; text-align: center; background: #6d4ae0; color: #fff; font: inherit; font-weight: 600; font-size: 16px; padding: 14px; border: 0; border-radius: 13px; margin: 4px 0 6px; cursor: pointer; }
+.oc-cta:hover { background: #5f3fd6; }
+.oc-fine { text-align: center; font-size: 12px; color: #8a8a8e; margin-bottom: 14px; }
+.oc-sign { margin: 0 !important; }
+
+@media (min-width: 1040px) {
+  .oc { height: 100svh; min-height: 760px; overflow: hidden; }
+  .oc-back { top: 24px; left: 32px; }
+  .oc-grid { max-width: 1300px; height: 100%; margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: minmax(0, 1fr) 730px; gap: 24px; align-items: center; }
+  .oc-pitch { display: block; background: rgba(255,253,249,.74); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.6); border-radius: 28px; padding: 36px 38px; }
+  .oc-pill { display: inline-flex; align-items: center; gap: 10px; background: #fffdf9; border: 1px solid rgba(35,32,27,.08); border-radius: 999px; padding: 8px 15px; font-size: 13.5px; font-weight: 500; }
+  .oc-pitch h1 { font-family: 'EB Garamond', Georgia, serif; font-weight: 500; font-size: clamp(44px, 4.2vw, 60px); line-height: 1.02; letter-spacing: -.02em; margin: 22px 0 18px; }
+  .oc-pitch h1 em { color: #5536c4; }
+  .oc-lede { font-size: 18px; line-height: 1.55; color: #3d3932; max-width: 440px; margin: 0; }
+  .oc-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; background: #23201b; color: #fff; font: inherit; font-weight: 600; font-size: 16px; padding: 15px 26px; border: 0; border-radius: 999px; cursor: pointer; }
+  .oc-small { font-size: 13.5px; color: #4e4a41; margin-top: 12px; }
+  .oc-notifs-m { display: none; }
+  .oc-phones { position: relative; height: 790px; transform-origin: center; }
+  .oc-phone { width: 372px; height: 790px; border-radius: 58px; background: #1b1b1d; padding: 11px; box-shadow: 0 0 0 2px #3a3a3d inset, 0 50px 90px -30px rgba(20,15,10,.55); }
+  .oc-phone .oc-screen { position: relative; width: 100%; height: 100%; border-radius: 47px; overflow: hidden; }
+  .oc-lock { display: block; position: absolute; left: 0; top: 30px; transform: rotate(-5deg) scale(.94); transform-origin: bottom right; }
+  .oc-mail { position: absolute; right: 0; top: 0; }
+  .oc-mail .oc-screen { padding: 0; border-radius: 47px; box-shadow: none; }
+  .oc-mail .oc-status, .oc-mail .oc-island, .oc-mail .oc-home { display: flex; }
+  .oc-island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 112px; height: 32px; background: #000; border-radius: 20px; z-index: 10; }
+  .oc-status { position: absolute; top: 0; left: 0; right: 0; height: 52px; display: flex; justify-content: space-between; align-items: center; padding: 4px 30px 0 36px; font: 600 15.5px -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; z-index: 9; }
+  .oc-ic { display: flex; gap: 6px; align-items: center; }
+  .oc-ic .sig { width: 17px; height: 11px; background: currentColor; clip-path: polygon(0 75%,22% 75%,22% 50%,48% 50%,48% 25%,74% 25%,74% 0,100% 0,100% 100%,0 100%); }
+  .oc-ic .wifi { width: 15px; height: 11px; background: currentColor; clip-path: polygon(50% 100%,0 30%,15% 12%,50% 0,85% 12%,100% 30%); }
+  .oc-ic .bat { width: 25px; height: 12px; border: 1.5px solid currentColor; border-radius: 4px; position: relative; }
+  .oc-ic .bat::after { content: ''; position: absolute; inset: 1.5px 5px 1.5px 1.5px; background: currentColor; border-radius: 1.5px; }
+  .oc-home { position: absolute; bottom: 9px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; border-radius: 3px; }
+  .oc-lock .oc-screen { background: url(/media/landing/dusk.webp) 40% 50% / cover; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; }
+  .oc-lock .oc-home { background: #fff; }
+  .oc-date { text-align: center; margin-top: 70px; font-size: 18px; font-weight: 500; }
+  .oc-clock { text-align: center; font-size: 92px; font-weight: 600; letter-spacing: -.03em; line-height: 1; margin-top: 2px; }
+  .oc-stack { position: absolute; left: 10px; right: 10px; bottom: 40px; display: grid; gap: 7px; }
+  .oc-more { text-align: center; font-size: 12.5px; opacity: .85; margin-bottom: 4px; }
+  .oc-mail .oc-screen { background: #fff; color: #111; }
+  .oc-mail .oc-home { background: #111; }
+  .oc-mail .oc-nav { position: absolute; top: 52px; left: 0; right: 0; height: 44px; align-items: center; padding: 0 18px; margin: 0; font-size: 17px; background: #fff; z-index: 8; }
+  .oc-body { position: absolute; top: 100px; left: 0; right: 0; bottom: 24px; padding: 6px 20px 0; overflow-y: auto; scrollbar-width: none; }
+  .oc-body::-webkit-scrollbar { display: none; }
+  .oc-mail .oc-em { font-size: 14px; line-height: 1.45; }
+  .oc-mail .oc-subj { font-size: 20px; }
+  .oc-mail .oc-from { margin: 10px 0 12px; padding-bottom: 10px; }
+  .oc-mail .oc-q { font-size: 19px; margin-bottom: 12px; }
+  .oc-mail .oc-em p { margin-bottom: 10px; }
+  .oc-mail .oc-live { display: none; }
+  .oc-mail .oc-stats { margin-bottom: 11px; }
+  .oc-mail .oc-cta { padding: 12px; }
+}
+@media (min-width: 1040px) and (max-height: 860px) { .oc-phones { transform: scale(.88); } }
+@media (min-width: 1040px) and (max-height: 760px) { .oc-phones { transform: scale(.78); } }

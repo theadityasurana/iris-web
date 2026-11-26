@@ -38,7 +38,8 @@ export function useJobActions() {
   const { data: free } = useFreeSwipes();
   const qc = useQueryClient();
   const navigate = useNavigate();
-  const goToPlans = () => navigate('/app/plans');
+  // Out of swipes/credits: the outcome page first; its buttons lead to /app/plans.
+  const goToPlans = () => navigate('/app/upgrade');
 
   const freeLeft = free?.remaining ?? 0;
   const { data: webPlan } = useWebPlan();

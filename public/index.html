@@ -40,7 +40,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Iris - Tinder for Jobs!">
   <meta name="twitter:description" content="Swipe right. AI applies to 100s of jobs in seconds. Over 2 million jobs globally. Try for free!">
-  <link rel="preload" as="image" href="/media/landing/hero.webp">
+  <link rel="preload" as="image" href="/media/auth-clouds-poster.webp">
   <link rel="stylesheet" href="/media/site.css?v=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -663,6 +663,67 @@
       body.mode-job .ctas-row, body.mode-job .ctas { justify-content: flex-start; }
     }
     @media (max-width: 959px) { body.mode-job #job-phone { margin-top: 30px; } }
+
+    /* ── Outcome hero (Nov 2026): clouds, glass card, live counters, interview notifications ── */
+    .hero-art { background: linear-gradient(180deg, rgba(248,245,239,0) 55%, rgba(248,245,239,.9) 100%), url(/media/auth-clouds-poster.webp) 50% 30% / cover no-repeat; }
+    .headline { text-shadow: none; }
+    .hero .hero-kicker .tj { display: inline-block; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 1.35em; color: #fff; background: linear-gradient(135deg, #7c5cf0, #5536c4); padding: 0 .45em .12em; margin: 0 .12em; border-radius: .38em; transform: rotate(-1.5deg); box-shadow: 0 10px 24px -12px rgba(85,54,196,.8); }
+    .live-strip { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; max-width: 560px; margin-top: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; text-align: left; }
+    .lc { padding: 12px 16px; border-right: 1px solid #eee8dd; min-width: 0; }
+    .lc:last-child { border-right: 0; }
+    .lc-top { display: flex; align-items: center; gap: 7px; font-size: .66rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ok); }
+    .blink { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #34a853; animation: lc-blink 1.6s ease-in-out infinite; }
+    .blink::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: #34a853; animation: lc-pulse 1.6s ease-out infinite; }
+    @keyframes lc-blink { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+    @keyframes lc-pulse { 0% { transform: scale(.6); opacity: .5; } 100% { transform: scale(1.9); opacity: 0; } }
+    .lc-num { font-family: var(--serif); font-weight: 500; font-size: clamp(1.35rem, 2.4vw, 1.85rem); line-height: 1.1; margin-top: 4px; letter-spacing: -.01em; font-variant-numeric: tabular-nums; color: #1d1a16; }
+    .lc-num.bump { animation: lc-bump .6s ease; }
+    @keyframes lc-bump { 0% { color: var(--ok); transform: translateY(-2px); } 100% { color: #1d1a16; transform: none; } }
+    .lc-lbl { font-size: .78rem; line-height: 1.25; color: var(--muted); }
+    @media (max-width: 480px) { .lc { padding: 10px 10px; } .lc-lbl { font-size: .7rem; } }
+    .hero .hero-proof { font-size: .9rem; font-weight: 500; color: var(--ink-2); }
+    /* Notification cards (iOS + Gmail look), used in the phone and in the mobile stack */
+    .np-n { display: grid; grid-template-columns: 40px 1fr; gap: 11px; align-items: start; padding: 12px 14px; border-radius: 22px; background: rgba(246,244,240,.84); -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); color: #111; text-align: left; box-shadow: 0 10px 30px -14px rgba(0,0,0,.35); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif; }
+    .np-av { position: relative; width: 40px; height: 40px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
+    .np-av > svg { width: 26px; height: 26px; }
+    .np-av.full { overflow: visible; }
+    .np-av.full > svg { width: 40px; height: 40px; border-radius: 50%; }
+    .np-av i { position: absolute; right: -4px; bottom: -4px; width: 20px; height: 20px; border-radius: 6px; background: #fff; display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    .np-av i svg { width: 15px; height: 15px; }
+    .np-tr { display: flex; justify-content: space-between; gap: 8px; }
+    .np-tr b { font-size: 14px; font-weight: 600; }
+    .np-tr span { font-size: 12px; color: #6b6b70; white-space: nowrap; }
+    .np-sj { font-size: 13.5px; font-weight: 500; margin-top: 1px; }
+    .np-n p { font-size: 13.5px; color: #3c3c43; line-height: 1.3; margin-top: 1px; }
+    .np-phone { display: none; }
+    .np-stack-m { display: grid; gap: 8px; width: 100%; max-width: 420px; margin-top: 10px; }
+    .np-stack-m .np-n:nth-child(2) { opacity: .94; } .np-stack-m .np-n:nth-child(3) { opacity: .86; }
+    body.mode-job .np-phone, body.mode-job .np-stack-m, body.mode-job .live-strip { display: none !important; }
+    @media (min-width: 1040px) {
+      body:not(.mode-job) .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; column-gap: 56px; align-items: center; text-align: left; }
+      body:not(.mode-job) .hero-copy { background: rgba(255,253,249,.78); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,.7); border-radius: 30px; padding: 40px 44px 34px; }
+      body:not(.mode-job) .hero-copy .headline { font-size: clamp(3.4rem, 5.6vw, 4.9rem); margin-top: 20px; }
+      body:not(.mode-job) .hero-copy .sub { margin-left: 0; max-width: 52ch; }
+      body:not(.mode-job) .hero-copy #job-slot:not(:empty) { margin-left: 0; }
+      body:not(.mode-job) .hero-copy .actions-col { align-items: flex-start; }
+      body:not(.mode-job) .hero-copy .ctas-row, body:not(.mode-job) .hero-copy .ctas { justify-content: flex-start; }
+      body:not(.mode-job) .np-stack-m { display: none; }
+      body:not(.mode-job) .np-phone { display: block; width: 360px; height: 760px; border-radius: 56px; background: #1b1b1d; padding: 11px; box-shadow: 0 0 0 2px #3a3a3d inset, 0 50px 90px -30px rgba(20,15,10,.55); }
+      .np-screen { position: relative; width: 100%; height: 100%; border-radius: 46px; overflow: hidden; background: url(/media/landing/dusk.webp) 40% 50% / cover; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif; }
+      .np-island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 108px; height: 31px; background: #000; border-radius: 20px; }
+      .np-status { position: absolute; top: 0; left: 0; right: 0; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 4px 28px 0 34px; font-size: 15px; font-weight: 600; }
+      .np-ic { display: flex; gap: 6px; align-items: center; }
+      .np-ic .sig { width: 17px; height: 11px; background: currentColor; clip-path: polygon(0 75%,22% 75%,22% 50%,48% 50%,48% 25%,74% 25%,74% 0,100% 0,100% 100%,0 100%); }
+      .np-ic .wifi { width: 15px; height: 11px; background: currentColor; clip-path: polygon(50% 100%,0 30%,15% 12%,50% 0,85% 12%,100% 30%); }
+      .np-ic .bat { width: 25px; height: 12px; border: 1.5px solid currentColor; border-radius: 4px; position: relative; }
+      .np-ic .bat::after { content: ''; position: absolute; inset: 1.5px 5px 1.5px 1.5px; background: currentColor; border-radius: 1.5px; }
+      .np-date { text-align: center; margin-top: 68px; font-size: 17px; font-weight: 500; }
+      .np-clock { text-align: center; font-size: 88px; font-weight: 600; letter-spacing: -.03em; line-height: 1; }
+      .np-stack { position: absolute; left: 10px; right: 10px; bottom: 44px; display: grid; gap: 7px; }
+      .np-more { text-align: center; font-size: 12.5px; opacity: .85; margin-bottom: 4px; }
+      .np-home { position: absolute; bottom: 9px; left: 50%; transform: translateX(-50%); width: 128px; height: 5px; border-radius: 3px; background: #fff; }
+    }
+    @media (max-width: 1039px) { body:not(.mode-job) .hero-copy .live-strip { margin-left: auto; margin-right: auto; } }
   </style>
 </head>
 <body>
@@ -681,20 +742,35 @@
     <section class="hero" id="hero">
       <div class="hero-first">
         <div class="hero-art" aria-hidden="true"></div>
-        <div class="wrap">
-          <div class="overline hero-kicker">The <strong>Tinder for jobs</strong>, with an AI that applies</div>
-          <h1 class="headline" id="page-title">Swipe right.<br><em>AI applies.</em></h1>
-          <p class="sub" id="page-bio">Apply to hundreds of jobs in seconds. Over 2 million jobs worldwide. Free to try.</p>
-          <div id="job-slot"></div>
-          <div class="actions-col">
-            <div class="ctas-row">
-              <div class="ctas" id="actions"></div>
-              <a class="pill light web-cta" id="web-cta" href="https://irisjobs.live/app/sign-up">Continue on web</a>
+        <div class="wrap hero-grid">
+          <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+            <symbol id="lg-gmail" viewBox="0 0 48 48"><path fill="#4caf50" d="M45,16.2l-5,2.75l-5,4.75L35,40h7c1.657,0,3-1.343,3-3V16.2z"/><path fill="#1e88e5" d="M3,16.2l3.614,1.71L13,23.7V40H6c-1.657,0-3-1.343-3-3V16.2z"/><polygon fill="#e53935" points="35,11.2 24,19.45 13,11.2 12,17 13,23.7 24,31.95 35,23.7 36,17"/><path fill="#c62828" d="M3,12.298V16.2l10,7.5V11.2L9.876,8.859C9.132,8.301,8.228,8,7.298,8h0C4.924,8,3,9.924,3,12.298z"/><path fill="#fbc02d" d="M45,12.298V16.2l-10,7.5V11.2l3.124-2.341C38.868,8.301,39.772,8,40.702,8h0C43.076,8,45,9.924,45,12.298z"/></symbol>
+            <symbol id="lg-google" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></symbol>
+            <symbol id="lg-nvidia" viewBox="0 0 48 48"><rect width="48" height="48" fill="#76b900"/><path d="M8 24c5-8 13-12 21-11 6 1 10 5 12 11-2 6-6 10-12 11-8 1-16-3-21-11z" fill="none" stroke="#fff" stroke-width="3.2"/><path d="M17 24c2-5 7-7 11-6 3 1 5 3 5 6s-2 5-5 6c-4 1-8-1-9-4" fill="none" stroke="#fff" stroke-width="3"/><circle cx="26" cy="24" r="2.6" fill="#fff"/></symbol>
+            <symbol id="lg-msft" viewBox="0 0 48 48"><rect x="9" y="9" width="14" height="14" fill="#f25022"/><rect x="25" y="9" width="14" height="14" fill="#7fba00"/><rect x="9" y="25" width="14" height="14" fill="#00a4ef"/><rect x="25" y="25" width="14" height="14" fill="#ffb900"/></symbol>
+          </svg>
+          <div class="hero-copy">
+            <div class="overline hero-kicker">The <strong class="tj">Tinder for jobs</strong> with an AI that applies</div>
+            <h1 class="headline" id="page-title">Swipe tonight.<br>Wake up to <em>interviews.</em></h1>
+            <p class="sub" id="page-bio">Swipe right on jobs you like, and our AI applies for you in seconds. Wake up to recruiters from the companies you've always wanted to work for.</p>
+            <div id="job-slot"></div>
+            <div class="actions-col">
+              <div class="ctas-row">
+                <div class="ctas" id="actions"></div>
+                <a class="pill light web-cta" id="web-cta" href="https://irisjobs.live/app/sign-up">Continue on web</a>
+              </div>
+              <div class="live-strip" aria-label="Live Iris numbers"><div class="lc"><div class="lc-top"><span class="blink"></span>Live</div><div class="lc-num" data-base="8001">8,001</div><div class="lc-lbl">interviews landed</div></div><div class="lc"><div class="lc-top"><span class="blink"></span>Live</div><div class="lc-num" data-base="14500">14,500</div><div class="lc-lbl">partner companies</div></div><div class="lc"><div class="lc-top"><span class="blink"></span>Live</div><div class="lc-num" data-base="2006050">2,006,050</div><div class="lc-lbl">open jobs</div></div></div>
+              <p class="hero-proof">Every minute, someone on Iris lands an interview. 70% of users do.</p>
+              <div class="np-stack-m" aria-hidden="true"><div class="np-n"><span class="np-av"><svg><use href="#lg-google"/></svg><i><svg><use href="#lg-gmail"/></svg></i></span><div><div class="np-tr"><b>Google Recruiting</b><span>now</span></div><div class="np-sj">Interview invitation: Software Engineer</div><p>Hi, we'd love to schedule a first-round interview with you.</p></div></div><div class="np-n"><span class="np-av full"><svg><use href="#lg-nvidia"/></svg><i><svg><use href="#lg-gmail"/></svg></i></span><div><div class="np-tr"><b>NVIDIA Talent Acquisition</b><span>6m ago</span></div><div class="np-sj">Next steps for your application</div><p>Your profile stood out to our team. Are you free this week?</p></div></div><div class="np-n"><span class="np-av"><svg><use href="#lg-msft"/></svg><i><svg><use href="#lg-gmail"/></svg></i></span><div><div class="np-tr"><b>Microsoft Careers</b><span>24m ago</span></div><div class="np-sj">Let's schedule your interview</div><p>Congratulations! The hiring team would like to meet you.</p></div></div></div>
+              <p class="countdown" id="countdown"></p>
+              <a id="open-now" href="#" class="pill" style="display:none">Open Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
             </div>
-            <p class="hero-proof">Every minute, someone on Iris lands an interview.</p>
-            <p class="countdown" id="countdown"></p>
-            <a id="open-now" href="#" class="pill" style="display:none">Open Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           </div>
+          <div class="np-phone" aria-hidden="true"><div class="np-screen">
+            <div class="np-status"><span>7:42</span><span class="np-ic"><i class="sig"></i><i class="wifi"></i><i class="bat"></i></span></div><div class="np-island"></div>
+            <div class="np-date" id="np-date">Tomorrow</div><div class="np-clock">7:42</div>
+            <div class="np-stack"><div class="np-more">3 new interview requests</div><div class="np-n"><span class="np-av"><svg><use href="#lg-google"/></svg><i><svg><use href="#lg-gmail"/></svg></i></span><div><div class="np-tr"><b>Google Recruiting</b><span>now</span></div><div class="np-sj">Interview invitation: Software Engineer</div><p>Hi, we'd love to schedule a first-round interview with you.</p></div></div><div class="np-n"><span class="np-av full"><svg><use href="#lg-nvidia"/></svg><i><svg><use href="#lg-gmail"/></svg></i></span><div><div class="np-tr"><b>NVIDIA Talent Acquisition</b><span>6m ago</span></div><div class="np-sj">Next steps for your application</div><p>Your profile stood out to our team. Are you free this week?</p></div></div><div class="np-n"><span class="np-av"><svg><use href="#lg-msft"/></svg><i><svg><use href="#lg-gmail"/></svg></i></span><div><div class="np-tr"><b>Microsoft Careers</b><span>24m ago</span></div><div class="np-sj">Let's schedule your interview</div><p>Congratulations! The hiring team would like to meet you.</p></div></div></div>
+            <div class="np-home"></div></div></div>
           <div id="job-phone" aria-label="This job, as it looks in the Iris app"></div>
         </div>
       </div>
@@ -1616,5 +1692,25 @@
     }
   </script>
   <script src="/media/lenis.min.js" defer></script><script src="/media/site.js?v=1" defer></script>
+  <script>
+    // Live hero numbers: shared start time, +1 every minute, same for every visitor.
+    (function () {
+      var START = Date.UTC(2026, 10, 26, 13, 2, 0); // launch moment: counters read exactly their base here
+      var els = Array.prototype.slice.call(document.querySelectorAll('.lc-num[data-base]'));
+      var last = [];
+      function tick() {
+        var m = Math.max(0, Math.floor((Date.now() - START) / 60000));
+        els.forEach(function (el, i) {
+          var v = +el.getAttribute('data-base') + m;
+          if (last[i] === v) return;
+          if (last[i] !== undefined) { el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+          el.textContent = v.toLocaleString('en-US'); last[i] = v;
+        });
+      }
+      tick(); setInterval(tick, 1000);
+      var d = document.getElementById('np-date');
+      if (d) { var t = new Date(Date.now() + 864e5); d.textContent = t.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }); }
+    })();
+  </script>
 </body>
 </html>
