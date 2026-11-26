@@ -115,6 +115,7 @@ export default function OutOfSwipes() {
   const cta = `Get started for ${price}`;
   const notes = sequence(name, role);
   const arrived = useArrivals(notes.length);
+  const [narrow] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1040);
   const { data: variant } = useExperimentVariant();
   useEffect(() => { markPaywallSeen(); }, []);
   const outTitle = variant === 'paywall' ? "You've used your free application" : "You've used all your free swipes";
@@ -167,7 +168,7 @@ export default function OutOfSwipes() {
               <Status /><div className="oc-island" />
               <div className="oc-date">{tomorrow}</div>
               <div className="oc-clock">7:42</div>
-              <div className="oc-stack"><div className="oc-more">{arrived ? `${arrived} new ${arrived === 1 ? 'message from a recruiter' : 'messages from recruiters'}` : '\u00a0'}</div><LiveNotifications notes={notes} arrived={arrived} max={4} /></div>
+              <div className="oc-stack"><div className="oc-more">{arrived ? `${arrived} new ${arrived === 1 ? 'message from a recruiter' : 'messages from recruiters'}` : '\u00a0'}</div><LiveNotifications notes={notes} arrived={arrived} max={narrow ? 3 : 4} /></div>
               <div className="oc-home" />
             </div>
           </div>

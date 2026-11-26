@@ -77,3 +77,25 @@ export function useExperimentVariant() {
 export function markPaywallSeen() {
   void post({ event: 'paywall_seen' }).catch(() => {});
 }
+
+/**
+ * Records (or reads) the signed-in user's group right away, given their access token.
+ * Called before a new profile row is created, so the welcome email webhook already
+ * knows the group. Never holds things up for more than 2 seconds.
+ */
+export async function assignVariantNow(token: string): Promise<Variant | null> {
+  let hint: Variant | null = null;
+  try { hint = JSON.parse(localStorage.getItem(ANON_KEY) || 'null')?.variant ?? null; } catch { /* ignore */ }
+  try {
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 2000);
+    const r = await fetch('/api/experiment', {
+      method: 'POST', signal: ctl.signal,
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(hint ? { hint } : {}),
+    });
+    clearTimeout(t);
+    const out = r.ok ? await r.json().catch(() => ({})) : {};
+    return out.variant === 'paywall' || out.variant === 'control' ? out.variant : null;
+  } catch { return null; }
+}

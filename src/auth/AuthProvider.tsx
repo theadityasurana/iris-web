@@ -9,6 +9,7 @@ import type { Session } from '@supabase/supabase-js';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase, getStorageUrl } from '@/lib/supabase';
 import { syncPromoWithUser } from '@web/lib/promo';
+import { assignVariantNow } from '@web/lib/experiment';
 import { mapDbToUserProfile, profileUpdateToDb, onboardingProfileRow, upsertOnboardingProfileWithVerify, welcomeEmailRow, stripNullBytes } from '@/lib/profile-mapping';
 import { getOrCreateProxyEmail } from '@/lib/resend';
 import { sanitizeError } from '@/utils/sanitizeError';
@@ -132,6 +133,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
+    // Put a brand-new account in its A/B group before the profile exists, so the
+    // profile-created welcome email can skip the paywall group.
+    await assignVariantNow(s.access_token);
     const { error: insertErr } = await supabase.from('profiles').insert(newRow);
     if (insertErr && !insertErr.message.toLowerCase().includes('duplicate')) {
       if (insertErr.message.includes('foreign key constraint')) {
@@ -331,7 +335,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const saved = await upsertOnboardingProfileWithVerify(uid, row);
 
     supabase.functions.invoke('prefetch-jobs', { body: { user_id: uid } }).catch(() => {});
-    if (email.endsWith('@nextquark.in')) {
+    // The in-app welcome promises 10 free applications, so the paywall test group skips it.
+    const { data: expSess } = await supabase.auth.getSession();
+    const variant = expSess.session ? await assignVariantNow(expSess.session.access_token) : null;
+    if (email.endsWith('@nextquark.in') && variant !== 'paywall') {
       await supabase.from('inbound_emails').insert(welcomeEmailRow(uid, email, data.firstName, data.lastName)).then(() => {}, () => {});
     }
 
