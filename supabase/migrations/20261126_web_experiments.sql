@@ -80,3 +80,7 @@ revoke all on function public.web_experiment_results(text) from public, anon, au
 create table if not exists public.web_admin_secrets (key text primary key, value text not null, updated_at timestamptz not null default now());
 alter table public.web_admin_secrets enable row level security;
 revoke all on public.web_admin_secrets from anon, authenticated;
+
+-- "Everyone pays after the first application": when on, every website user who isn't
+-- paying gets the paywall rule, whatever their group (assignments are left untouched).
+alter table public.web_experiments add column if not exists force_all boolean not null default false;

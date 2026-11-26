@@ -9,6 +9,7 @@
  *         outside Africa (which already has its own paywall). `hint` is the group the
  *         visitor saw before signing up, so the promise on the sign-up page holds.
  *         event: 'paywall_seen' stamps the first time they reached the upgrade page.
+ *         With force_all on, everyone gets 'paywall' (assignments are not changed).
  */
 import { db, json, regionOf, requireUser } from '../_lib/dodo.js';
 
@@ -16,15 +17,15 @@ const KEY = 'paywall_after_first';
 const VARIANTS = new Set(['paywall', 'control']);
 
 async function settings(env) {
-  const res = await db(env, `web_experiments?key=eq.${KEY}&select=enabled,paywall_percent,run,started_at`);
+  const res = await db(env, `web_experiments?key=eq.${KEY}&select=enabled,paywall_percent,run,started_at,force_all`);
   const rows = res.ok ? await res.json() : [];
   const s = rows[0];
-  return s ? { enabled: !!s.enabled, percent: s.paywall_percent, run: s.run, startedAt: s.started_at } : { enabled: false, percent: 0, run: '', startedAt: null };
+  return s ? { enabled: !!s.enabled, percent: s.paywall_percent, run: s.run, startedAt: s.started_at, forceAll: !!s.force_all } : { enabled: false, percent: 0, run: '', startedAt: null, forceAll: false };
 }
 
 export async function onRequestGet({ env }) {
   const s = await settings(env).catch(() => ({ enabled: false, percent: 0, run: '' }));
-  return json({ enabled: s.enabled, percent: s.percent, run: s.run }, 200, { 'Cache-Control': 'public, max-age=60' });
+  return json({ enabled: s.enabled, percent: s.percent, run: s.run, forceAll: s.forceAll }, 200, { 'Cache-Control': 'public, max-age=60' });
 }
 
 export async function onRequestPost({ request, env }) {
@@ -44,6 +45,8 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
+    // "Everyone pays": the paywall rule for every website user, whatever their group.
+    if (s.forceAll) return json({ variant: 'paywall' });
     // Switched off: everyone gets the normal free swipes (assignments are kept for the results).
     if (!s.enabled) return json({ variant: null });
     if (existing) return json({ variant: existing.run === s.run ? existing.variant : null });

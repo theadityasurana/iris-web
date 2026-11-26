@@ -9,7 +9,7 @@ import { useAuth } from '@web/auth/AuthProvider';
 import { supabase } from '@/lib/supabase';
 
 export type Variant = 'paywall' | 'control';
-type Settings = { enabled: boolean; percent: number; run: string };
+type Settings = { enabled: boolean; percent: number; run: string; forceAll?: boolean };
 
 const ANON_KEY = 'iris_exp_paywall';
 
@@ -34,6 +34,7 @@ export function useAnonVariant() {
     staleTime: 10 * 60_000,
     queryFn: async (): Promise<Variant | null> => {
       const s = await fetchExperimentSettings();
+      if (s.forceAll) return 'paywall';
       if (!s.enabled || !s.run) return null;
       const saved = readAnon(s.run);
       if (saved) return saved;
