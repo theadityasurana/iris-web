@@ -1,0 +1,71 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2 · Tomorrow's inbox</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=EB+Garamond:ital,wght@0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#f8f5ef;color:#23201b;-webkit-font-smoothing:antialiased}
+.page{max-width:1160px;margin:0 auto;padding:44px 28px 60px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#797366;text-align:center}
+.lead{font-family:'EB Garamond',Georgia,serif;font-size:44px;font-weight:500;text-align:center;letter-spacing:-.01em;margin:8px 0 34px}
+.lead i{color:#6d4ae0}
+.grid{display:grid;grid-template-columns:380px 1fr;background:#fffdf9;border:1px solid #e8e2d7;border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(35,32,27,.2)}
+.list{border-right:1px solid #e8e2d7;background:#fbf9f4}
+.lh{display:flex;justify-content:space-between;padding:16px 20px;font-weight:600;font-size:14px;border-bottom:1px solid #e8e2d7}
+.lh span{color:#797366;font-weight:500}
+.day{padding:12px 20px 6px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#a39c8e}
+.m{padding:14px 20px;border-bottom:1px solid #efe9de;position:relative}
+.m .r{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.m .r span{font-weight:500;color:#797366;font-size:12.5px}
+.m .s{font-size:13.5px;color:#23201b;margin-top:3px}
+.m .p{font-size:13px;color:#797366;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m.future{opacity:.55}
+.m.future::before{content:"";position:absolute;left:8px;top:22px;width:6px;height:6px;border-radius:50%;background:#2f7a55}
+.m.sel{background:#fffdf9;box-shadow:inset 3px 0 0 #6d4ae0}
+.lock{margin:14px 20px;font-size:12.5px;color:#797366;border:1px dashed #d8d1c4;border-radius:10px;padding:10px 12px;line-height:1.5}
+.read{padding:36px 52px 50px}
+.subject{font-size:23px;font-weight:600;letter-spacing:-.01em}
+.from{display:flex;align-items:center;gap:12px;margin:18px 0 28px;font-size:14px}
+.av{width:40px;height:40px;border-radius:50%;border:1px solid #e8e2d7;display:grid;place-items:center;background:#fff}.av img{width:26px}
+.from span{color:#797366;font-size:13px}.from .t{margin-left:auto}
+.body{max-width:600px;font-size:16px;line-height:1.72;color:#4e4a41}
+.body p{margin-bottom:17px}.body b{color:#23201b}
+.stats{display:flex;gap:28px;margin:6px 0 24px;padding:18px 0;border-top:1px solid #e8e2d7;border-bottom:1px solid #e8e2d7}
+.stats b{display:block;font-size:24px;letter-spacing:-.02em}.stats span{font-size:12.5px;color:#797366}
+.code{display:inline-block;font-family:'JetBrains Mono',ui-monospace,monospace;background:#efeafc;color:#5536c4;font-weight:600;padding:2px 8px;border-radius:6px}
+.cta{display:inline-block;background:#6d4ae0;color:#fff;font-weight:600;font-size:16.5px;padding:14px 30px;border-radius:12px;margin-top:8px}
+.note{font-size:12.5px;color:#a39c8e;margin-top:10px}
+@media(max-width:820px){.page{padding:24px 14px}.lead{font-size:30px}.grid{grid-template-columns:minmax(0,1fr)}.list{border-right:0;border-bottom:1px solid #e8e2d7}.read{padding:24px 20px 36px}.stats{gap:18px}.stats b{font-size:19px}}
+</style></head><body>
+<div class="page">
+  <div class="eyebrow">Your free swipes are over</div>
+  <div class="lead">This could be your inbox <i>tomorrow.</i></div>
+  <div class="grid">
+    <div class="list">
+      <div class="lh">Inbox <span>3 unread</span></div>
+      <div class="day">Tomorrow</div>
+      <div class="m future"><div class="r">Hiring Team<span>9:14 AM</span></div><div class="s">Interview invitation: Product Analyst</div><div class="p">Hi Rahul, we'd love to schedule an interview with you…</div></div>
+      <div class="m future"><div class="r">Recruiter<span>11:02 AM</span></div><div class="s">Quick chat this week?</div><div class="p">Your profile stood out. Are you free Thursday for a call…</div></div>
+      <div class="m future"><div class="r">People Ops<span>4:47 PM</span></div><div class="s">Next steps: final round</div><div class="p">Congratulations on clearing the first round! Here's what…</div></div>
+      <div class="lock">These emails start with an application. Keep applying to make them real.</div>
+      <div class="day">Today</div>
+      <div class="m sel"><div class="r">Team Iris<span>Now</span></div><div class="s">Imagine waking up to this tomorrow.</div><div class="p">"We'd love to schedule an interview with you."</div></div>
+    </div>
+    <div class="read">
+      <div class="subject">Imagine waking up to this tomorrow.</div>
+      <div class="from"><div class="av"><img src="logo.png"></div><div><b>Team Iris</b><br><span>to me</span></div><span class="t">Just now</span></div>
+      <div class="body">
+        <p>Hey Rahul,</p>
+        <p><i style="font-family:'EB Garamond',Georgia,serif;font-size:20px;color:#23201b">"We'd love to schedule an interview with you."</i></p>
+        <p>Imagine opening your inbox to those words. The feeling that your next big opportunity is finally happening. That's the moment Iris exists for. <b>70% of Iris users land interviews</b> from the companies they apply to.</p>
+        <div class="stats"><div><b>2M+</b><span>jobs</span></div><div><b>14,000+</b><span>partner companies</span></div><div><b>70%</b><span>get interviews</span></div></div>
+        <p>Your free swipes are over, but your job search doesn't have to stop here. You've already taken the first step. Let's get you to that interview.</p>
+        <p>A little something from us: use <span class="code">IRIS10</span> for an exclusive discount on any plan.</p>
+        <p>We're rooting for you,<br>Team Iris</p>
+        <a class="cta">Get started for ₹4</a>
+        <div class="note">₹4 per application · cancel any time</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

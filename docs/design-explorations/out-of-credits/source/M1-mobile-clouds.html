@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>M1-mobile-clouds</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=EB+Garamond:ital,wght@0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="art.css"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;color:#23201b;-webkit-font-smoothing:antialiased;min-height:100vh;overflow:hidden;position:relative}
+.sf{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif}
+.back{position:absolute;top:26px;left:34px;display:flex;align-items:center;gap:10px;font-size:14px;color:#4e4a41;z-index:5}
+.back img{width:26px}
+.pill{display:inline-flex;align-items:center;gap:9px;background:rgba(255,253,249,.85);backdrop-filter:blur(10px);border:1px solid rgba(35,32,27,.08);border-radius:999px;padding:8px 15px;font-size:13.5px;color:#23201b;font-weight:500}
+.dot{width:8px;height:8px;border-radius:50%;background:#3aa06a;box-shadow:0 0 0 4px rgba(58,160,106,.2)}
+.mailicon{width:38px;height:38px;border-radius:9px;background:linear-gradient(180deg,#5ab0ff,#1a73e8);display:grid;place-items:center;flex:none}
+.mailicon svg{width:22px}
+/* iOS notification */
+.ntf{display:grid;grid-template-columns:38px 1fr auto;gap:11px;align-items:start;background:rgba(246,244,240,.78);backdrop-filter:blur(24px) saturate(1.4);border-radius:22px;padding:12px 14px;color:#111;box-shadow:0 10px 30px -14px rgba(0,0,0,.35)}
+.ntf b{font-size:14.5px;font-weight:600;display:block}
+.ntf .sj{font-size:14px;font-weight:500;margin-top:1px}
+.ntf p{font-size:14px;color:#3c3c43;line-height:1.3;margin-top:1px}
+.ntf .t{font-size:12.5px;color:#6b6b70}
+
+.em{font-size:15px;line-height:1.5;color:#2b2b2e}
+.em .subj{font-size:21px;font-weight:700;line-height:1.2;letter-spacing:-.01em;color:#111}
+.em .from{display:flex;align-items:center;gap:10px;margin:14px 0 16px;padding-bottom:14px;border-bottom:1px solid #e6e6e9}
+.em .av{width:38px;height:38px;border-radius:50%;border:1px solid #e6e6e9;display:grid;place-items:center;background:#fff;flex:none}
+.em .av img{width:24px}
+.em .from b{font-size:14.5px;color:#111}.em .from span{font-size:13px;color:#8a8a8e;display:block}
+.em .from .tm{margin-left:auto;font-size:13px;color:#8a8a8e}
+.em .q{font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:21px;line-height:1.3;color:#111;border-left:3px solid #6d4ae0;padding:2px 0 2px 14px;margin-bottom:16px}
+.em p{margin-bottom:13px}
+.em .live{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#2f7a55;background:#e9f5ee;border-radius:10px;padding:9px 12px;margin-bottom:14px}
+.em .st{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:2px 0 15px}
+.em .st div{background:#f4f1eb;border-radius:11px;padding:9px 10px}
+.em .st b{display:block;font-size:17px;color:#111;letter-spacing:-.01em}.em .st span{font-size:11.5px;color:#6b6760}
+.em .code{font-weight:700;color:#5536c4;background:#efeafc;padding:1px 7px;border-radius:6px}
+.em .cta{display:block;text-align:center;background:#6d4ae0;color:#fff;font-weight:600;font-size:16px;padding:14px;border-radius:13px;margin:4px 0 6px}
+.em .fine{text-align:center;font-size:12px;color:#8a8a8e;margin-bottom:14px}
+
+body{overflow:auto}
+.top{padding:22px 14px 26px;text-align:center;position:relative}
+.top .pill{font-size:12.5px;margin-bottom:12px}
+.top .ntfs{display:grid;gap:7px;text-align:left}
+.top .ntf:nth-child(2){opacity:.92}.top .ntf:nth-child(3){opacity:.8}
+.mailcard{background:#fff;border-radius:24px 24px 0 0;padding:20px 20px 30px;box-shadow:0 -10px 30px -18px rgba(0,0,0,.3)}
+.mailcard .nav{display:flex;justify-content:space-between;color:#0a7cff;font-size:16px;margin-bottom:14px}
+</style></head><body><div class="bg bg-clouds"></div><div class="top"><div class="pill"><span class="dot"></span>Every minute, someone on Iris lands an interview</div><div class="ntfs"><div class="ntf sf" ><div class="mailicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></div><div><b>Hiring Team</b><div class="sj">Interview invitation</div><p>Hi Rahul, we'd love to schedule an interview with you.</p></div><span class="t">now</span></div><div class="ntf sf" ><div class="mailicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></div><div><b>Recruiter</b><div class="sj">Quick call this week?</div><p>Your profile stood out. Are you free Thursday?</p></div><span class="t">6m ago</span></div><div class="ntf sf" ><div class="mailicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></div><div><b>People Ops</b><div class="sj">Next steps: final round</div><p>Congratulations on clearing round one! Here’s what’s next…</p></div><span class="t">32m ago</span></div></div></div><div class="mailcard"><div class="nav sf"><span>‹ Back to jobs</span><span>Iris</span></div><div class="em sf">
+<div class="subj">Imagine waking up to this tomorrow.</div>
+<div class="from"><div class="av"><img src="logo.png"></div><div><b>Team Iris</b><span>To: Rahul</span></div><span class="tm">7:41 AM</span></div>
+<div class="q">“We'd love to schedule an interview with you.”</div>
+<p>Hey Rahul,</p>
+<p>Imagine opening your inbox to those words. That's the moment we built Iris for, and <b>70% of Iris users</b> get interviews from the companies they apply to.</p>
+<div class="live"><span class="dot"></span>Every minute, someone on Iris lands an interview.</div>
+<div class="st"><div><b>2M+</b><span>jobs</span></div><div><b>14,000+</b><span>companies</span></div><div><b>70%</b><span>get interviews</span></div></div>
+<p>Your free swipes are over, but your job search doesn't have to be. Use <span class="code">IRIS10</span> for an exclusive discount on any plan.</p>
+<a class="cta">Get started for ₹4</a><div class="fine">₹4 per application · cancel any time</div>
+<p style="margin:0">We're rooting for you,<br>Team Iris</p>
+</div></div></body></html>

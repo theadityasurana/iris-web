@@ -1,0 +1,139 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>H1-wake-up-to-interviews</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=EB+Garamond:ital,wght@0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="art.css"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;color:#23201b;-webkit-font-smoothing:antialiased;min-height:100vh;overflow:hidden;position:relative}
+.sf{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif}
+.back{position:absolute;top:26px;left:34px;display:flex;align-items:center;gap:10px;font-size:14px;color:#4e4a41;z-index:5}
+.back img{width:26px}
+.pill{display:inline-flex;align-items:center;gap:9px;background:rgba(255,253,249,.85);backdrop-filter:blur(10px);border:1px solid rgba(35,32,27,.08);border-radius:999px;padding:8px 15px;font-size:13.5px;color:#23201b;font-weight:500}
+.dot{width:8px;height:8px;border-radius:50%;background:#3aa06a;box-shadow:0 0 0 4px rgba(58,160,106,.2)}
+.mailicon{width:38px;height:38px;border-radius:9px;background:linear-gradient(180deg,#5ab0ff,#1a73e8);display:grid;place-items:center;flex:none}
+.mailicon svg{width:22px}
+/* iOS notification */
+.ntf{display:grid;grid-template-columns:38px 1fr auto;gap:11px;align-items:start;background:rgba(246,244,240,.78);backdrop-filter:blur(24px) saturate(1.4);border-radius:22px;padding:12px 14px;color:#111;box-shadow:0 10px 30px -14px rgba(0,0,0,.35)}
+.ntf b{font-size:14.5px;font-weight:600;display:block}
+.ntf .sj{font-size:14px;font-weight:500;margin-top:1px}
+.ntf p{font-size:14px;color:#3c3c43;line-height:1.3;margin-top:1px}
+.ntf .t{font-size:12.5px;color:#6b6b70}
+
+.em{font-size:15px;line-height:1.5;color:#2b2b2e}
+.em .subj{font-size:21px;font-weight:700;line-height:1.2;letter-spacing:-.01em;color:#111}
+.em .from{display:flex;align-items:center;gap:10px;margin:14px 0 16px;padding-bottom:14px;border-bottom:1px solid #e6e6e9}
+.em .av{width:38px;height:38px;border-radius:50%;border:1px solid #e6e6e9;display:grid;place-items:center;background:#fff;flex:none}
+.em .av img{width:24px}
+.em .from b{font-size:14.5px;color:#111}.em .from span{font-size:13px;color:#8a8a8e;display:block}
+.em .from .tm{margin-left:auto;font-size:13px;color:#8a8a8e}
+.em .q{font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:21px;line-height:1.3;color:#111;border-left:3px solid #6d4ae0;padding:2px 0 2px 14px;margin-bottom:16px}
+.em p{margin-bottom:13px}
+.em .live{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#2f7a55;background:#e9f5ee;border-radius:10px;padding:9px 12px;margin-bottom:14px}
+.em .st{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:2px 0 15px}
+.em .st div{background:#f4f1eb;border-radius:11px;padding:9px 10px}
+.em .st b{display:block;font-size:17px;color:#111;letter-spacing:-.01em}.em .st span{font-size:11.5px;color:#6b6760}
+.em .code{font-weight:700;color:#5536c4;background:#efeafc;padding:1px 7px;border-radius:6px}
+.em .cta{display:block;text-align:center;background:#6d4ae0;color:#fff;font-weight:600;font-size:16px;padding:14px;border-radius:13px;margin:4px 0 6px}
+.em .fine{text-align:center;font-size:12px;color:#8a8a8e;margin-bottom:14px}
+
+.phone{width:372px;height:790px;border-radius:58px;background:#1b1b1d;padding:11px;box-shadow:0 0 0 2px #3a3a3d inset,0 50px 90px -30px rgba(20,15,10,.55),0 18px 30px -18px rgba(20,15,10,.4);position:relative}
+.screen{width:100%;height:100%;border-radius:47px;overflow:hidden;position:relative;background:#fff}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:112px;height:32px;background:#000;border-radius:20px;z-index:10}
+.status{position:absolute;top:0;left:0;right:0;height:52px;display:flex;justify-content:space-between;align-items:center;padding:4px 30px 0 36px;font-size:15.5px;font-weight:600;z-index:9}
+.status .ic{display:flex;gap:6px;align-items:center}
+.sig{width:17px;height:11px;background:linear-gradient(90deg,currentColor 0 3px,transparent 3px 4.5px,currentColor 4.5px 7.5px,transparent 7.5px 9px,currentColor 9px 12px,transparent 12px 13.5px,currentColor 13.5px);clip-path:polygon(0 75%,22% 75%,22% 50%,48% 50%,48% 25%,74% 25%,74% 0,100% 0,100% 100%,0 100%)}
+.wifi{width:15px;height:11px;background:currentColor;clip-path:polygon(50% 100%,0 30%,15% 12%,50% 0,85% 12%,100% 30%)}
+.bat{width:25px;height:12px;border:1.5px solid currentColor;border-radius:4px;position:relative;opacity:.9}
+.bat::after{content:"";position:absolute;inset:1.5px;right:5px;background:currentColor;border-radius:1.5px}
+.lock{background:url(dusk.webp) center/cover;color:#fff}
+.lock .status{color:#fff}
+.lock .date{text-align:center;margin-top:70px;font-size:18px;font-weight:500;opacity:.95}
+.lock .clock{text-align:center;font-size:92px;font-weight:600;letter-spacing:-.03em;line-height:1;margin-top:2px;text-shadow:0 2px 20px rgba(0,0,0,.08)}
+.lock .stack{position:absolute;left:10px;right:10px;bottom:120px;display:grid;gap:7px}
+.lock .more{text-align:center;font-size:12.5px;color:#fff;opacity:.85;margin-bottom:4px}
+.lock .bottom{position:absolute;bottom:30px;left:0;right:0;display:flex;justify-content:space-between;padding:0 44px}
+.lock .bottom i{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.22);backdrop-filter:blur(10px)}
+.lock .home{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:#fff}
+.mail .status{color:#111;background:#fff}
+.mail .nav{position:absolute;top:52px;left:0;right:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;color:#0a7cff;font-size:17px;background:#fff;z-index:8}
+.mail .nav .ar{display:flex;gap:20px;font-size:18px}
+.mail .body{position:absolute;top:100px;left:0;right:0;bottom:74px;padding:6px 20px 0;overflow:hidden}
+.compact .em{font-size:14px;line-height:1.45}.compact .em .q{font-size:19px;margin-bottom:12px}.compact .em p{margin-bottom:10px}.compact .em .from{margin:10px 0 12px;padding-bottom:10px}.compact .em .subj{font-size:20px}.compact .em .st{margin-bottom:11px}.compact .em .cta{padding:12px}
+.mail .tool{position:absolute;bottom:0;left:0;right:0;height:74px;border-top:1px solid #e6e6e9;background:rgba(250,250,250,.95);display:flex;justify-content:space-around;padding-top:14px;color:#0a7cff;font-size:19px}
+.mail .home{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:#111}
+
+nav{display:flex;align-items:center;gap:30px;max-width:1240px;margin:16px auto 0;padding:12px 14px 12px 22px;font-size:15px;color:#4e4a41;background:rgba(255,253,249,.78);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.7);border-radius:999px;position:relative;z-index:5}
+nav .logo{display:flex;align-items:center;gap:9px;font-family:'EB Garamond',Georgia,serif;font-size:25px;color:#23201b;margin-right:auto}
+nav .logo img{width:30px}
+nav .dl{background:#23201b;color:#fff;padding:10px 18px;border-radius:999px;font-weight:500}
+.serif{font-family:'EB Garamond',Georgia,serif}
+.eyebrow{font-size:19px;color:#23201b}.eyebrow b{color:#5536c4;font-weight:600}
+h1{font-family:'EB Garamond',Georgia,serif;font-weight:500;letter-spacing:-.025em;line-height:.98;color:#1d1a16}
+h1 i{color:#5536c4}
+.sub{font-size:19px;line-height:1.55;color:#3d3932}
+.ctas{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:14px 22px;border-radius:999px;font-weight:600;font-size:15.5px;border:1px solid transparent}
+.btn.dark{background:#23201b;color:#fff;box-shadow:0 8px 20px -10px rgba(0,0,0,.5)}
+.btn.ghost{background:#fffdf9;border-color:rgba(35,32,27,.12);color:#23201b}
+.btn svg{width:16px;height:16px}
+.card{background:#fffdf9;border:1px solid #e8e2d7;border-radius:18px;box-shadow:0 30px 60px -28px rgba(35,32,27,.35)}
+.ntf{text-align:left}
+.tag{display:inline-block;font-size:11px;font-weight:600;background:#e4f2ea;color:#2f7a55;padding:2px 8px;border-radius:999px}
+
+.gn{display:grid;grid-template-columns:42px 1fr;gap:11px;align-items:start;background:rgba(246,244,240,.8);backdrop-filter:blur(24px) saturate(1.4);border-radius:22px;padding:12px 14px;color:#111;box-shadow:0 10px 30px -14px rgba(0,0,0,.35);text-align:left}
+.gav{position:relative;width:40px;height:40px}
+.gav .co{width:40px;height:40px;border-radius:50%;overflow:hidden;background:#fff;display:grid;place-items:center;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
+.gav .co svg{width:26px;height:26px}.gav .co.full svg{width:40px;height:40px}
+.gav .co svg[viewBox="0 0 48 48"] rect[width="48"]{}
+.gav .gb{position:absolute;right:-4px;bottom:-4px;width:20px;height:20px;border-radius:6px;background:#fff;display:grid;place-items:center;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.gav .gb svg{width:15px;height:15px}
+.gn .tr{display:flex;justify-content:space-between;gap:8px}.gn b{font-size:14.5px;font-weight:600}.gn .t{font-size:12.5px;color:#6b6b70;white-space:nowrap}
+.gn .sj{font-size:14px;font-weight:500;margin-top:1px}.gn p{font-size:14px;color:#3c3c43;line-height:1.3;margin-top:1px}
+
+.hero{max-width:1260px;margin:0 auto;display:grid;grid-template-columns:1fr 390px;gap:44px;align-items:center;padding:22px 24px 0;height:880px}
+.copy{background:rgba(255,253,249,.78);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.7);border-radius:30px;padding:34px 42px 30px}
+.tag-line{display:inline-flex;align-items:center;gap:12px;font-size:25px;font-weight:500;color:#23201b;letter-spacing:-.01em}
+.tag-line .tj{font-family:'EB Garamond',Georgia,serif;font-style:italic;font-weight:500;font-size:34px;color:#fff;background:linear-gradient(135deg,#7c5cf0,#5536c4);padding:2px 16px 6px;border-radius:14px;box-shadow:0 10px 24px -12px rgba(85,54,196,.8);transform:rotate(-1.5deg)}
+h1{font-size:74px;margin:20px 0 16px}
+.sub{max-width:540px;margin-bottom:26px;font-size:18.5px}
+.live-strip{margin-top:22px;background:#fffdf9;border:1px solid #e8e2d7;border-radius:18px;display:grid;grid-template-columns:repeat(3,1fr)}
+.live-strip .c{padding:13px 18px;border-right:1px solid #eee8dd}.live-strip .c:last-child{border:0}
+.live-strip .top{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:700;letter-spacing:.12em;color:#2f7a55;text-transform:uppercase}
+.blink{position:relative;width:8px;height:8px;border-radius:50%;background:#34a853}
+.blink::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:#34a853;opacity:.35;animation:pulse 1.6s ease-out infinite}
+.blink{animation:blink 1.6s ease-in-out infinite}
+@keyframes pulse{0%{transform:scale(.6);opacity:.5}100%{transform:scale(1.9);opacity:0}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.live-strip .num{font-family:'EB Garamond',Georgia,serif;font-weight:500;font-size:30px;line-height:1.1;margin-top:4px;letter-spacing:-.01em;font-variant-numeric:tabular-nums;color:#1d1a16}
+.live-strip .num.bump{animation:bump .6s ease}
+@keyframes bump{0%{color:#2f7a55;transform:translateY(-2px)}100%{color:#1d1a16;transform:none}}
+.live-strip .lbl{font-size:12.5px;color:#797366}
+.foot{margin-top:12px;font-size:13.5px;color:#4e4a41;display:flex;align-items:center;gap:8px}
+.phonewrap{transform:scale(.9)}
+</style></head><body><div class="bg bg-clouds grain"></div><nav><div class="logo"><img src="logo.png">Iris</div><span>Jobs</span><span>Pricing</span><span>Blog</span><span>Sign in</span><span class="dl">Download →</span></nav><section class="hero"><div class="copy">
+<div class="tag-line">The <span class="tj">Tinder for jobs</span> with an AI that applies</div>
+<h1>Swipe tonight.<br>Wake up to <i>interviews.</i></h1>
+<p class="sub">Swipe right on jobs you like, and our AI applies for you in seconds. Wake up to recruiters from the companies you've always wanted to work for.</p>
+<div class="ctas"><span class="btn dark"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.37 1.43c0 1.14-.42 2.2-1.25 3.04-.9.9-1.98 1.42-3.15 1.33-.02-1.1.47-2.24 1.27-3.04.86-.87 2.13-1.43 3.13-1.33zM20.5 17.1c-.55 1.27-.82 1.84-1.530 2.96-.99 1.56-2.390 3.5-4.120 3.51-1.540.02-1.940-1-4.030-.99-2.090.01-2.530 1.01-4.070.99-1.730-.02-3.050-1.77-4.040-3.33C-.07 15.9-.36 10.84 1.36 8.2 2.58 6.33 4.5 5.24 6.32 5.24c1.85 0 3.01 1.01 4.54 1.01 1.48 0 2.38-1.01 4.52-1.01 1.62 0 3.33.88 4.55 2.4-4 2.19-3.35 7.9.57 9.46z"/></svg>App Store</span><span class="btn dark"><svg viewBox="0 0 24 24"><path d="M3 2l11 10L3 22z" fill="#34a853"/><path d="M3 2l15 8.5-4 1.5z" fill="#4285f4"/><path d="M3 22l15-8.5-4-1.5z" fill="#ea4335"/><path d="M18 10.5l3 1.5-3 1.5-4-1.5z" fill="#fbbc04"/></svg>Google Play</span><span class="btn ghost">Continue on web</span></div>
+<div class="live-strip">
+<div class="c"><div class="top"><span class="blink"></span>Live</div><div class="num" data-base="8001">8,001</div><div class="lbl">interviews landed</div></div>
+<div class="c"><div class="top"><span class="blink"></span>Live</div><div class="num" data-base="14500">14,500</div><div class="lbl">partner companies</div></div>
+<div class="c"><div class="top"><span class="blink"></span>Live</div><div class="num" data-base="2006050">2,006,050</div><div class="lbl">open jobs</div></div>
+</div>
+<div class="foot">Every minute, someone on Iris lands an interview. 70% of users do.</div>
+</div>
+<div class="phonewrap"><div class="phone"><div class="island"></div><div class="screen lock"><div class="status sf"><span>7:42</span><span class="ic"><i class="sig"></i><i class="wifi"></i><i class="bat"></i></span></div>
+<div class="date sf">Friday, 28 November</div><div class="clock sf">7:42</div>
+<div class="stack"><div class="more sf">3 new interview requests</div><div class="gn sf"><div class="gav"><div class="co"><svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg></div><div class="gb"><svg viewBox="0 0 48 48"><path fill="#4caf50" d="M45,16.2l-5,2.75l-5,4.75L35,40h7c1.657,0,3-1.343,3-3V16.2z"/><path fill="#1e88e5" d="M3,16.2l3.614,1.71L13,23.7V40H6c-1.657,0-3-1.343-3-3V16.2z"/><polygon fill="#e53935" points="35,11.2 24,19.45 13,11.2 12,17 13,23.7 24,31.95 35,23.7 36,17"/><path fill="#c62828" d="M3,12.298V16.2l10,7.5V11.2L9.876,8.859C9.132,8.301,8.228,8,7.298,8h0C4.924,8,3,9.924,3,12.298z"/><path fill="#fbc02d" d="M45,12.298V16.2l-10,7.5V11.2l3.124-2.341C38.868,8.301,39.772,8,40.702,8h0C43.076,8,45,9.924,45,12.298z"/></svg></div></div>
+<div><div class="tr"><b>Google Recruiting</b><span class="t">now</span></div><div class="sj">Interview invitation: Software Engineer</div><p>Hi Rahul, we'd love to schedule a first-round interview with you.</p></div></div><div class="gn sf"><div class="gav"><div class="co full"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#76b900"/><path d="M8 24c5-8 13-12 21-11 6 1 10 5 12 11-2 6-6 10-12 11-8 1-16-3-21-11z" fill="none" stroke="#fff" stroke-width="3.2"/><path d="M17 24c2-5 7-7 11-6 3 1 5 3 5 6s-2 5-5 6c-4 1-8-1-9-4" fill="none" stroke="#fff" stroke-width="3"/><circle cx="26" cy="24" r="2.6" fill="#fff"/></svg></div><div class="gb"><svg viewBox="0 0 48 48"><path fill="#4caf50" d="M45,16.2l-5,2.75l-5,4.75L35,40h7c1.657,0,3-1.343,3-3V16.2z"/><path fill="#1e88e5" d="M3,16.2l3.614,1.71L13,23.7V40H6c-1.657,0-3-1.343-3-3V16.2z"/><polygon fill="#e53935" points="35,11.2 24,19.45 13,11.2 12,17 13,23.7 24,31.95 35,23.7 36,17"/><path fill="#c62828" d="M3,12.298V16.2l10,7.5V11.2L9.876,8.859C9.132,8.301,8.228,8,7.298,8h0C4.924,8,3,9.924,3,12.298z"/><path fill="#fbc02d" d="M45,12.298V16.2l-10,7.5V11.2l3.124-2.341C38.868,8.301,39.772,8,40.702,8h0C43.076,8,45,9.924,45,12.298z"/></svg></div></div>
+<div><div class="tr"><b>NVIDIA Talent Acquisition</b><span class="t">6m ago</span></div><div class="sj">Next steps for your application</div><p>Your profile stood out to our team. Are you free this week?</p></div></div><div class="gn sf"><div class="gav"><div class="co"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#fff"/><rect x="9" y="9" width="14" height="14" fill="#f25022"/><rect x="25" y="9" width="14" height="14" fill="#7fba00"/><rect x="9" y="25" width="14" height="14" fill="#00a4ef"/><rect x="25" y="25" width="14" height="14" fill="#ffb900"/></svg></div><div class="gb"><svg viewBox="0 0 48 48"><path fill="#4caf50" d="M45,16.2l-5,2.75l-5,4.75L35,40h7c1.657,0,3-1.343,3-3V16.2z"/><path fill="#1e88e5" d="M3,16.2l3.614,1.71L13,23.7V40H6c-1.657,0-3-1.343-3-3V16.2z"/><polygon fill="#e53935" points="35,11.2 24,19.45 13,11.2 12,17 13,23.7 24,31.95 35,23.7 36,17"/><path fill="#c62828" d="M3,12.298V16.2l10,7.5V11.2L9.876,8.859C9.132,8.301,8.228,8,7.298,8h0C4.924,8,3,9.924,3,12.298z"/><path fill="#fbc02d" d="M45,12.298V16.2l-10,7.5V11.2l3.124-2.341C38.868,8.301,39.772,8,40.702,8h0C43.076,8,45,9.924,45,12.298z"/></svg></div></div>
+<div><div class="tr"><b>Microsoft Careers</b><span class="t">24m ago</span></div><div class="sj">Let's schedule your interview</div><p>Congratulations! The hiring team would like to meet you.</p></div></div></div>
+<div class="bottom"><i></i><i></i></div><div class="home"></div></div></div></div></section>
+<script>
+// Shared across visitors: each counter = base + minutes since START (+1 every minute).
+const START = Date.UTC(2026, 10, 26, 0, 0, 0);
+const els = [...document.querySelectorAll('.num[data-base]')]; const last = new Map();
+function tick(){ const m = Math.max(0, Math.floor((Date.now() - START) / 60000));
+  els.forEach(el => { const v = +el.dataset.base + m;
+    if (last.get(el) !== v) { if (last.has(el)) { el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+      el.textContent = v.toLocaleString('en-US'); last.set(el, v); } }); }
+if (!location.hash.includes('static')) { tick(); setInterval(tick, 1000); }
+</script></body></html>

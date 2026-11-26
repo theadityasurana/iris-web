@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f8f5ef;--surface:#fffdf9;--line:#e8e2d7;--ink:#23201b;--ink2:#4e4a41;--ink3:#797366;--ink4:#a39c8e;--brand:#6d4ae0;--brand-ink:#5536c4;--soft:#efeafc;--ok:#2f7a55;--ok-soft:#e4f2ea;--serif:'EB Garamond',Georgia,serif}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;overflow:hidden}
+nav{display:flex;align-items:center;gap:30px;max-width:1240px;margin:0 auto;padding:22px 32px;font-size:15px;color:var(--ink2)}
+nav .logo{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-size:25px;color:var(--ink);margin-right:auto}
+nav .logo img{width:30px}
+nav .dl{background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-weight:500}
+.serif{font-family:var(--serif)}
+.ctas{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:14px 22px;border-radius:999px;font-weight:600;font-size:15.5px;border:1px solid transparent}
+.btn.dark{background:var(--ink);color:#fff}
+.btn.brand{background:var(--brand);color:#fff}
+.btn.ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.btn svg{width:16px;height:16px}
+.proof{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink3)}
+.dot{width:8px;height:8px;border-radius:50%;background:#3aa06a;box-shadow:0 0 0 4px rgba(58,160,106,.18)}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13.5px;color:var(--ink2)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 50px -28px rgba(35,32,27,.28)}
+.av{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:14px;color:#fff;flex:none}

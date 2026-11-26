@@ -1,0 +1,64 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1 · Inbox client</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#f8f5ef;color:#23201b;min-height:100vh;-webkit-font-smoothing:antialiased}
+.app{max-width:1120px;margin:40px auto;background:#fffdf9;border:1px solid #e8e2d7;border-radius:16px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(35,32,27,.18)}
+.bar{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid #e8e2d7;background:#fbf9f4}
+.dots{display:flex;gap:7px}.dots i{width:11px;height:11px;border-radius:50%;background:#e2dccf;display:block}
+.search{flex:1;max-width:460px;margin:0 auto;background:#f2eee6;border-radius:9px;padding:8px 14px;font-size:13px;color:#a39c8e}
+.tools{display:flex;gap:18px;color:#797366;font-size:13px}
+.wrap{display:grid;grid-template-columns:210px 1fr}
+.side{border-right:1px solid #e8e2d7;padding:18px 12px;font-size:14px;color:#4e4a41}
+.side .compose{background:#23201b;color:#fffdf9;border-radius:10px;padding:10px 14px;font-weight:600;margin-bottom:16px;font-size:13.5px}
+.side div.f{display:flex;justify-content:space-between;padding:8px 12px;border-radius:8px}
+.side div.on{background:#efeafc;color:#5536c4;font-weight:600}
+.main{padding:28px 44px 56px}
+.subject{font-size:24px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:12px}
+.tag{font-size:11.5px;font-weight:500;background:#f2eee6;color:#797366;border-radius:6px;padding:3px 8px}
+.from{display:flex;align-items:center;gap:12px;margin:22px 0 30px}
+.av{width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #e8e2d7;display:grid;place-items:center}
+.av img{width:28px}
+.from b{font-weight:600;font-size:14.5px}.from span{color:#797366;font-size:13px}
+.from .t{margin-left:auto;color:#797366;font-size:13px}
+.body{max-width:620px;font-size:16px;line-height:1.7;color:#4e4a41}
+.body p{margin-bottom:18px}
+.hero{text-align:center;padding:34px 20px 30px;border-bottom:1px solid #e8e2d7;margin-bottom:28px}
+.hero h1{font-size:30px;color:#23201b;letter-spacing:-.02em;font-weight:700}
+.hero q{display:block;margin-top:10px;font-size:18px;color:#4e4a41}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #e8e2d7;border-radius:12px;margin:26px 0;overflow:hidden}
+.stats div{padding:16px 14px;text-align:center;border-right:1px solid #e8e2d7}.stats div:last-child{border:0}
+.stats b{display:block;font-size:22px;color:#23201b;letter-spacing:-.02em}.stats span{font-size:12.5px;color:#797366}
+.code{background:#efeafc;border:1px dashed #b9a7f0;border-radius:10px;padding:14px 16px;color:#5536c4;font-weight:600}
+.cta{display:inline-block;background:#6d4ae0;color:#fff;font-weight:600;font-size:17px;padding:15px 34px;border-radius:12px;text-decoration:none;margin:10px 0 0}
+.ctawrap{text-align:center;margin-top:30px}
+.ctawrap small{display:block;color:#a39c8e;font-size:12.5px;margin-top:10px}
+@media(max-width:760px){.app{margin:0;border-radius:0;border:0}.wrap{grid-template-columns:1fr}.side,.tools,.search{display:none}.main{padding:22px 20px 40px}.subject{font-size:20px}.hero h1{font-size:24px}.stats b{font-size:18px}}
+</style></head><body>
+<div class="app">
+  <div class="bar"><div class="dots"><i></i><i></i><i></i></div><div class="search">Search mail</div><div class="tools"><span>Archive</span><span>Reply</span></div></div>
+  <div class="wrap">
+    <aside class="side">
+      <div class="compose">✎ Compose</div>
+      <div class="f on"><span>Inbox</span><span>1</span></div><div class="f"><span>Starred</span></div><div class="f"><span>Sent</span></div><div class="f"><span>Drafts</span></div>
+    </aside>
+    <main class="main">
+      <div class="subject">Imagine waking up to this tomorrow. <span class="tag">Inbox</span></div>
+      <div class="from"><div class="av"><img src="logo.png"></div><div><b>Team Iris</b> <span>&lt;hello@irisjobs.live&gt;</span><br><span>to me</span></div><div class="t">Just now</div></div>
+      <div class="body">
+        <div class="hero"><h1>Imagine waking up to this tomorrow.</h1><q>We'd love to schedule an interview with you.</q></div>
+        <p>Hey Rahul,</p>
+        <p>Imagine the excitement. The feeling that your next big opportunity is finally happening. That's the moment we built Iris for, and it happens more often than you'd think: <b style="color:#23201b">70% of Iris users land interviews</b> from the companies they apply to.</p>
+        <div class="stats"><div><b>2M+</b><span>open jobs</span></div><div><b>14,000+</b><span>partner companies</span></div><div><b>70%</b><span>land interviews</span></div></div>
+        <p>Your free swipes are over, but your job search doesn't have to stop here. The right role is already out there. You just have to keep applying.</p>
+        <p>You've already taken the first step. Here's a little something to help you along the way:</p>
+        <div class="code">Use code IRIS10 for an exclusive discount on any plan.</div>
+        <p style="margin-top:26px">We're rooting for you,<br>Team Iris</p>
+        <div class="ctawrap"><a class="cta">Get started for ₹4</a><small>₹4 per application · cancel any time</small></div>
+      </div>
+    </main>
+  </div>
+</div>
+</body></html>

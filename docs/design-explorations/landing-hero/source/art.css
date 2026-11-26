@@ -1,0 +1,10 @@
+.grain::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .45 0 0 0 0 .4 0 0 0 .28 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background-size:cover;background-position:center}
+.bg-clouds{background-image:linear-gradient(180deg,rgba(255,255,255,0) 40%,rgba(248,245,239,.92) 100%),url(clouds.webp)}
+.bg-dusk{background-image:linear-gradient(180deg,rgba(248,245,239,.15),rgba(248,245,239,.35)),url(dusk.webp)}
+.bg-sunrise{background-image:url(sunrise.webp)}
+.bg-paint{background-image:url(paint.svg)}
+.bg-mesh{background:radial-gradient(60% 70% at 12% 20%,#fbd9c4 0,transparent 60%),radial-gradient(55% 60% at 88% 18%,#d9e4fb 0,transparent 60%),radial-gradient(60% 60% at 70% 95%,#e7defb 0,transparent 60%),radial-gradient(50% 60% at 15% 95%,#fdeccb 0,transparent 60%),#f8f2ea}
+.bg-blinds{background:radial-gradient(80% 70% at 75% 30%,#fff3dd 0,#f6e7cf 45%,#ecdcc4 100%)}
+.bg-blinds::before{content:"";position:absolute;inset:-30%;background:repeating-linear-gradient(-28deg,transparent 0 70px,rgba(255,248,232,.95) 70px 150px);filter:blur(16px);opacity:.9;transform:translateX(12%)}
+.bg-blinds::after{content:"";position:absolute;inset:0;background:radial-gradient(40% 50% at 18% 80%,rgba(120,100,70,.18),transparent 70%)}
