@@ -166,7 +166,6 @@ function StepResume({ data, update, onSkipResume, onBusy }: { data: OnboardingDa
               <b>Upload your resume</b>
               <span className="t-callout muted">Drag it here, or click to choose a file</span>
             </button>
-            <button type="button" className="t-caption link" style={{ marginTop: 10 }} onClick={onSkipResume}>I'll add it later</button>
           </>
         )}
         {(picked || savedPath) && <div className="ob-resume-preview"><ResumePreview file={picked} path={picked ? null : savedPath} fileName={picked?.name ?? savedPath ?? ''} /></div>}

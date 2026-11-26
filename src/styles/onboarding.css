@@ -43,7 +43,7 @@
 .ob-file { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: var(--r-3); background: var(--ok-soft); color: var(--ok); }
 .ob-file > svg { flex-shrink: 0; }
 .ob-parsing { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-radius: var(--r-3); background: var(--surface-2); }
-.ob-nav { position: sticky; bottom: 0; display: flex; gap: 12px; padding: 16px 0 calc(8px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, transparent, var(--bg) 26%); }
+.ob-nav { position: sticky; bottom: 0; display: flex; gap: 12px; padding: 16px 0 calc(8px + env(safe-area-inset-bottom)); background: none; }
 .ob-nav .btn.next { flex: 1; }
 .ob-nav .btn[disabled] { opacity: 0.45; }
 .ob-err { margin-top: 12px; }
