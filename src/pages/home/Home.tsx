@@ -78,7 +78,7 @@ export default function Home() {
     <div className="page wide">
       <AutoInstallSheet />
       <section className="hero-card">
-        <img src="/media/onboarding/final.webp" alt="" width={880} height={1100} />
+        <img src="/media/landing/dusk.webp" alt="" width={2000} height={1125} />
         <div className="hero-copy">
           <div className="t-overline">{firstName ? `Welcome back, ${firstName}` : 'Your goal'}</div>
           <h1 className="t-display">{goal ? <>{goal}.</> : <>Where do you want to <em>land?</em></>}</h1>

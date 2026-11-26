@@ -16,10 +16,15 @@ import '@web/styles/premium.css';
 import '@web/styles/sky.css';
 
 // Apply the saved theme before first paint. "System" is the absence of a saved value.
-try {
-  const theme = localStorage.getItem('iris-theme');
-  if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
-} catch { /* private mode */ }
+// Light by default for everyone (the device's dark mode is ignored); dark only if chosen in Settings.
+let savedTheme: string | null = null;
+try { savedTheme = localStorage.getItem('iris-theme-v2'); } catch { /* private mode */ }
+document.documentElement.setAttribute('data-theme', savedTheme === 'dark' ? 'dark' : 'light');
+
+// Makes /app installable as a desktop app (Chrome/Edge "Install", Safari "Add to Dock").
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('/app/sw.js', { scope: '/app/' }).catch(() => {}); });
+}
 
 // Partner links (/?code=ARJUN10) land straight in /app too: keep the code for checkout.
 capturePromoFromUrl();

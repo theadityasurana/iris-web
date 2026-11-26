@@ -1,9 +1,10 @@
 import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { isPhone, isStandalone, promptInstall, useInstall } from '@web/lib/pwa';
 import { useLiveCount } from '@web/lib/liveStats';
 import { useEffect, useState, type ComponentType } from 'react';
 import {
   Home, BriefcaseBusiness, Send, Mail, Sparkles, User, Bookmark, CreditCard, Settings, LifeBuoy, Gift,
-  PanelLeft, ChevronLeft, ChevronRight, ClipboardList, Menu, X, Moon, Sun, LogOut, Compass, Plug, FileText,
+  PanelLeft, ChevronLeft, ChevronRight, ClipboardList, Menu, X, LogOut, Compass, Plug, FileText,
 } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useUnreadMail } from '@web/lib/queries';
@@ -92,6 +93,25 @@ function LiveInterviews() {
   );
 }
 
+function InstallDesktop() {
+  const mode = useInstall();
+  const [help, setHelp] = useState(false);
+  const ua = navigator.userAgent;
+  const macSafari = /Macintosh/.test(ua) && /Safari\//.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS/.test(ua);
+  if (isPhone || isStandalone()) return null;
+  if (mode !== 'prompt' && !macSafari) return null;
+  const onClick = () => { if (mode === 'prompt') void promptInstall(); else setHelp(h => !h); };
+  return (
+    <div className="install-desk">
+      <button type="button" className="install-desk-btn" onClick={onClick} title="Install Iris on this computer">
+        <img src="/pwa/icon-192.png" alt="" width={22} height={22} />
+        <span className="nav-text"><b>Install Iris</b><small>{macSafari ? 'Add it to your Dock' : 'Open it like an app'}</small></span>
+      </button>
+      {help && <p className="install-desk-help nav-text">In Safari's menu bar choose <b>File → Add to Dock</b>. Iris then opens in its own window.</p>}
+    </div>
+  );
+}
+
 function GetTheApp() {
   return (
     <div className="get-app">
@@ -112,28 +132,23 @@ type Theme = 'light' | 'dark';
 function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     try {
-      const saved = localStorage.getItem('iris-theme');
+      const saved = localStorage.getItem('iris-theme-v2');
       if (saved === 'light' || saved === 'dark') return saved;
     } catch { /* private mode */ }
-    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return 'light';
   });
   const toggle = () => setTheme(current => {
     const next: Theme = current === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
-    try { localStorage.setItem('iris-theme', next); } catch { /* private mode */ }
+    try { localStorage.setItem('iris-theme-v2', next); } catch { /* private mode */ }
     return next;
   });
   return { theme, toggle };
 }
 
-function ThemeAndSignOut({ theme, onToggle, onSignOut, busy }: { theme: Theme; onToggle: () => void; onSignOut: () => void; busy: boolean }) {
-  const dark = theme === 'dark';
+function ThemeAndSignOut({ onSignOut, busy }: { theme?: Theme; onToggle?: () => void; onSignOut: () => void; busy: boolean }) {
   return (
     <>
-      <button className="nav-item" onClick={onToggle} title={dark ? 'Switch to light mode' : 'Switch to dark mode'} aria-pressed={dark}>
-        {dark ? <Sun size={17} /> : <Moon size={17} />}
-        <span className="nav-text">{dark ? 'Light mode' : 'Dark mode'}</span>
-      </button>
       <button className="nav-item" onClick={onSignOut} disabled={busy} title="Sign out">
         <LogOut size={17} />
         <span className="nav-text">{busy ? 'Signing out…' : 'Sign out'}</span>
@@ -199,6 +214,7 @@ export function AppShell() {
         <NavItems items={YOU} unread={unread} />
         <div className="sidebar-foot">
           <LiveInterviews />
+          <InstallDesktop />
           <GetTheApp />
           <hr className="nav-rule" />
           <NavItems items={ACCOUNT} unread={unread} />

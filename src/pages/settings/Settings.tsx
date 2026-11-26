@@ -23,17 +23,17 @@ const STYLES = [
   { value: 'honest', label: 'Honest', note: 'Reorders and emphasises the experience relevant to each job.' },
   { value: 'aggressive', label: 'Aggressive', note: 'Stretches to match the job requirements as closely as possible.' },
 ] as const;
-const THEME_KEY = 'iris-theme';
+const THEME_KEY = 'iris-theme-v2';
 
 function useTheme() {
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
-    try { const t = localStorage.getItem(THEME_KEY); if (t === 'light' || t === 'dark') return t; } catch { /* private mode */ }
-    return 'system';
+  // Light unless the user picked Dark here; the device setting is ignored.
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try { if (localStorage.getItem(THEME_KEY) === 'dark') return 'dark'; } catch { /* private mode */ }
+    return 'light';
   });
   useEffect(() => {
-    try { if (theme === 'system') localStorage.removeItem(THEME_KEY); else localStorage.setItem(THEME_KEY, theme); } catch { /* private mode */ }
-    if (theme === 'system') document.documentElement.removeAttribute('data-theme');
-    else document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem(THEME_KEY, theme); } catch { /* private mode */ }
+    document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
   return [theme, setTheme] as const;
 }
@@ -69,7 +69,6 @@ function Personal() {
         <div className="segmented" role="group" aria-label="Theme" style={{ marginTop: 12 }}>
           <button className={theme === 'light' ? 'on' : ''} onClick={() => setTheme('light')}><Sun size={14} />Light</button>
           <button className={theme === 'dark' ? 'on' : ''} onClick={() => setTheme('dark')}><Moon size={14} />Dark</button>
-          <button className={theme === 'system' ? 'on' : ''} onClick={() => setTheme('system')}>System</button>
         </div>
       </section>
       <section className="p-card" style={{ marginTop: 16 }}>

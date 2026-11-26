@@ -8,6 +8,7 @@
 /download  /  200
 /download/  /  200
 /app/assets/*  /app/assets/:splat  200
+/app/sw.js  /app/sw.js  200
 /app/logo.png  /app/logo.png  200
 /app/logo.webp  /app/logo.webp  200
 /app/*  /app/  200

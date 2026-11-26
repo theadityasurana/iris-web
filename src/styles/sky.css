@@ -54,7 +54,13 @@
 
 /* Jobs page: the swipe deck stacks cards, so see-through cards show the ones behind.
    Everything on this page gets solid surfaces again (the sky still shows around it). */
-:root[data-theme='light'] .jobs-page { --surface: #ffffff; --surface-2: #f3f5f9; --field: #ffffff; --bg-sunken: #f3f5f9; --card-head: #f3f5f9; }
+:root[data-theme='light'] :is(.jobs-page, .mail) { --surface: #ffffff; --surface-2: #f3f5f9; --field: #ffffff; --bg-sunken: #f3f5f9; --card-head: #f3f5f9; }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme='dark']) .jobs-page { --surface: #ffffff; --surface-2: #f3f5f9; --field: #ffffff; --bg-sunken: #f3f5f9; --card-head: #f3f5f9; }
+  :root:not([data-theme='dark']) :is(.jobs-page, .mail) { --surface: #ffffff; --surface-2: #f3f5f9; --field: #ffffff; --bg-sunken: #f3f5f9; --card-head: #f3f5f9; }
 }
+
+/* Home banner: sunset painting with a soft violet wash instead of the dark brown. */
+:root[data-theme='light'] .hero-card { background: #5a4a8a; }
+:root[data-theme='light'] .hero-card img { opacity: 1; }
+:root[data-theme='light'] .hero-card::after { background: linear-gradient(180deg, rgba(48, 34, 92, 0.18) 0%, rgba(48, 34, 92, 0.62) 100%); }
+:root[data-theme='light'] .hero-card .hero-alt { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.6); color: #fff; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
