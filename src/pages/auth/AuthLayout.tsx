@@ -7,6 +7,17 @@ import { useLocation } from 'react-router-dom';
 import { useAuth, APPLE_WEB_ENABLED, type OAuthProvider } from '@web/auth/AuthProvider';
 import { useToast } from '@web/ui/Toast';
 
+function PlayColor() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3.6 2.2 13.4 12 3.6 21.8c-.36-.2-.6-.6-.6-1.06V3.26c0-.46.24-.86.6-1.06z" fill="#00d7fe" />
+      <path d="M16.7 8.7 4.63 2.19c-.35-.19-.73-.16-1.03.01L13.4 12l3.3-3.3z" fill="#32bb76" />
+      <path d="M16.7 15.3 13.4 12 3.6 21.8c.3.17.68.2 1.03.01L16.7 15.3z" fill="#f43249" />
+      <path d="M20.42 10.82 16.7 8.7 13.4 12l3.3 3.3 3.72-2.12c.73-.42.73-1.47 0-1.88z" fill="#ffd400" />
+    </svg>
+  );
+}
+
 export function AuthLayout({ title, subtitle, children, footer }: { title: string; subtitle?: ReactNode; children: ReactNode; footer?: ReactNode }) {
   useLightTheme();
   useEffect(() => { document.title = `${title} | Iris`; }, [title]);
@@ -26,8 +37,12 @@ export function AuthLayout({ title, subtitle, children, footer }: { title: strin
         <div className="auth-stores">
           <span className="t-overline muted">Or get the app</span>
           <div>
-            <a href="https://apps.apple.com/in/app/nextquark/id6761863089" target="_blank" rel="noopener" className="btn outline"><AppleMark />Download on iOS</a>
-            <a href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener" className="btn outline"><PlayMark />Get it on Google Play</a>
+            <a href="https://apps.apple.com/in/app/nextquark/id6761863089" target="_blank" rel="noopener" className="store-badge" aria-label="Download on the App Store">
+              <AppleMark /><span><small>Download on the</small><b>App Store</b></span>
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke" target="_blank" rel="noopener" className="store-badge" aria-label="Get it on Google Play">
+              <PlayColor /><span><small>GET IT ON</small><b>Google Play</b></span>
+            </a>
           </div>
         </div>
       </div>
