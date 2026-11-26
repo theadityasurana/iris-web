@@ -243,6 +243,10 @@ a.bj-card:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px var(-
 .bj-foot b, .bj-foot small { display: block; }
 .bj-foot b { font-weight: 600; font-size: 14px; }
 .bj-foot small { color: var(--ink-3); font-size: 12px; }
+.bj-apply { flex-shrink: 0; }
+.bj-grid .apply-flip, .bj-grid .apply-flip-front { height: 100%; }
+.bj-grid .apply-flip-front > .bj-card { height: 100%; }
+.bj-grid .apply-flip-back { border-radius: var(--r-4); }
 .bj-go { flex-shrink: 0; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); }
 .bj-more { display: flex; justify-content: center; margin-top: 26px; }
 @media (max-width: 640px) {

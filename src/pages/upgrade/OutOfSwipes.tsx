@@ -4,7 +4,7 @@
  * emails) as a phone lock screen + an opened email, then hands off to Plans.
  */
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CalendarDays, Clock, Video } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useRegion } from '@web/lib/webBilling';
 import '@web/styles/upgrade.css';
@@ -22,10 +22,10 @@ function Logos() {
   );
 }
 
-function Notifications({ name }: { name: string }) {
+function Notifications({ name, role }: { name: string; role: string }) {
   const hi = name ? `Hi ${name}, ` : 'Hi, ';
   const items = [
-    { logo: 'google', full: false, sender: 'Google Recruiting', time: 'now', subject: 'Interview invitation: Software Engineer', preview: `${hi}we'd love to schedule a first-round interview with you.` },
+    { logo: 'google', full: false, sender: 'Google Recruiting', time: 'now', subject: `Interview invitation: ${role}`, preview: `${hi}we'd love to schedule a first-round interview with you.` },
     { logo: 'nvidia', full: true, sender: 'NVIDIA Talent Acquisition', time: '6m ago', subject: 'Next steps for your application', preview: 'Your profile stood out to our team. Are you free this week?' },
     { logo: 'msft', full: false, sender: 'Microsoft Careers', time: '24m ago', subject: "Let's schedule your interview", preview: 'Congratulations! The hiring team would like to meet you.' },
   ];
@@ -53,29 +53,35 @@ export default function OutOfSwipes() {
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { data: region = 'INTL' } = useRegion();
-  const name = ((profile as { first_name?: string } | null)?.first_name || '').trim();
+  const p = profile as { first_name?: string; name?: string; desiredRoles?: string[] } | null;
+  const name = (p?.first_name || (p?.name || '').split(' ')[0] || '').trim();
+  const role = (p?.desiredRoles?.[0] || 'Software Engineer').trim();
   const price = region === 'IN' ? '₹4' : region === 'AF' ? 'under $0.05' : 'under $0.10';
   const goPlans = () => navigate('/app/plans');
   const tomorrow = new Date(Date.now() + 864e5).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
   const cta = `Get started for ${price}`;
 
+  // What they could wake up to: a recruiter's interview email, addressed to them.
   const email = (
     <div className="oc-em">
-      <div className="oc-subj">Imagine waking up to this tomorrow.</div>
+      <div className="oc-subj">Interview invitation: {role} at Google</div>
       <div className="oc-from">
-        <div className="oc-fav"><img src="/logo.webp" alt="" /></div>
-        <div><b>Team Iris</b><span>To: {name || 'you'}</span></div>
-        <span className="oc-tm">Just now</span>
+        <div className="oc-fav"><svg width="24" height="24"><use href="#oc-google" /></svg></div>
+        <div><b>Priya Raman</b><span>Google Recruiting · to {name || 'you'}</span></div>
+        <span className="oc-tm">7:41 AM</span>
       </div>
-      <div className="oc-q">“We'd love to schedule an interview with you.”</div>
-      <p>Hey {name || 'there'},</p>
-      <p>Imagine opening your inbox to those words. That's the moment we built Iris for, and <b>70% of Iris users</b> get interviews from the companies they apply to.</p>
-      <div className="oc-live"><span className="oc-blink" />Every minute, someone on Iris lands an interview.</div>
-      <div className="oc-stats"><div><b>2M+</b><span>jobs</span></div><div><b>14,000+</b><span>companies</span></div><div><b>70%</b><span>get interviews</span></div></div>
-      <p>Your free swipes are over, but your job search doesn't have to be. Use <span className="oc-code">{DISCOUNT_CODE}</span> at checkout for an exclusive discount on any plan.</p>
-      <button type="button" className="oc-cta" onClick={goPlans}>{cta}</button>
-      <div className="oc-fine">{price} per application · cancel any time</div>
-      <p className="oc-sign">We're rooting for you,<br />Team Iris</p>
+      <p>Hi {name || 'there'},</p>
+      <p>I'm Priya, a recruiter on the hiring team at Google. We came across your application for the <b>{role}</b> role and really liked your profile. Your experience stood out to the team.</p>
+      <p>We'd love to schedule a quick 30-minute intro call to learn more about you and walk you through the next steps.</p>
+      <p>Could you pick a time that works for you this week?</p>
+      <div className="oc-cal">
+        <div className="oc-cal-h"><CalendarDays size={16} /><b>Intro call with Google</b></div>
+        <div className="oc-cal-m"><span><Clock size={13} />30 min</span><span><Video size={13} />Google Meet</span></div>
+        <div className="oc-cal-link">calendly.com/priya-raman-google/intro-call</div>
+        <div className="oc-cal-btn">Book a time →</div>
+      </div>
+      <p>Looking forward to speaking with you!</p>
+      <p className="oc-sign">Best,<br /><b>Priya Raman</b><br /><span className="oc-sig2">Technical Recruiter, Google</span></p>
     </div>
   );
 
@@ -100,22 +106,27 @@ export default function OutOfSwipes() {
               <Status /><div className="oc-island" />
               <div className="oc-date">{tomorrow}</div>
               <div className="oc-clock">7:42</div>
-              <div className="oc-stack"><div className="oc-more">3 new interview requests</div><Notifications name={name} /></div>
+              <div className="oc-stack"><div className="oc-more">3 new interview requests</div><Notifications name={name} role={role} /></div>
               <div className="oc-home" />
             </div>
           </div>
 
-          <div className="oc-notifs-m" aria-hidden="true"><Notifications name={name} /></div>
+          <div className="oc-notifs-m" aria-hidden="true"><Notifications name={name} role={role} /></div>
 
           <div className="oc-phone oc-mail">
             <div className="oc-screen">
               <Status /><div className="oc-island" />
-              <div className="oc-nav"><span>‹ Inbox</span><span>Iris</span></div>
+              <div className="oc-nav"><span>‹ Inbox</span><span className="oc-nav-ic">⌃ ⌄</span></div>
               <div className="oc-body">{email}</div>
               <div className="oc-home" />
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="oc-sticky">
+        <div><b>This could be your inbox.</b><span>Use <b>{DISCOUNT_CODE}</b> for an exclusive discount</span></div>
+        <button type="button" onClick={goPlans}>{cta}</button>
       </div>
     </div>
   );

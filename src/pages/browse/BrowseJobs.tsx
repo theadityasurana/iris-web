@@ -6,12 +6,15 @@
  * /api/jobs, so this page adds very little load on Postgres.
  */
 import { useEffect, useState, type FormEvent } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { ArrowRight, MapPin, RotateCcw, Search, WifiOff, X } from 'lucide-react';
+import { MapPin, RotateCcw, Search, WifiOff, X } from 'lucide-react';
 import { CompanyLogo, Empty, timeAgo } from '@web/ui/bits';
 import { useAuth } from '@web/auth/AuthProvider';
-import { fetchJobsBatch } from '@/lib/jobs';
+import { fetchJobById, fetchJobsBatch } from '@/lib/jobs';
+import { useToast } from '@web/ui/Toast';
+import { ApplyFlip, APPLY_FLIP_LONG_MS, APPLY_OUT_MS, type ApplyPhase } from '@web/pages/jobs/JobParts';
+import { useJobActions } from '@web/pages/jobs/useJobActions';
 import { getDefaultJobLevelsFromExperience } from '@/lib/feed-policy';
 import { nearFromProfile } from '@/lib/feed-home';
 import { readServerJobCache } from '@/lib/server-job-cache';
@@ -71,7 +74,9 @@ async function fetchPage(qs: string): Promise<Page> {
   return res.json();
 }
 
-function JobCard({ job, index }: { job: Card; index: number }) {
+const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+function JobCard({ job, index, onApply, busy }: { job: Card; index: number; onApply: () => void; busy: boolean }) {
   return (
     <Link to={`/app/jobs/${encodeURIComponent(job.id)}`} className={`bj-card ${TINTS[index % TINTS.length]}`}>
       <div className="bj-top">
@@ -87,13 +92,49 @@ function JobCard({ job, index }: { job: Card; index: number }) {
       <div className="bj-foot">
         <CompanyLogo name={job.company} website={job.website} size="sm" />
         <div className="grow"><b className="ellipsis">{job.company}</b><small className="ellipsis">{[job.postedText ?? (job.posted && timeAgo(job.posted)), job.ats].filter(Boolean).join(' · ')}</small></div>
-        <span className="bj-go" aria-hidden="true"><ArrowRight size={16} /></span>
+        <button type="button" className="btn sm bj-apply" disabled={busy} onClick={e => { e.preventDefault(); e.stopPropagation(); onApply(); }}>Apply</button>
       </div>
     </Link>
   );
 }
 
+/** Apply from a Browse card: flip to the "AI is applying" face for ~5s, then the card leaves. */
+function useBrowseApply() {
+  const actions = useJobActions();
+  const toast = useToast();
+  const navigate = useNavigate();
+  const [phase, setPhaseMap] = useState<Record<string, Exclude<ApplyPhase, null>>>({});
+  const [gone, setGone] = useState<Set<string>>(() => new Set());
+  const setPhase = (id: string, p: ApplyPhase) => setPhaseMap(prev => {
+    const next = { ...prev };
+    if (p) next[id] = p; else delete next[id];
+    return next;
+  });
+  const apply = async (card: Card) => {
+    if (phase[card.id]) return;
+    if (!actions.hasCredits) { navigate('/app/upgrade'); return; }
+    setPhase(card.id, 'flip');
+    const pending = fetchJobById(card.id).then(j => (j ? actions.apply(j) : 'failed' as const)).catch(() => 'failed' as const);
+    await wait(APPLY_FLIP_LONG_MS);
+    setPhase(card.id, 'out');
+    await wait(APPLY_OUT_MS);
+    setGone(prev => new Set(prev).add(card.id));
+    setPhase(card.id, null);
+    const outcome = await pending;
+    if (outcome === 'no-credits') { setGone(prev => { const n = new Set(prev); n.delete(card.id); return n; }); return; }
+    toast(outcome === 'applied' ? `Applied to ${card.company}` : 'Your application could not be queued', outcome === 'applied' ? 'ok' : 'error');
+    if (outcome !== 'applied') setGone(prev => { const n = new Set(prev); n.delete(card.id); return n; });
+  };
+  const render = (j: Card, i: number) => gone.has(j.id) ? null : (
+    <ApplyFlip key={j.id} long phase={phase[j.id] ?? null} company={j.company}>
+      <JobCard job={j} index={i} busy={!!phase[j.id]} onApply={() => void apply(j)} />
+    </ApplyFlip>
+  );
+  return render;
+}
+
 export default function BrowseJobs() {
+  const renderCard = useBrowseApply();
   const [params, setParams] = useSearchParams();
   const [draftQ, setDraftQ] = useState(params.get('q') ?? '');
   const [draftLoc, setDraftLoc] = useState(params.get('loc') ?? '');
@@ -277,7 +318,7 @@ export default function BrowseJobs() {
           <div className="card"><Empty icon={WifiOff} title="We couldn’t load jobs" body="Check your connection and try again." action={<button className="btn" onClick={() => loadMine(true)}><RotateCcw />Try again</button>} /></div>
         ) : (
           <>
-            <div className="bj-grid">{mine.cards.slice(0, shown).map((j, i) => <JobCard key={j.id} job={j} index={i} />)}</div>
+            <div className="bj-grid">{mine.cards.slice(0, shown).map(renderCard)}</div>
             {(shown < mine.cards.length || mine.hasMore) && (
               <div className="bj-more"><button className="btn outline lg" disabled={mineLoading} onClick={() => {
                 setShown(n => n + SHOW_STEP);
@@ -293,7 +334,7 @@ export default function BrowseJobs() {
       ) : jobs.length === 0 ? (
         <div className="card"><Empty icon={Search} title="No roles match that yet" body="Try fewer filters or a broader search." action={<button className="btn" onClick={clear}>Clear all</button>} /></div>
       ) : (
-        <div className={`bj-grid ${first.isFetching ? 'is-stale' : ''}`}>{jobs.slice(0, shown).map((j, i) => <JobCard key={j.id} job={j} index={i} />)}</div>
+        <div className={`bj-grid ${first.isFetching ? 'is-stale' : ''}`}>{jobs.slice(0, shown).map(renderCard)}</div>
       )}
 
       {!personal && jobs.length > 0 && (shown < jobs.length || (filtered && hasMore)) && (

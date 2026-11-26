@@ -11,26 +11,27 @@ export type ApplyPhase = 'flip' | 'out' | null;
 /** How long the "AI is applying" face holds after the flip starts, then how long it takes to leave. */
 export const APPLY_FLIP_MS = 1500;
 export const APPLY_OUT_MS = 320;
+/** Home and Browse use a slower, step-by-step face so people see the work happening. */
+export const APPLY_FLIP_LONG_MS = 5000;
 
 /**
  * Wraps a job card so Apply can flip it over to an "AI is applying for you"
  * face before it leaves. The back face only mounts while applying, so its
  * step animation starts in sync with the flip.
  */
-export function ApplyFlip({ phase, company, children }: { phase: ApplyPhase; company: string; children: ReactNode }) {
+export function ApplyFlip({ phase, company, children, long = false }: { phase: ApplyPhase; company: string; children: ReactNode; long?: boolean }) {
+  const steps = long
+    ? ['Customizing your resume', 'Opening application portal', 'Filling in the application', `Applying to ${company}`]
+    : ['Reading the role', 'Tailoring your answers', `Sending to ${company}`];
   return (
-    <div className={`apply-flip ${phase ? 'flipped' : ''} ${phase === 'out' ? 'out' : ''}`}>
+    <div className={`apply-flip ${long ? 'long' : ''} ${phase ? 'flipped' : ''} ${phase === 'out' ? 'out' : ''}`}>
       <div className="apply-flip-inner">
         <div className="apply-flip-front" aria-hidden={phase ? true : undefined}>{children}</div>
         {phase && (
           <div className="apply-flip-back" role="status" aria-live="polite">
             <div className="applying-orb"><Sparkles /></div>
             <div className="applying-title">AI is applying for you<span className="applying-dots"><i /><i /><i /></span></div>
-            <div className="applying-steps">
-              <span>Reading the role</span>
-              <span>Tailoring your answers</span>
-              <span className="ellipsis">Sending to {company}</span>
-            </div>
+            <div className="applying-steps">{steps.map(t => <span key={t} className="ellipsis">{t}</span>)}</div>
             <div className="applying-bar"><i /></div>
           </div>
         )}

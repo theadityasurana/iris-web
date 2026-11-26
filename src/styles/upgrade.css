@@ -40,7 +40,7 @@
 .oc-fav img { width: 24px; height: 24px; }
 .oc-from b { font-size: 14.5px; color: #111; }
 .oc-from span { font-size: 13px; color: #8a8a8e; display: block; }
-.oc-from .oc-tm { margin-left: auto; }
+.oc-from .oc-tm { margin-left: auto; white-space: nowrap; align-self: flex-start; }
 .oc-q { font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-size: 21px; line-height: 1.3; color: #111; border-left: 3px solid #6d4ae0; padding: 2px 0 2px 14px; margin-bottom: 16px; }
 .oc-em p { margin: 0 0 13px; }
 .oc-live { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #2f7a55; background: #e9f5ee; border-radius: 10px; padding: 9px 12px; margin-bottom: 14px; }
@@ -53,9 +53,26 @@
 .oc-cta:hover { background: #5f3fd6; }
 .oc-fine { text-align: center; font-size: 12px; color: #8a8a8e; margin-bottom: 14px; }
 .oc-sign { margin: 0 !important; }
+.oc-org { font-style: normal; font-weight: 400; color: #6b6b70; }
+.oc-sig2 { color: #6b6b70; font-size: .92em; }
+.oc-cal { border: 1px solid #e3e3e8; border-radius: 14px; padding: 12px 14px; margin: 4px 0 14px; background: #fbfbfd; }
+.oc-cal-h { display: flex; align-items: center; gap: 8px; color: #111; font-size: 14.5px; }
+.oc-cal-h svg { color: #006bff; }
+.oc-cal-m { display: flex; gap: 14px; margin-top: 6px; font-size: 12.5px; color: #6b6b70; }
+.oc-cal-m span { display: inline-flex; align-items: center; gap: 5px; }
+.oc-cal-link { margin-top: 8px; font-size: 13px; color: #006bff; text-decoration: underline; word-break: break-all; }
+.oc-cal-btn { display: inline-block; margin-top: 10px; background: #006bff; color: #fff; font-weight: 600; font-size: 13.5px; padding: 8px 14px; border-radius: 999px; }
+.oc-nav-ic { letter-spacing: 8px; }
+/* Mobile: the pitch card is hidden, so the CTA rides along at the bottom. */
+.oc { padding-bottom: 96px; }
+.oc-sticky { position: fixed; left: 10px; right: 10px; bottom: 10px; z-index: 20; display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 16px; border-radius: 20px; background: rgba(35,32,27,.94); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: #fff; box-shadow: 0 18px 40px -16px rgba(0,0,0,.6); }
+.oc-sticky > div { flex: 1; min-width: 0; display: flex; flex-direction: column; font-size: 14px; line-height: 1.3; }
+.oc-sticky > div span { font-size: 12px; opacity: .75; }
+.oc-sticky button { flex-shrink: 0; border: 0; border-radius: 14px; background: #6d4ae0; color: #fff; font: inherit; font-weight: 600; font-size: 14.5px; padding: 12px 14px; cursor: pointer; }
 
 @media (min-width: 1040px) {
-  .oc { height: 100svh; min-height: 760px; overflow: hidden; }
+  .oc-sticky { display: none; }
+  .oc { padding-bottom: 0; height: 100svh; min-height: 760px; overflow: hidden; }
   .oc-back { top: 24px; left: 32px; }
   .oc-grid { max-width: 1300px; height: 100%; margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: minmax(0, 1fr) 730px; gap: 24px; align-items: center; }
   .oc-pitch { display: block; background: rgba(255,253,249,.74); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.6); border-radius: 28px; padding: 36px 38px; }
@@ -97,7 +114,6 @@
   .oc-mail .oc-from { margin: 10px 0 12px; padding-bottom: 10px; }
   .oc-mail .oc-q { font-size: 19px; margin-bottom: 12px; }
   .oc-mail .oc-em p { margin-bottom: 10px; }
-  .oc-mail .oc-live { display: none; }
   .oc-mail .oc-stats { margin-bottom: 11px; }
   .oc-mail .oc-cta { padding: 12px; }
 }

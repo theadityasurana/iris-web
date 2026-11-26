@@ -7,7 +7,7 @@ import { useCredits } from '@web/lib/webBilling';
 import { useToast } from '@web/ui/Toast';
 import { CompanyLogo, Empty, SkeletonList, StatusBadge, timeAgo } from '@web/ui/bits';
 import type { Job } from '@/types';
-import { JobTile, JobTileSkeleton } from '@web/pages/jobs/JobParts';
+import { ApplyFlip, APPLY_FLIP_LONG_MS, APPLY_OUT_MS, JobTile, JobTileSkeleton, type ApplyPhase } from '@web/pages/jobs/JobParts';
 import { EMPTY_FILTERS, useFeed } from '@web/pages/jobs/useFeed';
 import { useJobActions } from '@web/pages/jobs/useJobActions';
 import { TimeSaved } from '@web/ui/TimeSaved';
@@ -20,6 +20,7 @@ const GOAL_LABEL: Record<string, string> = {
   learn_skills: 'Learn new skills on the job', switch_industry: 'Switch to a new industry',
 };
 const VISIBLE = 6;
+const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 export default function Home() {
   const { profile, onboardingData, swipedJobIds } = useAuth();
@@ -29,17 +30,35 @@ export default function Home() {
   const apps = useApplications();
   const [q, setQ] = useState('');
 
+  // Tiles flipping to the "AI is applying" face, by job id.
+  const [applying, setApplying] = useState<Record<string, Exclude<ApplyPhase, null>>>({});
+  const setPhase = (id: string, phase: ApplyPhase) => setApplying(prev => {
+    const next = { ...prev };
+    if (phase) next[id] = phase; else delete next[id];
+    return next;
+  });
+
   const act = useCallback(async (kind: 'save' | 'pass' | 'apply', job: Job) => {
+    if (kind === 'apply') {
+      if (applying[job.id]) return;
+      // No credits: go straight to the upgrade page, no animation.
+      if (!actions.hasCredits) { void actions.apply(job); return; }
+      setPhase(job.id, 'flip');
+      const pending = actions.apply(job);
+      await wait(APPLY_FLIP_LONG_MS);
+      setPhase(job.id, 'out');
+      await wait(APPLY_OUT_MS);
+      feed.remove(job.id);
+      setPhase(job.id, null);
+      const outcome = await pending;
+      if (outcome === 'no-credits') return feed.restore(job);
+      return toast(outcome === 'applied' ? `Applied to ${job.companyName}` : 'Your application could not be queued', outcome === 'applied' ? 'ok' : 'error');
+    }
     feed.remove(job.id);
     if (kind === 'pass') return actions.skip(job);
-    if (kind === 'save') {
-      const ok = await actions.save(job);
-      return toast(ok ? `Saved ${job.jobTitle}` : 'Could not save this job', ok ? 'ok' : 'error');
-    }
-    const outcome = await actions.apply(job);
-    if (outcome === 'no-credits') return feed.restore(job);
-    toast(outcome === 'applied' ? `Applying to ${job.companyName}` : 'Your application could not be queued', outcome === 'applied' ? 'ok' : 'error');
-  }, [feed, actions, toast]);
+    const ok = await actions.save(job);
+    toast(ok ? `Saved ${job.jobTitle}` : 'Could not save this job', ok ? 'ok' : 'error');
+  }, [feed, actions, toast, applying]);
 
   const roles = profile?.desiredRoles ?? [];
   const goal = GOAL_LABEL[onboardingData.goal] ?? null;
@@ -88,7 +107,11 @@ export default function Home() {
         </div>
         {shown.length > 0 ? (
           <>
-            <div className="tile-grid">{shown.map(j => <JobTile key={j.id} job={j} onSave={() => act('save', j)} onPass={() => act('pass', j)} onApply={() => act('apply', j)} />)}</div>
+            <div className="tile-grid">{shown.map(j => (
+              <ApplyFlip key={j.id} long phase={applying[j.id] ?? null} company={j.companyName}>
+                <JobTile job={j} busy={!!applying[j.id]} onSave={() => act('save', j)} onPass={() => act('pass', j)} onApply={() => act('apply', j)} />
+              </ApplyFlip>
+            ))}</div>
             {isFree && behind.length > 0 && (
               <div className="feed-gate">
                 <div className="feed-gate-ghosts" aria-hidden="true">{[0, 1, 2].map(i => <div key={i} className="tile feed-ghost"><JobTileSkeleton /></div>)}</div>

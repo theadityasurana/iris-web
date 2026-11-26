@@ -1,0 +1,54 @@
+/* Plans page revamp: outcome-led header, per-application pricing, glowing popular card. */
+.pl-hero { position: relative; isolation: isolate; overflow: hidden; text-align: center; padding: 46px 24px 30px; margin-bottom: 26px; border-radius: 28px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.6), 0 30px 60px -40px rgba(35,32,27,.45); }
+.pl-hero-art { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(248,245,239,.05) 0%, rgba(248,245,239,.6) 62%, rgba(248,245,239,.94) 100%), url(/media/auth-clouds-poster.webp) 50% 35% / cover no-repeat, #a9c8ea; }
+.pl-pill { display: inline-flex; align-items: center; gap: 9px; padding: 7px 14px; border-radius: 999px; background: rgba(255,253,249,.88); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); font-size: 13px; font-weight: 500; color: #23201b; }
+.pl-blink { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #34a853; animation: pl-blink 1.6s ease-in-out infinite; }
+.pl-blink::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: #34a853; animation: pl-pulse 1.6s ease-out infinite; }
+@keyframes pl-blink { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes pl-pulse { 0% { transform: scale(.6); opacity: .5; } 100% { transform: scale(1.9); opacity: 0; } }
+.pl-title { font-family: var(--serif); font-weight: 500; font-size: clamp(36px, 6vw, 64px); line-height: 1.02; letter-spacing: -0.02em; margin: 18px auto 0; max-width: 14ch; color: #1d1a16; }
+.pl-title em { color: #5536c4; }
+.pl-sub { max-width: 52ch; margin: 14px auto 0; font-size: 16.5px; line-height: 1.5; color: #3d3932; }
+.pl-coffee { display: flex; width: fit-content; margin-left: auto; margin-right: auto; align-items: center; gap: 8px; margin-top: 18px; padding: 10px 16px; border-radius: 14px; background: rgba(255,253,249,.92); box-shadow: 0 10px 30px -18px rgba(35,32,27,.5); font-size: 14.5px; color: #3d3932; text-align: left; }
+.pl-coffee svg { flex-shrink: 0; color: #a8620f; }
+.pl-coffee b { color: #1d1a16; }
+.pl-seg { display: flex; width: fit-content; margin: 20px auto 0; }
+.pl-save { margin-left: 6px; font-size: 11px; font-weight: 600; color: var(--ok, #2f7a55); }
+.pl-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; margin-top: 16px; font-size: 13px; color: #4e4a41; }
+.pl-trust span { display: inline-flex; align-items: center; gap: 6px; }
+
+.pl-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+.pl-card { position: relative; display: flex; flex-direction: column; padding: 26px 24px 24px; border-radius: 24px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line), 0 24px 50px -36px rgba(35,32,27,.45); transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+.pl-card:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--line-strong), 0 30px 60px -34px rgba(35,32,27,.5); }
+.pl-card.pop { color: #fbf7ee; background: radial-gradient(120% 70% at 50% 0%, rgba(124,92,240,.55) 0%, transparent 60%), linear-gradient(170deg, #2b2440 0%, #1d1a16 100%); box-shadow: 0 0 0 1.5px #7c5cf0, 0 34px 70px -30px rgba(85,54,196,.65); }
+@media (min-width: 900px) { .pl-card.pop { transform: translateY(-10px); } .pl-card.pop:hover { transform: translateY(-13px); } }
+.pl-flag { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); padding: 5px 12px; border-radius: 999px; background: linear-gradient(135deg, #7c5cf0, #5536c4); color: #fff; font-size: 12px; font-weight: 600; white-space: nowrap; box-shadow: 0 8px 18px -8px rgba(85,54,196,.8); }
+.pl-name { font-size: 18px; font-weight: 600; }
+.pl-per { display: flex; align-items: baseline; gap: 8px; margin-top: 14px; }
+.pl-per b { font-family: var(--serif); font-weight: 500; font-size: 54px; line-height: 1; letter-spacing: -0.02em; }
+.pl-per span { font-size: 14px; color: var(--ink-3); }
+.pl-card.pop .pl-per span, .pl-card.pop .pl-billed { color: #c9c1e6; }
+.pl-billed { margin-top: 6px; font-size: 14px; color: var(--ink-3); }
+.pl-billed em { font-style: normal; font-weight: 600; color: var(--ok, #2f7a55); }
+.pl-card.pop .pl-billed em { color: #8fe0b0; }
+.pl-outcome { display: flex; gap: 10px; align-items: flex-start; margin-top: 18px; padding: 12px 14px; border-radius: 14px; background: #efeafc; color: #3b2a8f; }
+.pl-outcome svg { flex-shrink: 0; margin-top: 1px; }
+.pl-outcome b { display: block; font-size: 14.5px; }
+.pl-outcome span { display: block; font-size: 12.5px; opacity: .8; }
+.pl-card.pop .pl-outcome { background: rgba(255,255,255,.1); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+.pl-list { list-style: none; margin: 18px 0 22px; padding: 0; display: grid; gap: 9px; font-size: 14px; }
+.pl-list li { display: flex; gap: 9px; align-items: flex-start; }
+.pl-list svg { flex-shrink: 0; margin-top: 3px; color: var(--ok, #2f7a55); }
+.pl-card.pop .pl-list svg { color: #8fe0b0; }
+.pl-btn { margin-top: auto; width: 100%; min-height: 50px; border: 0; border-radius: 14px; background: var(--ink); color: var(--inverse, #fffdf9); font: inherit; font-weight: 600; font-size: 15.5px; cursor: pointer; transition: transform .15s var(--ease), filter .15s var(--ease); }
+.pl-btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.1); }
+.pl-btn:disabled { opacity: .6; cursor: default; }
+.pl-card.pop .pl-btn { background: linear-gradient(135deg, #7c5cf0, #5536c4); color: #fff; box-shadow: 0 12px 26px -12px rgba(124,92,240,.9); }
+.pl-foot { margin-top: 14px; text-align: center; font-size: 12px; color: var(--ink-3); }
+.pl-trial { margin-top: 20px; background: linear-gradient(120deg, var(--bg-sunken) 0%, color-mix(in srgb, var(--bg-sunken) 75%, #7c5cf0) 100%); }
+@media (max-width: 900px) { .pl-grid { grid-template-columns: 1fr; } .pl-hero { padding: 34px 16px 24px; } }
+
+/* The header is always a bright sky, so its text stays dark in both themes. */
+.pl-hero .pl-title { color: #1d1a16; } .pl-hero .pl-sub { color: #3d3932; } .pl-hero .pl-trust { color: #4e4a41; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) .pl-outcome { background: rgba(124,92,240,.18); color: #e4dcff; } }
+:root[data-theme='dark'] .pl-outcome { background: rgba(124,92,240,.18); color: #e4dcff; }

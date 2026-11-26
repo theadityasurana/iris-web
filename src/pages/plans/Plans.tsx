@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Check, CheckCircle2 } from 'lucide-react';
+import { Check, CheckCircle2, Coffee, ShieldCheck, Sparkles, Tag } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useSubscription } from '@web/lib/queries';
 import { useRegion, openBillingPortal, startCheckout, useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
@@ -10,8 +10,17 @@ import { formatDate } from '@web/ui/bits';
 import { PLAN_CONFIGS, TRIAL_PLAN } from '@/lib/billing';
 import { getPlanDisplayName } from '@/lib/subscription';
 import { Hired, PlansFaq, Stages, TimeSaved } from '@web/pages/plans/PlansExtras';
+import '@web/styles/plans-revamp.css';
 
 const INCLUDED = ['Job feed, search and swipe', 'Applications submitted for you', 'Your own application inbox', 'Application tracking and replies'];
+
+/**
+ * Outcome estimate shown on each plan ("75 applications ≈ 3 interviews").
+ * Assumption, not measured data: about 1 interview per 25 applications.
+ * Change this one number to update every card and the footnote.
+ */
+const INTERVIEWS_PER_APPLICATION = 1 / 25;
+const interviewsFor = (applications: number) => Math.max(1, Math.round(applications * INTERVIEWS_PER_APPLICATION));
 
 const money = (currency: string, n: number) => `${currency}${Number.isInteger(n) ? n.toLocaleString() : n.toFixed(2)}`;
 
@@ -50,15 +59,18 @@ export default function Plans() {
 
   return (
     <div className="page">
-      <div className="plans-head">
-        <h1 className="t-display">Plans for the website</h1>
-        <p className="soft">Apply to more jobs from your browser. Cancel any time.</p>
-        <div className="px-low">Apply for as low as {region === 'IN' ? '₹4' : region === 'AF' ? 'under $0.05' : 'under $0.10'} per application</div>
-        <div className="segmented" role="group" aria-label="Billing period" style={{ marginTop: 18 }}>
+      <header className="pl-hero">
+        <div className="pl-hero-art" aria-hidden="true" />
+        <div className="pl-pill"><span className="pl-blink" />Every minute, someone on Iris lands an interview</div>
+        <h1 className="pl-title">Get to your next interview <em>faster.</em></h1>
+        <p className="pl-sub">Every plan is a stack of applications Iris sends for you, tailored to each role. Pick how many shots you want this month.</p>
+        <div className="pl-coffee"><Coffee size={16} />Less than a coffee for each shot at an interview: from <b>{region === 'IN' ? '₹4' : region === 'AF' ? 'under $0.05' : 'under $0.10'}</b> per application</div>
+        <div className="segmented pl-seg" role="group" aria-label="Billing period">
           <button className={period === 'monthly' ? 'on' : ''} aria-pressed={period === 'monthly'} onClick={() => setPeriod('monthly')}>Monthly</button>
-          <button className={period === 'quarterly' ? 'on' : ''} aria-pressed={period === 'quarterly'} onClick={() => setPeriod('quarterly')}>Quarterly</button>
+          <button className={period === 'quarterly' ? 'on' : ''} aria-pressed={period === 'quarterly'} onClick={() => setPeriod('quarterly')}>Quarterly <span className="pl-save">save more</span></button>
         </div>
-      </div>
+        <div className="pl-trust"><span><ShieldCheck size={14} />Secure checkout</span><span><Check size={14} />Cancel any time</span><span><Tag size={14} />Use <b>IRIS10</b> for 10% off</span></div>
+      </header>
 
       {returned && !active && (
         <div className="banner" role="status" style={{ marginBottom: 20 }}>
@@ -85,7 +97,7 @@ export default function Plans() {
         <div className="banner" style={{ marginBottom: 20 }}><span className="grow">Your {getPlanDisplayName(appPlan)} plan from the mobile app also works here. It is managed through the App Store or Google Play and is separate from website plans.</span></div>
       )}
 
-      <div className="plan-grid">
+      <div className="pl-grid">
         {PLAN_CONFIGS.map(plan => {
           const p = plan.pricing[region];
           const price = p[period];
@@ -93,29 +105,32 @@ export default function Plans() {
           const perApp = price / credits;
           const saved = Math.round((1 - p.quarterly / (p.monthly * 3)) * 100);
           const isCurrent = active?.plan === plan.id && active.period === period;
+          const per = period === 'quarterly' ? 'quarter' : 'month';
           return (
-            <article key={plan.id} className={`plan-card-new ${plan.mostPopular ? 'dark' : ''}`}>
-              <div className="row between">
-                <h2 className="t-heading">{plan.label}</h2>
-                {plan.mostPopular && <span className="plan-flag">Most popular</span>}
+            <article key={plan.id} className={`pl-card ${plan.mostPopular ? 'pop' : ''}`}>
+              {plan.mostPopular && <span className="pl-flag">Most popular</span>}
+              <h2 className="pl-name">{plan.label}</h2>
+              <div className="pl-per"><b>{money(p.currency, Math.round(perApp * 100) / 100)}</b><span>per application</span></div>
+              <div className="pl-billed">{money(p.currency, price)} billed per {per}{period === 'quarterly' && saved > 0 ? <em> · save {saved}%</em> : null}</div>
+              <div className="pl-outcome">
+                <Sparkles size={18} />
+                <div><b>{credits} applications ≈ {interviewsFor(credits)} interviews*</b><span>sent for you, tailored to each role</span></div>
               </div>
-              <p className="t-callout plan-sub">{credits} applications per {period === 'quarterly' ? 'quarter' : 'month'}</p>
-              <div className="plan-price"><b>{money(p.currency, price)}</b><span>/ {period === 'quarterly' ? 'quarter' : 'month'}</span></div>
-              <div className="plan-unit">{money(p.currency, Math.round(perApp * 100) / 100)} per application{period === 'quarterly' && saved > 0 ? ` · save ${saved}%` : ''}</div>
-              <ul className="plan-list">{INCLUDED.map(f => <li key={f}><Check size={15} />{f}</li>)}</ul>
-              <button className={`btn block lg ${plan.mostPopular ? 'invert' : ''}`} disabled={!!busy || webLoading || isCurrent} onClick={() => checkout(plan.id)}>
-                {busy === plan.id ? <span className="spinner" /> : isCurrent ? 'Current plan' : `Continue with ${plan.label}`}
+              <ul className="pl-list">{INCLUDED.map(f => <li key={f}><Check size={15} />{f}</li>)}</ul>
+              <button className="pl-btn" disabled={!!busy || webLoading || isCurrent} onClick={() => checkout(plan.id)}>
+                {busy === plan.id ? <span className="spinner" /> : isCurrent ? 'Current plan' : `Get ${plan.label}`}
               </button>
             </article>
           );
         })}
       </div>
+      <p className="pl-foot">*Estimate, based on about 1 interview for every {Math.round(1 / INTERVIEWS_PER_APPLICATION)} applications. Results vary by role and profile.</p>
 
       {(() => {
         const t = TRIAL_PLAN.pricing[region];
         const isCurrent = active?.plan === 'trial';
         return (
-          <section className="trial-strip" aria-label="Trial plan">
+          <section className="trial-strip pl-trial" aria-label="Trial plan">
             <div>
               <div className="t-overline muted">Trial plan</div>
               <h2 className="t-heading" style={{ marginTop: 4 }}>Want to try Iris first? Start at {money(t.currency, t.price)}.</h2>
