@@ -115,6 +115,11 @@ export default function OutOfSwipes() {
             </div>
           </div>
 
+          <div className="oc-out-m" role="status">
+            <span className="oc-out-ic">0</span>
+            <div><b>You've used all your free swipes</b><span>Keep applying and this could be your phone tomorrow morning.</span></div>
+          </div>
+
           <div className="oc-notifs-m" aria-hidden="true"><Notifications name={name} role={role} /></div>
 
           <div className="oc-phone oc-mail">
