@@ -74,3 +74,9 @@ language sql stable security definer set search_path = public as $$
   order by a.run desc, a.variant;
 $$;
 revoke all on function public.web_experiment_results(text) from public, anon, authenticated;
+
+-- Server-only secrets the nextquark dashboard reads with the service role (no client access).
+-- Rows are added by hand in the Supabase SQL editor, never committed.
+create table if not exists public.web_admin_secrets (key text primary key, value text not null, updated_at timestamptz not null default now());
+alter table public.web_admin_secrets enable row level security;
+revoke all on public.web_admin_secrets from anon, authenticated;
