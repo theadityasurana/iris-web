@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useApplications, useEntitlements, useFreeSwipes } from '@web/lib/queries';
+import { experimentQuery, useExperimentVariant } from '@web/lib/experiment';
 import { REGION_QUERY, africaAllowanceQuery, useAfricaAllowance, useRegion, useWebPlan, webPlanUsable } from '@web/lib/webBilling';
 import { AF_FREE_APPLICATIONS } from '@/lib/billing';
 import { supabase } from '@/lib/supabase';
@@ -48,15 +49,20 @@ export function useJobActions() {
   const paying = webCredits > 0 || entitlements.usesCredits;
   const { data: cachedApps } = useApplications();
   // Africa (website only): a free user gets the onboarding application plus earned credits, then must pay.
-  const { data: allowance = AF_FREE_APPLICATIONS } = useAfricaAllowance(region === 'AF');
-  const africaLocked = region === 'AF' && !paying && (cachedApps?.length ?? 0) >= allowance;
+  const { data: variant } = useExperimentVariant();
+  // Africa and the "pay after first application" test group: the onboarding application
+  // (plus anything earned) is free, then the paywall.
+  const firstOnly = region === 'AF' || variant === 'paywall';
+  const { data: allowance = AF_FREE_APPLICATIONS } = useAfricaAllowance(firstOnly);
+  const africaLocked = firstOnly && !paying && (cachedApps?.length ?? 0) >= allowance;
 
   const apply = useCallback(async (job: Job): Promise<ApplyOutcome> => {
     if (!userId || !profile) return 'failed';
     if (webCredits <= 0 && !canApply(entitlements, freeLeft)) { goToPlans(); return 'no-credits'; }
     if (!paying) {
       const r = region ?? await qc.fetchQuery(REGION_QUERY).catch(() => 'INTL');
-      if (r === 'AF') {
+      const v = variant !== undefined ? variant : await qc.fetchQuery(experimentQuery(userId)).catch(() => null);
+      if (r === 'AF' || v === 'paywall') {
         // Always read fresh: the cached list can lag right after the onboarding application.
         const earlier = await fetchUserApplications(userId).catch(() => cachedApps ?? []);
         const limit = await qc.fetchQuery(africaAllowanceQuery(userId)).catch(() => AF_FREE_APPLICATIONS);
@@ -88,7 +94,7 @@ export function useJobActions() {
       window.dispatchEvent(new CustomEvent(FIRST_APPLY_EVENT, { detail }));
     }
     return ok ? 'applied' : 'failed';
-  }, [userId, profile, entitlements, freeLeft, webCredits, paying, region, cachedApps, addSwipedJobId, qc]);
+  }, [userId, profile, entitlements, freeLeft, webCredits, paying, region, variant, cachedApps, addSwipedJobId, qc]);
 
   const skip = useCallback((job: Job) => { addSwipedJobId(job.id); }, [addSwipedJobId]);
 

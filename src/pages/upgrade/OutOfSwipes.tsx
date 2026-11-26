@@ -9,6 +9,8 @@ import { useAuth } from '@web/auth/AuthProvider';
 import { useRegion } from '@web/lib/webBilling';
 import '@web/styles/upgrade.css';
 import { getPromoCode } from '@web/lib/promo';
+import { markPaywallSeen, useExperimentVariant } from '@web/lib/experiment';
+import { useEffect } from 'react';
 
 const DEFAULT_CODE = 'IRIS10'; // 10% off any plan (Dodo discount, no expiry)
 
@@ -61,6 +63,9 @@ export default function OutOfSwipes() {
   const goPlans = () => navigate('/app/plans');
   const tomorrow = new Date(Date.now() + 864e5).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
   const cta = `Get started for ${price}`;
+  const { data: variant } = useExperimentVariant();
+  useEffect(() => { markPaywallSeen(); }, []);
+  const outTitle = variant === 'paywall' ? "You've used your free application" : "You've used all your free swipes";
   // A partner code (from /?code=…) is applied for them at checkout; otherwise suggest IRIS10.
   const saved = getPromoCode();
   const codeNote = saved ? <>Your code <b>{saved}</b> is applied automatically</> : <>Use code <b>{DEFAULT_CODE}</b> for an exclusive discount</>;
@@ -99,7 +104,7 @@ export default function OutOfSwipes() {
         <section className="oc-pitch">
           <div className="oc-pill"><span className="oc-blink" />Every minute, someone on Iris lands an interview</div>
           <h1>Tomorrow morning, this could be <em>your phone.</em></h1>
-          <p className="oc-lede">Your free swipes are over. Keep applying, and the next notification you wake up to could be the interview you've been waiting for.</p>
+          <p className="oc-lede">{variant === 'paywall' ? 'Your free application is done.' : 'Your free swipes are over.'} Keep applying, and the next notification you wake up to could be the interview you've been waiting for.</p>
           <button type="button" className="oc-btn" onClick={goPlans}>{cta}<ArrowRight size={18} /></button>
           <div className="oc-small">{codeNote} · cancel any time</div>
         </section>
@@ -117,7 +122,7 @@ export default function OutOfSwipes() {
 
           <div className="oc-out-m" role="status">
             <span className="oc-out-ic">0</span>
-            <div><b>You've used all your free swipes</b><span>Keep applying and this could be your phone tomorrow morning.</span></div>
+            <div><b>{outTitle}</b><span>Keep applying and this could be your phone tomorrow morning.</span></div>
           </div>
 
           <div className="oc-notifs-m" aria-hidden="true"><Notifications name={name} role={role} /></div>

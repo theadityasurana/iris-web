@@ -5,6 +5,7 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import { getPromoCode } from '@web/lib/promo';
+import { useExperimentVariant } from '@web/lib/experiment';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useApplications, useEntitlements, useFreeSwipes } from '@web/lib/queries';
 import { supabase } from '@/lib/supabase';
@@ -52,12 +53,15 @@ export function useCredits() {
   const { data: web } = useWebPlan();
   const { data: region } = useRegion();
   const { data: apps } = useApplications();
-  const { data: allowance } = useAfricaAllowance(region === 'AF');
+  const { data: variant } = useExperimentVariant();
+  // Africa, and the "pay after first application" test group, share the same rule.
+  const firstOnly = region === 'AF' || variant === 'paywall';
+  const { data: allowance } = useAfricaAllowance(firstOnly);
   const webLeft = webPlanUsable(web) ? web.credits_remaining : 0;
   let base = ent.usesCredits ? ent.creditsRemaining : (free?.remaining ?? freeSwipesPerCycle());
   const paid = ent.usesCredits || webLeft > 0;
   // Africa: free users get the onboarding application plus any credits they earned, then pay.
-  if (region === 'AF' && !paid) base = Math.min(base, Math.max(0, (allowance ?? AF_FREE_APPLICATIONS) - (apps?.length ?? 0)));
+  if (firstOnly && !paid) base = Math.min(base, Math.max(0, (allowance ?? AF_FREE_APPLICATIONS) - (apps?.length ?? 0)));
   return { left: base + webLeft, webLeft, noun: paid ? 'credits' : 'free applications' };
 }
 

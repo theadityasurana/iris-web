@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useAnonVariant } from '@web/lib/experiment';
 import { Link, useLocation } from 'react-router-dom';
 import { Mail, Lock, User } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
@@ -6,6 +7,7 @@ import { isValidEmail } from '@web/lib/validate';
 import { AuthLayout, OAuthButtons, OrDivider } from './AuthLayout';
 
 export default function SignUp() {
+  const { data: anonVariant } = useAnonVariant();
   const { signUpWithEmail } = useAuth();
   const { search } = useLocation();
   const [name, setName] = useState('');
@@ -29,7 +31,7 @@ export default function SignUp() {
   return (
     <AuthLayout
       title="Create your account"
-      subtitle="Your first 10 applications are free. No card needed."
+      subtitle={anonVariant === 'paywall' ? 'Your first application is on us. No card needed.' : 'Your first 10 applications are free. No card needed.'}
       footer={<>Already have an account? <Link to={`/app/sign-in${search}`} className="link">Sign in</Link></>}
     >
       <OAuthButtons />

@@ -26,6 +26,8 @@ async function clickCount(env, code) {
 
 export async function onRequestGet({ request, env }) {
   if (!isAdmin(request, env)) return deny();
+  // Cheap password check, used by the nextquark dashboard before it shows admin data.
+  if (new URL(request.url).searchParams.get('ping') === '1') return json({ ok: true });
   try {
     const fresh = new URL(request.url).searchParams.get('fresh') === '1';
     const [partners, sales] = await Promise.all([listPartners(env), loadSales(env, { fresh })]);

@@ -1,4 +1,4 @@
-import { creditsFor, dodo, json, regionOf, requireUser } from '../../_lib/dodo.js';
+import { creditsFor, db, dodo, json, regionOf, requireUser } from '../../_lib/dodo.js';
 
 /** GET returns the buyer's pricing region. POST starts a Dodo checkout. */
 export async function onRequestGet({ request }) {
@@ -22,6 +22,9 @@ export async function onRequestPost({ request, env }) {
   if (!productId) return json({ error: 'This plan is not available yet.' }, 503);
 
   const origin = new URL(request.url).origin;
+  // Tag the purchase with the A/B group (if any) so revenue can be split by group.
+  const exp = await db(env, `web_experiment_assignments?user_id=eq.${user.id}&select=variant,run&limit=1`)
+    .then(r => (r.ok ? r.json() : [])).then(rows => rows[0] || null).catch(() => null);
   const session = code => dodo(env, '/checkouts', {
     method: 'POST',
     body: JSON.stringify({
@@ -30,7 +33,7 @@ export async function onRequestPost({ request, env }) {
       return_url: `${origin}/app/plans?checkout=done`,
       feature_flags: { allow_discount_code: true },
       ...(code ? { discount_code: code } : {}),
-      metadata: { user_id: user.id, plan, period, region, source: 'iris-web', ...(code ? { promo_code: code } : {}) },
+      metadata: { user_id: user.id, plan, period, region, source: 'iris-web', ...(code ? { promo_code: code } : {}), ...(exp ? { exp_paywall: `${exp.run}:${exp.variant}` } : {}) },
     }),
   });
   let res = await session(promo);
