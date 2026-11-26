@@ -8,6 +8,7 @@ import { ToastProvider } from '@web/ui/Toast';
 import { App } from '@web/App';
 // Registers the install-prompt listener before anything mounts (Chrome fires it once, early).
 import '@web/lib/pwa';
+import { capturePromoFromUrl } from '@web/lib/promo';
 import '@web/styles/app.css';
 import '@web/styles/onboarding.css';
 import '@web/styles/pages.css';
@@ -18,6 +19,9 @@ try {
   const theme = localStorage.getItem('iris-theme');
   if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
 } catch { /* private mode */ }
+
+// Partner links (/?code=ARJUN10) land straight in /app too: keep the code for checkout.
+capturePromoFromUrl();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

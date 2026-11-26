@@ -8,6 +8,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { Session } from '@supabase/supabase-js';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase, getStorageUrl } from '@/lib/supabase';
+import { syncPromoWithUser } from '@web/lib/promo';
 import { mapDbToUserProfile, profileUpdateToDb, onboardingProfileRow, upsertOnboardingProfileWithVerify, welcomeEmailRow, stripNullBytes } from '@/lib/profile-mapping';
 import { getOrCreateProxyEmail } from '@/lib/resend';
 import { sanitizeError } from '@/utils/sanitizeError';
@@ -160,6 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const isNewUser = userIdRef.current !== s.user.id;
       userIdRef.current = s.user.id;
       if (isNewUser) {
+        syncPromoWithUser(s.user.user_metadata);
         // A returning device renders from its cached profile straight away, then refreshes.
         const cached = readCachedProfile(s.user.id);
         if (cached) {

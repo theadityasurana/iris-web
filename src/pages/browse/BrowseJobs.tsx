@@ -15,6 +15,7 @@ import { fetchJobById, fetchJobsBatch } from '@/lib/jobs';
 import { useToast } from '@web/ui/Toast';
 import { ApplyFlip, APPLY_FLIP_LONG_MS, APPLY_OUT_MS, type ApplyPhase } from '@web/pages/jobs/JobParts';
 import { useJobActions } from '@web/pages/jobs/useJobActions';
+import { useLiveCount } from '@web/lib/liveStats';
 import { getDefaultJobLevelsFromExperience } from '@/lib/feed-policy';
 import { nearFromProfile } from '@/lib/feed-home';
 import { readServerJobCache } from '@/lib/server-job-cache';
@@ -135,6 +136,7 @@ function useBrowseApply() {
 
 export default function BrowseJobs() {
   const renderCard = useBrowseApply();
+  const openJobs = useLiveCount('jobs');
   const [params, setParams] = useSearchParams();
   const [draftQ, setDraftQ] = useState(params.get('q') ?? '');
   const [draftLoc, setDraftLoc] = useState(params.get('loc') ?? '');
@@ -286,7 +288,7 @@ export default function BrowseJobs() {
     <div className="page wide bj">
       <header className="bj-hero">
         <div className="t-overline muted">Browse all jobs</div>
-        <h1 className="t-hero">Find a role. <em>Iris applies.</em></h1>
+        <h1 className="t-hero">{openJobs.toLocaleString('en-US')} open roles. <em>Find yours.</em></h1>
         <p className="soft">Fresh roles from company career pages. Search everything, or start with top companies hiring now.</p>
         <form className="bj-search" onSubmit={submit} role="search">
           <div className="bj-field"><Search size={17} /><input value={draftQ} onChange={e => setDraftQ(e.target.value)} maxLength={60} placeholder="Job title or company" aria-label="Job title or company" /></div>

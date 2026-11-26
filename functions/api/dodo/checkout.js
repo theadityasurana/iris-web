@@ -12,6 +12,8 @@ export async function onRequestPost({ request, env }) {
   let body;
   try { body = await request.json(); } catch { return json({ error: 'Invalid request.' }, 400); }
   const { plan, period } = body || {};
+  // Partner code saved from a link like /?code=ARJUN10. Validated by shape here; Dodo validates the rest.
+  const promo = /^[A-Z0-9_-]{3,32}$/.test(String(body?.promo || '').toUpperCase()) ? String(body.promo).toUpperCase() : null;
   if (!creditsFor(plan, period)) return json({ error: 'Unknown plan.' }, 400);
 
   // Region comes from Cloudflare, not the browser, so the price can't be picked by the client.
@@ -20,16 +22,23 @@ export async function onRequestPost({ request, env }) {
   if (!productId) return json({ error: 'This plan is not available yet.' }, 503);
 
   const origin = new URL(request.url).origin;
-  const res = await dodo(env, '/checkouts', {
+  const session = code => dodo(env, '/checkouts', {
     method: 'POST',
     body: JSON.stringify({
       product_cart: [{ product_id: productId, quantity: 1 }],
       customer: { email: user.email, name: user.user_metadata?.full_name || user.email },
       return_url: `${origin}/app/plans?checkout=done`,
       feature_flags: { allow_discount_code: true },
-      metadata: { user_id: user.id, plan, period, region, source: 'iris-web' },
+      ...(code ? { discount_code: code } : {}),
+      metadata: { user_id: user.id, plan, period, region, source: 'iris-web', ...(code ? { promo_code: code } : {}) },
     }),
   });
+  let res = await session(promo);
+  // An expired or unknown code must never block a purchase: retry without it.
+  if (!res.ok && promo) {
+    console.warn('dodo checkout with promo failed, retrying without', promo, res.status, await res.text());
+    res = await session(null);
+  }
   if (!res.ok) {
     console.error('dodo checkout failed', res.status, await res.text());
     return json({ error: 'Could not start checkout. Please try again.' }, 502);

@@ -1068,7 +1068,7 @@
       sendTrack({
         host: host,
         path: path,
-        campaign: params.get('c') || params.get('campaign') || params.get('utm_campaign') || null,
+        campaign: params.get('c') || params.get('campaign') || params.get('utm_campaign') || params.get('code') || null,
         device_type: isIOS || isAndroid ? 'mobile' : 'desktop',
         referrer: document.referrer || ''
       });
@@ -1693,6 +1693,15 @@
   </script>
   <script src="/media/lenis.min.js" defer></script><script src="/media/site.js?v=1" defer></script>
   <script>
+    // Partner links (/?code=ARJUN10): remember the code; the app pre-applies it at checkout
+    // and skips the referral step in onboarding. Same key and format as src/lib/promo.ts.
+    (function () {
+      try {
+        var p = new URLSearchParams(location.search);
+        var c = String(p.get('code') || p.get('promo') || '').trim().toUpperCase();
+        if (/^[A-Z0-9_-]{3,32}$/.test(c)) localStorage.setItem('iris_promo_code', JSON.stringify({ code: c, at: Date.now() }));
+      } catch (_) {}
+    })();
     // Live hero numbers: shared start time, +1 every minute, same for every visitor.
     (function () {
       var START = Date.UTC(2026, 10, 26, 13, 2, 0); // launch moment: counters read exactly their base here

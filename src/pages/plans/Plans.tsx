@@ -11,6 +11,7 @@ import { PLAN_CONFIGS, TRIAL_PLAN } from '@/lib/billing';
 import { getPlanDisplayName } from '@/lib/subscription';
 import { Hired, PlansFaq, Stages, TimeSaved } from '@web/pages/plans/PlansExtras';
 import '@web/styles/plans-revamp.css';
+import { getPromoCode } from '@web/lib/promo';
 
 const INCLUDED = ['Job feed, search and swipe', 'Applications submitted for you', 'Your own application inbox', 'Application tracking and replies'];
 
@@ -34,6 +35,7 @@ export default function Plans() {
   const [period, setPeriod] = useState<'monthly' | 'quarterly'>('monthly');
   const [busy, setBusy] = useState<string | null>(null);
   const { data: region = 'INTL' } = useRegion();
+  const [promo] = useState(getPromoCode);
 
   const returned = params.get('checkout') === 'done';
   useEffect(() => {
@@ -69,7 +71,7 @@ export default function Plans() {
           <button className={period === 'monthly' ? 'on' : ''} aria-pressed={period === 'monthly'} onClick={() => setPeriod('monthly')}>Monthly</button>
           <button className={period === 'quarterly' ? 'on' : ''} aria-pressed={period === 'quarterly'} onClick={() => setPeriod('quarterly')}>Quarterly <span className="pl-save">save more</span></button>
         </div>
-        <div className="pl-trust"><span><ShieldCheck size={14} />Secure checkout</span><span><Check size={14} />Cancel any time</span><span><Tag size={14} />Use <b>IRIS10</b> for 10% off</span></div>
+        <div className="pl-trust"><span><ShieldCheck size={14} />Secure checkout</span><span><Check size={14} />Cancel any time</span>{promo ? <span className="pl-applied"><Tag size={14} />Code <b>{promo}</b> applied automatically at checkout</span> : <span><Tag size={14} />Use <b>IRIS10</b> for 10% off</span>}</div>
       </header>
 
       {returned && !active && (

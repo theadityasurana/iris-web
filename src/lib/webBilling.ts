@@ -4,6 +4,7 @@
  * plan status onto `profiles`, never credits (functions/api/dodo/webhook.js).
  */
 import { useQuery } from '@tanstack/react-query';
+import { getPromoCode } from '@web/lib/promo';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useApplications, useEntitlements, useFreeSwipes } from '@web/lib/queries';
 import { supabase } from '@/lib/supabase';
@@ -72,7 +73,8 @@ async function authedPost(path: string, body?: unknown): Promise<{ url: string }
   return out;
 }
 
-export const startCheckout = (plan: string, period: string) => authedPost('/api/dodo/checkout', { plan, period });
+// A saved partner code (from /?code=…) is sent along so Dodo pre-applies it.
+export const startCheckout = (plan: string, period: string) => authedPost('/api/dodo/checkout', { plan, period, promo: getPromoCode() });
 export const openBillingPortal = () => authedPost('/api/dodo/portal');
 
 export async function fetchRegion(): Promise<WebPricingRegion> {

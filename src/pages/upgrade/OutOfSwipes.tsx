@@ -8,8 +8,9 @@ import { ArrowLeft, ArrowRight, CalendarDays, Clock, Video } from 'lucide-react'
 import { useAuth } from '@web/auth/AuthProvider';
 import { useRegion } from '@web/lib/webBilling';
 import '@web/styles/upgrade.css';
+import { getPromoCode } from '@web/lib/promo';
 
-const DISCOUNT_CODE = 'IRIS10'; // 10% off any plan (Dodo discount, no expiry)
+const DEFAULT_CODE = 'IRIS10'; // 10% off any plan (Dodo discount, no expiry)
 
 function Logos() {
   return (
@@ -60,6 +61,9 @@ export default function OutOfSwipes() {
   const goPlans = () => navigate('/app/plans');
   const tomorrow = new Date(Date.now() + 864e5).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
   const cta = `Get started for ${price}`;
+  // A partner code (from /?code=…) is applied for them at checkout; otherwise suggest IRIS10.
+  const saved = getPromoCode();
+  const codeNote = saved ? <>Your code <b>{saved}</b> is applied automatically</> : <>Use code <b>{DEFAULT_CODE}</b> for an exclusive discount</>;
 
   // What they could wake up to: a recruiter's interview email, addressed to them.
   const email = (
@@ -97,7 +101,7 @@ export default function OutOfSwipes() {
           <h1>Tomorrow morning, this could be <em>your phone.</em></h1>
           <p className="oc-lede">Your free swipes are over. Keep applying, and the next notification you wake up to could be the interview you've been waiting for.</p>
           <button type="button" className="oc-btn" onClick={goPlans}>{cta}<ArrowRight size={18} /></button>
-          <div className="oc-small">Use code <b>{DISCOUNT_CODE}</b> for an exclusive discount · cancel any time</div>
+          <div className="oc-small">{codeNote} · cancel any time</div>
         </section>
 
         <div className="oc-phones">
@@ -125,7 +129,7 @@ export default function OutOfSwipes() {
       </div>
 
       <div className="oc-sticky">
-        <div><b>This could be your inbox.</b><span>Use <b>{DISCOUNT_CODE}</b> for an exclusive discount</span></div>
+        <div><b>This could be your inbox.</b><span>{codeNote}</span></div>
         <button type="button" onClick={goPlans}>{cta}</button>
       </div>
     </div>

@@ -52,3 +52,4 @@
 .pl-hero .pl-title { color: #1d1a16; } .pl-hero .pl-sub { color: #3d3932; } .pl-hero .pl-trust { color: #4e4a41; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) .pl-outcome { background: rgba(124,92,240,.18); color: #e4dcff; } }
 :root[data-theme='dark'] .pl-outcome { background: rgba(124,92,240,.18); color: #e4dcff; }
+.pl-hero .pl-applied { background: #e4f2ea; color: #2f7a55; padding: 4px 10px; border-radius: 99px; font-weight: 500; }

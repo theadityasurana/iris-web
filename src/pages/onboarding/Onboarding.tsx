@@ -22,6 +22,7 @@ import { extractAndParsePdf } from '@/lib/resume-parser/pdf-reader';
 import { parseResumeFromText, mapToOnboardingData } from '@/lib/resume-parser';
 import { sanitizeParsedData } from '@/lib/resume-parser/sanitize';
 import { applyReferralCode } from '@/lib/referral';
+import { getPromoCode } from '@web/lib/promo';
 
 type Update = (partial: Partial<OnboardingData>) => void;
 interface StepDef { n: number; label: string; art: string; caption: string; skippable?: boolean }
@@ -366,10 +367,12 @@ export default function Onboarding() {
     firstName: onboardingData.firstName || profileRow?.first_name || '',
     lastName: onboardingData.lastName || profileRow?.last_name || '',
   }));
+  // People who came through a partner link already have a code: skip the referral step.
+  const [steps] = useState(() => (getPromoCode() ? STEPS.filter(s => s.n !== 12) : STEPS));
   const [stepNo, setStepNo] = useState<number>(() => {
     const saved = onboardingData.onboardingStep ?? 1;
     if (saved >= 14) return BRIEF_STEP;
-    return STEPS.some(s => s.n === saved) ? saved : 1;
+    return steps.some(s => s.n === saved) ? saved : saved === 12 ? 13 : 1;
   });
   const [skippedResume, setSkippedResume] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -378,15 +381,15 @@ export default function Onboarding() {
   const [error, setError] = useState('');
 
   const update: Update = partial => setData(prev => ({ ...prev, ...partial }));
-  const index = STEPS.findIndex(s => s.n === stepNo);
-  const step = STEPS[index];
+  const index = steps.findIndex(s => s.n === stepNo);
+  const step = steps[index];
 
   useEffect(() => { document.title = `${step?.label ?? 'Your brief'} | Iris`; window.scrollTo(0, 0); }, [step]);
 
   const go = (n: number) => { setStepNo(n); saveOnboardingProgress({ ...data, onboardingStep: n }); };
   const next = () => {
     if (stepNo === 13) return go(BRIEF_STEP);
-    go(STEPS[index + 1].n);
+    go(steps[index + 1].n);
   };
   const back = () => {
     if (stepNo === BRIEF_STEP) return go(13);
@@ -395,7 +398,7 @@ export default function Onboarding() {
       window.location.assign('/');
       return;
     }
-    go(STEPS[index - 1].n);
+    go(steps[index - 1].n);
   };
 
   const canContinue = (() => {
@@ -453,12 +456,12 @@ export default function Onboarding() {
   return (
     <div className="ob">
       {top}
-      <div className="ob-progress" role="progressbar" aria-valuemin={0} aria-valuemax={STEPS.length} aria-valuenow={index + 1} aria-label="Onboarding progress"><span style={{ width: `${((index + 1) / STEPS.length) * 100}%` }} /></div>
+      <div className="ob-progress" role="progressbar" aria-valuemin={0} aria-valuemax={steps.length} aria-valuenow={index + 1} aria-label="Onboarding progress"><span style={{ width: `${((index + 1) / steps.length) * 100}%` }} /></div>
       <div className="ob-main">
         <div className="ob-art">
           <img src={`/media/onboarding/${step.art}.webp`} alt="" width={880} height={1100} />
           <div className="ob-art-copy">
-            <div className="t-overline">{String(index + 1).padStart(2, '0')} / {STEPS.length} · {step.label}</div>
+            <div className="t-overline">{String(index + 1).padStart(2, '0')} / {steps.length} · {step.label}</div>
             <em>{step.caption}</em>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLiveCount } from '@web/lib/liveStats';
 import { useEffect, useState, type ComponentType } from 'react';
 import {
   Home, BriefcaseBusiness, Send, Mail, Sparkles, User, Bookmark, CreditCard, Settings, LifeBuoy, Gift,
@@ -77,6 +78,17 @@ function PlayMark() {
       <path d="M16.7 15.3 13.4 12 3.6 21.8c.3.17.68.2 1.03.01L16.7 15.3z" fill="#f43249" />
       <path d="M20.42 10.82 16.7 8.7 13.4 12l3.3 3.3 3.72-2.12c.73-.42.73-1.47 0-1.88z" fill="#ffd400" />
     </svg>
+  );
+}
+
+function LiveInterviews() {
+  const n = useLiveCount('interviews');
+  return (
+    <div className="live-card nav-text" aria-label={`${n.toLocaleString('en-US')} interviews landed on Iris`}>
+      <div className="live-top"><span className="live-dot" />Live</div>
+      <b key={n}>{n.toLocaleString('en-US')}</b>
+      <span>interviews landed on Iris</span>
+    </div>
   );
 }
 
@@ -186,6 +198,7 @@ export function AppShell() {
         <hr className="nav-rule" />
         <NavItems items={YOU} unread={unread} />
         <div className="sidebar-foot">
+          <LiveInterviews />
           <GetTheApp />
           <hr className="nav-rule" />
           <NavItems items={ACCOUNT} unread={unread} />
