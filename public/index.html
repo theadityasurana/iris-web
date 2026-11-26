@@ -724,6 +724,13 @@
       .np-home { position: absolute; bottom: 9px; left: 50%; transform: translateX(-50%); width: 128px; height: 5px; border-radius: 3px; background: #fff; }
     }
     @media (max-width: 1039px) { body:not(.mode-job) .hero-copy .live-strip { margin-left: auto; margin-right: auto; } }
+
+    /* Notifications arrive one by one (hero phone + mobile stack), then stay. */
+    .np-n.np-in { animation: np-in .5s cubic-bezier(.2,.85,.25,1.05) both; }
+    .np-n.np-out { transition: opacity .35s ease, transform .35s ease; opacity: 0 !important; transform: translateY(-14px) scale(.96) !important; }
+    @keyframes np-in { 0% { opacity: 0; transform: translateY(46px) scale(.94); } 100% { opacity: 1; transform: none; } }
+    .np-stack-m.np-live { display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; height: 318px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 34px); mask-image: linear-gradient(180deg, transparent 0, #000 34px); }
+    .np-stack-m.np-live .np-n { opacity: 1; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -748,6 +755,9 @@
             <symbol id="lg-google" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></symbol>
             <symbol id="lg-nvidia" viewBox="0 0 48 48"><rect width="48" height="48" fill="#76b900"/><path d="M8 24c5-8 13-12 21-11 6 1 10 5 12 11-2 6-6 10-12 11-8 1-16-3-21-11z" fill="none" stroke="#fff" stroke-width="3.2"/><path d="M17 24c2-5 7-7 11-6 3 1 5 3 5 6s-2 5-5 6c-4 1-8-1-9-4" fill="none" stroke="#fff" stroke-width="3"/><circle cx="26" cy="24" r="2.6" fill="#fff"/></symbol>
             <symbol id="lg-msft" viewBox="0 0 48 48"><rect x="9" y="9" width="14" height="14" fill="#f25022"/><rect x="25" y="9" width="14" height="14" fill="#7fba00"/><rect x="9" y="25" width="14" height="14" fill="#00a4ef"/><rect x="25" y="25" width="14" height="14" fill="#ffb900"/></symbol>
+            <symbol id="lg-openai" viewBox="0 0 48 48"><rect width="48" height="48" fill="#0d0d0d"/><g fill="none" stroke="#fff" stroke-width="2.6"><rect x="17" y="10" width="14" height="28" rx="7"/><rect x="17" y="10" width="14" height="28" rx="7" transform="rotate(60 24 24)"/><rect x="17" y="10" width="14" height="28" rx="7" transform="rotate(120 24 24)"/></g></symbol>
+            <symbol id="lg-anthropic" viewBox="0 0 48 48"><rect width="48" height="48" fill="#f0eee6"/><path d="M9 35 16.6 13h5.2L29.4 35h-5.3l-1.6-4.8h-7.9L13 35zm7.1-9.3h5L18.6 18zM27.5 13h5.3L40.4 35h-5.3z" fill="#191919"/></symbol>
+            <symbol id="lg-spacex" viewBox="0 0 48 48"><rect width="48" height="48" fill="#000"/><path d="M14 14l20 20M34 14 14 34" stroke="#fff" stroke-width="4.2" stroke-linecap="round"/><path d="M7 31C17 19 29 12 43 9" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></symbol>
           </svg>
           <div class="hero-copy">
             <div class="overline hero-kicker">The <strong class="tj">Tinder for jobs</strong> with an AI that applies</div>
@@ -1707,6 +1717,83 @@
       tick(); setInterval(tick, 1000);
       var d = document.getElementById('np-date');
       if (d) { var t = new Date(Date.now() + 864e5); d.textContent = t.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }); }
+    })();
+  </script>
+  <script>
+    // Hero phone "video": recruiter notifications arrive from the bottom and push the older ones
+    // up (about 4.5s), then the last few stay. Static markup stays as the no-JS / reduced-motion view.
+    (function () {
+      var N = [
+        ['google', 0, 'Google Recruiting', 'Interview invitation: Software Engineer', "Hi, we'd love to schedule a first-round interview with you."],
+        ['nvidia', 1, 'NVIDIA Talent Acquisition', 'Next steps for your application', 'Your profile stood out to our team. Are you free this week?'],
+        ['openai', 1, 'OpenAI Recruiting', "Let's chat about the role", 'Your background is a great fit. Free for a 30-minute call?'],
+        ['msft', 0, 'Microsoft Careers', "Let's schedule your interview", 'Congratulations! The hiring team would like to meet you.'],
+        ['spacex', 1, 'SpaceX Talent', 'Final round invitation', "You've cleared the technical rounds. Can you come in Friday?"],
+        ['anthropic', 1, 'Anthropic People Team', 'Your offer letter \ud83c\udf89', "We're thrilled to offer you the role. Details inside."]
+      ];
+      var AGO = ['now', '1m ago', '3m ago', '6m ago', '11m ago', '18m ago'];
+      var STEP = 760, START = 650;
+      function card(n) {
+        var el = document.createElement('div');
+        el.className = 'np-n';
+        el.innerHTML = '<span class="np-av' + (n[1] ? ' full' : '') + '"><svg><use href="#lg-' + n[0] + '"/></svg><i><svg><use href="#lg-gmail"/></svg></i></span>' +
+          '<div><div class="np-tr"><b></b><span class="np-ago">now</span></div><div class="np-sj"></div><p></p></div>';
+        el.querySelector('b').textContent = n[2];
+        el.querySelector('.np-sj').textContent = n[3];
+        el.querySelector('p').textContent = n[4];
+        return el;
+      }
+      function play(stack, max, label) {
+        if (!stack || !stack.offsetParent) return;
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        Array.prototype.slice.call(stack.querySelectorAll('.np-n')).forEach(function (el) { el.remove(); });
+        if (stack.classList.contains('np-stack-m')) stack.classList.add('np-live');
+        var cards = [];
+        function relabel() {
+          cards.forEach(function (c, i) { c.querySelector('.np-ago').textContent = AGO[cards.length - 1 - i] || ''; });
+          if (label) label.textContent = cards.length + (cards.length === 1 ? ' new message from a recruiter' : ' new messages from recruiters');
+        }
+        function add(n, animate) {
+          var before = new Map(cards.map(function (c) { return [c, c.getBoundingClientRect().top]; }));
+          var el = card(n);
+          stack.appendChild(el);
+          cards.push(el);
+          if (cards.length > max) {
+            var old = cards.shift();
+            if (animate) { old.classList.add('np-out'); setTimeout(function () { old.remove(); }, 360); } else old.remove();
+          }
+          relabel();
+          if (!animate) return;
+          el.classList.add('np-in');
+          // Drop the entrance class once it has played, so a card can never be left invisible.
+          setTimeout(function () { el.classList.remove('np-in'); }, 650);
+          cards.forEach(function (c) {
+            if (c === el || !before.has(c)) return;
+            var d = before.get(c) - c.getBoundingClientRect().top;
+            if (!d) return;
+            // FLIP: jump back to where it was, force a layout, then glide to the new spot.
+            c.style.transition = 'none';
+            c.style.transform = 'translateY(' + d + 'px)';
+            void c.offsetHeight;
+            c.style.transition = 'transform .5s cubic-bezier(.2,.85,.25,1)';
+            c.style.transform = '';
+            setTimeout(function () { c.style.transition = ''; }, 520);
+          });
+        }
+        if (reduce) { N.forEach(function (n) { add(n, false); }); return; }
+        N.forEach(function (n, i) { setTimeout(function () { add(n, true); }, START + i * STEP); });
+        // Once the last one has landed, settle everything exactly in place.
+        setTimeout(function () {
+          cards.forEach(function (c) { c.classList.remove('np-in'); c.style.transition = ''; c.style.transform = ''; });
+        }, START + N.length * STEP + 400);
+      }
+      function go() {
+        play(document.querySelector('.np-phone .np-stack'), 4, document.querySelector('.np-phone .np-more'));
+        play(document.querySelector('.np-stack-m'), 3, null);
+      }
+      // This script is at the end of the page, so the stacks exist: start now rather than
+      // waiting for images and video to finish loading.
+      go();
     })();
   </script>
 </body>
