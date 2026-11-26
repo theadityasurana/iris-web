@@ -13,6 +13,7 @@ import '@web/styles/app.css';
 import '@web/styles/onboarding.css';
 import '@web/styles/pages.css';
 import '@web/styles/premium.css';
+import '@web/styles/sky.css';
 
 // Apply the saved theme before first paint. "System" is the absence of a saved value.
 try {

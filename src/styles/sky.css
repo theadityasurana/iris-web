@@ -1,0 +1,10 @@
+/* Morning-sky backdrop (light theme only). Fixed to the viewport, fading into the page colour;
+   cards, sidebar and top bar keep their own backgrounds, so the UI itself is unchanged. */
+:root {
+  --sky-bg: linear-gradient(180deg, rgba(238,243,250,.12) 0%, rgba(248,245,239,.55) 55%, rgba(248,245,239,.9) 100%) fixed,
+            url(/media/auth-clouds-poster.webp) 50% 20% / cover no-repeat fixed, #f8f5ef;
+}
+:root[data-theme='light'] :is(.shell, .ob, .auth, .fj) { background: var(--sky-bg); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) :is(.shell, .ob, .auth, .fj) { background: var(--sky-bg); }
+}

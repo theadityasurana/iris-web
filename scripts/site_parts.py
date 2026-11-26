@@ -3,7 +3,7 @@ import urllib.parse
 
 APP_STORE = "https://apps.apple.com/in/app/nextquark/id6761863089"
 PLAY_STORE = "https://play.google.com/store/apps/details?id=app.rork.hireswipe_v3_clone_ceuofke"
-OG_IMAGE = "https://irisjobs.live/media/iris-og.jpg?v=2"
+OG_IMAGE = "https://irisjobs.live/media/iris-og.jpg?v=3"
 ASK_PROMPT = "What is Iris (irisjobs.live), the AI job application app known as the Tinder for jobs, and is it good for job seekers?"
 
 _q = urllib.parse.quote(ASK_PROMPT)

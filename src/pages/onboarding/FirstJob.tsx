@@ -3,6 +3,7 @@
  * and offers to apply. Everything shown comes from the job and the person's profile.
  */
 import { useEffect, useMemo, useState } from 'react';
+import { useLightTheme } from '@web/lib/useLightTheme';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { ArrowRight, Banknote, Check, Globe2, GraduationCap, MapPin } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
@@ -32,6 +33,7 @@ function reasons(job: Job, roles: string[], skills: string[]) {
 }
 
 export default function FirstJob() {
+  useLightTheme();
   const { profile, swipedJobIds } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();

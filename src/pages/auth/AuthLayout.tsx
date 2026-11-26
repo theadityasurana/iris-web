@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useLightTheme } from '@web/lib/useLightTheme';
 import { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Logo } from '@web/ui/bits';
@@ -7,6 +8,7 @@ import { useAuth, APPLE_WEB_ENABLED, type OAuthProvider } from '@web/auth/AuthPr
 import { useToast } from '@web/ui/Toast';
 
 export function AuthLayout({ title, subtitle, children, footer }: { title: string; subtitle?: ReactNode; children: ReactNode; footer?: ReactNode }) {
+  useLightTheme();
   useEffect(() => { document.title = `${title} | Iris`; }, [title]);
   return (
     <div className="auth">

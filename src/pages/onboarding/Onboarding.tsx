@@ -4,6 +4,7 @@
  * notifications prompt, so an account can start on one and finish on the other.
  */
 import { useEffect, useMemo, useRef, useState, type DragEvent, type ReactNode } from 'react';
+import { useLightTheme } from '@web/lib/useLightTheme';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, ArrowRight, Upload, FileCheck2, GraduationCap, Repeat, BriefcaseBusiness, Check, Eye, EyeOff, WandSparkles,
@@ -358,6 +359,7 @@ function Brief({ data, avatar, busy, error, onBack, onFinish }: { data: Onboardi
 }
 
 export default function Onboarding() {
+  useLightTheme();
   const { onboardingData, profileRow, userId, saveOnboardingProgress, completeOnboarding, logout } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
