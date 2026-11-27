@@ -4,6 +4,8 @@
 import fs from 'fs';
 import { buildCsv } from './build-bengaluru-sheet.mjs';
 
+const PART_LINES = 6000;
+
 export const US_TABS = [
   ['New York', 'new-york', ['new york', 'brooklyn', 'manhattan', 'new york city', 'nyc']],
   ['San Francisco', 'san-francisco', ['san francisco', 'south san francisco']],
@@ -31,7 +33,14 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const set = new Set(cities);
     const mine = rows.filter(r => (r.loc_cities || []).some(c => set.has(String(c).toLowerCase())));
     const { csv, jobs } = buildCsv(mine, `usa-sheet-${slug}`);
-    fs.writeFileSync(`${outDir}/${slug}.csv`, csv);
-    console.log(`${name}: ${jobs.length} roles, ${new Set(jobs.map(j => j.co)).size} companies, ${(csv.length / 1e6).toFixed(1)} MB`);
+    // Google Sheets' IMPORTDATA rejects files over ~2 MB, so big cities are split into parts
+    // of PART_LINES rows; the tab stacks them back together with {IMPORTDATA(1);IMPORTDATA(2)}.
+    const lines = csv.trimEnd().split('\n');
+    for (const f of fs.readdirSync(outDir)) if (f === `${slug}.csv` || f.startsWith(`${slug}-part`)) fs.unlinkSync(`${outDir}/${f}`);
+    const parts = [];
+    for (let i = 0; i < lines.length; i += PART_LINES) parts.push(lines.slice(i, i + PART_LINES).join('\n') + '\n');
+    const files = parts.length === 1 ? [`${slug}.csv`] : parts.map((_, i) => `${slug}-part${i + 1}.csv`);
+    files.forEach((f, i) => fs.writeFileSync(`${outDir}/${f}`, parts[i]));
+    console.log(`${name}: ${jobs.length} roles, ${new Set(jobs.map(j => j.co)).size} companies → ${files.join(' + ')} (${parts.map(p => (p.length / 1e6).toFixed(2) + ' MB').join(', ')})`);
   }
 }
