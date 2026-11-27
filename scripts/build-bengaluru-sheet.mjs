@@ -3,9 +3,6 @@
 // 2) node scripts/build-bengaluru-sheet.mjs /tmp/blr.json public/sheets/bengaluru-jobs.csv [campaign], then push.
 // Other cities: same query with their location patterns (delhi-ncr-jobs.csv: gurgaon/gurugram/delhi; mumbai-pune-jobs.csv: mumbai/pune).
 import fs from 'fs';
-const [, , src, out, campaign = 'bengaluru-sheet'] = process.argv;
-const raw = fs.readFileSync(src, 'utf8');
-const rows = JSON.parse(raw.slice(raw.indexOf('{'))).rows;
 const D = [
   ['Data & AI', /\b(data|machine learning|ml|ai|genai|llm|analytics|analyst|scientist|nlp|computer vision|deep learning|bi\b|business intelligence|mlops)\b/i],
   ['Cloud, DevOps & security', /\b(devops|sre|site reliability|cloud|platform engineer|infrastructure|kubernetes|security|cyber|network|sysadmin|system administrator|devsecops|soc\b)\b/i],
@@ -22,6 +19,7 @@ const D = [
   ['Customer success & operations', /\b(customer|support|success|operations|ops\b|service|procurement|supply chain|logistics|admin|executive assistant|office|facilities|vendor)\b/i],
 ];
 const LV = { 'Internship': ['Internship', 0], 'Entry Level': ['Entry level', 1], 'Middle Level': ['Mid level', 2], 'Mid Level': ['Mid level', 2], 'Senior Level': ['Senior', 3], 'Lead': ['Lead', 4], 'Principal': ['Principal', 5], 'Director': ['Director', 6], 'VP': ['VP', 7], 'C-Level': ['C-level', 8] };
+export function buildCsv(rows, campaign) {
 const seen = new Set(); const jobs = [];
 for (const r of rows) {
   const title = String(r.title || '').replace(/\s+/g, ' ').trim(), co = String(r.company_name || '').trim();
@@ -41,7 +39,17 @@ for (const d of order) {
   lines.push([`${d}  ·  ${g.length} roles`, '', '', '', '', ''].join(','));
   for (const j of g) lines.push([j.co, j.title, d, j.lvl, `https://irisjobs.live/job/${encodeURIComponent(j.id)}?utm_campaign=${campaign}`, j.added ? fmt(j.added) : ''].map(q).join(','));
 }
-fs.writeFileSync(out, lines.join('\n') + '\n');
-const cos = new Set(jobs.map(j => j.co)).size;
-console.log(JSON.stringify({ roles: jobs.length, companies: cos, domains: order.map(d => `${d}: ${groups[d].length}`) }, null, 1));
-console.log('sample:', groups['Other roles']?.slice(0, 15).map(j => j.title).join(' | '));
+return { csv: lines.join('\n') + '\n', jobs, groups, order };
+}
+
+import { fileURLToPath } from 'url';
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const [, , src, out, campaign = 'bengaluru-sheet'] = process.argv;
+  const raw = fs.readFileSync(src, 'utf8');
+  const rows = JSON.parse(raw.slice(raw.indexOf('{'))).rows;
+  const { csv, jobs, groups, order } = buildCsv(rows, campaign);
+  fs.writeFileSync(out, csv);
+  const cos = new Set(jobs.map(j => j.co)).size;
+  console.log(JSON.stringify({ roles: jobs.length, companies: cos, domains: order.map(d => `${d}: ${groups[d].length}`) }, null, 1));
+  console.log('sample:', groups['Other roles']?.slice(0, 15).map(j => j.title).join(' | '));
+  }
