@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, CreditCard, SquarePlus, Eye, EyeOff, LogOut, Mail, Moon, SlidersHorizontal, Smartphone, Sun, Trash2, User, WandSparkles, type LucideIcon } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useFreeSwipes, useEntitlements, useSubscription, useTransactions } from '@web/lib/queries';
-import { useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
+import { useCredits, useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
 import { ConfirmModal } from '@web/ui/Modal';
 import { InstallSheet } from '@web/ui/InstallSheet';
 import { useInstall } from '@web/lib/pwa';
@@ -180,7 +180,8 @@ function Billing() {
   const { data: tx = [], isLoading } = useTransactions();
   const active = webPlanUsable(web) ? web : null;
   const planName = active ? webPlanName(active.plan) : ent.paid ? getPlanDisplayName(ent.plan) : 'Free';
-  const used = active ? active.credits_limit - active.credits_remaining : null;
+  // One wallet: app and website credits are the same balance.
+  const { left } = useCredits();
   const appLeft = ent.usesCredits ? ent.creditsRemaining : free?.remaining;
   return (
     <>
@@ -206,8 +207,8 @@ function Billing() {
         <div className="t-callout soft">Applications this cycle</div>
         {active ? (
           <>
-            <div className="usage-big num">{used} of {active.credits_limit} used</div>
-            <div className="meter usage-meter"><span style={{ width: `${Math.min(100, (used! / Math.max(active.credits_limit, 1)) * 100)}%` }} /></div>
+            <div className="usage-big num">{left.toLocaleString()} left</div>
+            <p className="t-caption muted" style={{ marginTop: 6 }}>Your plan adds {active.credits_limit.toLocaleString()} each {webPeriodName(active.period)}. Unused credits carry over, and they work in the app and on the website.</p>
           </>
         ) : <div className="usage-big num">{appLeft ?? '–'} left</div>}
       </section>

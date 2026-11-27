@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
-import { nextState, verify, profileUpdate } from '../../functions/api/dodo/webhook.js';
+import { nextState, verify, profileUpdate, grantFor } from '../../functions/api/dodo/webhook.js';
 
 const secret = 'whsec_' + Buffer.from('test-secret-bytes').toString('base64');
 const sign = (id, ts, body) => 'v1,' + createHmac('sha256', Buffer.from('test-secret-bytes')).update(`${id}.${ts}.${body}`).digest('base64');
@@ -24,18 +24,25 @@ test('rejects when the secret is missing', async () => {
 });
 
 const data = { subscription_id: 's1', next_billing_date: '2026-12-05T00:00:00Z', customer: { customer_id: 'c1' }, metadata: { plan: 'pro', period: 'quarterly' } };
-test('activation grants credits for the whole period', () => {
+test('activation grants the period\'s credits to the shared wallet, not the website row', () => {
   const s = nextState('subscription.active', data, null);
-  assert.equal(s.credits_remaining, 600);
+  assert.equal(s.credits_remaining, 0);
+  assert.equal(s.credits_limit, 600);
   assert.equal(s.status, 'active');
+  assert.deepEqual(grantFor('subscription.active', data), { amount: 600, subscriptionId: 's1', periodEnd: data.next_billing_date });
 });
 test('repeat event for the same period does not refill', () => {
   const s = nextState('subscription.active', data, { dodo_subscription_id: 's1', current_period_end: data.next_billing_date, credits_remaining: 12 });
   assert.equal(s.credits_remaining, 12);
 });
-test('renewal into a new period refills', () => {
+test('renewal into a new period grants to the wallet (once per period, enforced in SQL)', () => {
   const s = nextState('subscription.renewed', data, { dodo_subscription_id: 's1', current_period_end: '2026-09-05T00:00:00Z', credits_remaining: 12 });
-  assert.equal(s.credits_remaining, 600);
+  assert.equal(s.credits_remaining, 0);
+  assert.equal(grantFor('subscription.renewed', data).amount, 600);
+});
+test('only activation/renewal grant credits', () => {
+  for (const t of ['subscription.cancelled', 'subscription.expired', 'subscription.on_hold']) assert.equal(grantFor(t, data), null);
+  assert.equal(grantFor('subscription.active', { ...data, metadata: { plan: 'x', period: 'monthly' } }), null);
 });
 test('cancel keeps credits; expiry clears them', () => {
   assert.equal('credits_remaining' in nextState('subscription.cancelled', data, null), false);
@@ -96,7 +103,8 @@ test('missing profile or unknown plan is ignored', () => {
 const trial = { subscription_id: 't1', next_billing_date: '2026-11-28T00:00:00Z', customer: { customer_id: 'c1' }, metadata: { plan: 'trial', period: 'biweekly', region: 'IN' } };
 test('trial grants 30 credits per 14-day cycle', () => {
   const s = nextState('subscription.active', trial, null);
-  assert.equal(s.credits_remaining, 30);
+  assert.equal(s.credits_remaining, 0);
+  assert.equal(grantFor('subscription.active', trial).amount, 30);
   assert.equal(s.plan, 'trial');
   assert.equal(s.period, 'biweekly');
 });

@@ -4,7 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Check, CheckCircle2, Coffee, ShieldCheck, Sparkles, Tag } from 'lucide-react';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useSubscription } from '@web/lib/queries';
-import { useRegion, openBillingPortal, startCheckout, useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
+import { useCredits, useRegion, openBillingPortal, startCheckout, useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
 import { useToast } from '@web/ui/Toast';
 import { formatDate } from '@web/ui/bits';
 import { PLAN_CONFIGS, TRIAL_PLAN } from '@/lib/billing';
@@ -36,6 +36,7 @@ export default function Plans() {
   const [busy, setBusy] = useState<string | null>(null);
   const { data: region = 'INTL' } = useRegion();
   const [promo] = useState(getPromoCode);
+  const { left: creditsLeft } = useCredits();
 
   const returned = params.get('checkout') === 'done';
   useEffect(() => {
@@ -80,7 +81,7 @@ export default function Plans() {
           <button className="btn ghost sm" onClick={() => setParams({}, { replace: true })}>Dismiss</button>
         </div>
       )}
-      {returned && active && <div className="banner green" role="status" style={{ marginBottom: 20 }}><CheckCircle2 /><span className="grow">You're on {webPlanName(active.plan)}. {active.credits_remaining} credits are ready to use.</span></div>}
+      {returned && active && <div className="banner green" role="status" style={{ marginBottom: 20 }}><CheckCircle2 /><span className="grow">You're on {webPlanName(active.plan)}. {creditsLeft.toLocaleString()} credits are ready to use, in the app and on the website.</span></div>}
 
       {active && (
         <section className="card pad current-plan">
@@ -88,7 +89,7 @@ export default function Plans() {
             <div className="t-overline muted">Your website plan · {webPeriodName(active.period)}</div>
             <div className="t-title" style={{ marginTop: 6 }}>{webPlanName(active.plan)}</div>
             <p className="t-callout soft" style={{ marginTop: 6 }}>
-              {active.credits_remaining} of {active.credits_limit} credits left
+              {creditsLeft.toLocaleString()} credits left
               {active.current_period_end && ` · ${active.status === 'cancelled' ? 'ends' : 'renews'} ${formatDate(active.current_period_end)}`}
             </p>
           </div>

@@ -1,10 +1,11 @@
 /**
- * Dodo webhook (Standard Webhooks). Credits live only in the website's own
- * tables, web_subscriptions and web_billing_events. The plan's status is also
- * mirrored onto `profiles` (subscription_type / plan / status / dates), which
- * is what the app's paid-access gates, the admin dashboard and the upgrade
- * alert read. That mirror never touches profile credits (the web adds its own
- * on top) and never overrides a live Google Play / Razorpay subscription.
+ * Dodo webhook (Standard Webhooks). One wallet: each paid period's credits are
+ * added to profiles.applications_remaining (the balance the app, the website
+ * and Iris auto-apply all spend) exactly once, via grant_web_period_credits.
+ * web_subscriptions keeps the plan, status and period (its credits_remaining is
+ * only a legacy balance, spent first if anything is left). The plan's status is
+ * also mirrored onto `profiles` (subscription_type / plan / status / dates); the
+ * mirror never overrides a live Google Play / Razorpay subscription.
  */
 import { creditsFor, db, json } from '../../_lib/dodo.js';
 
@@ -47,7 +48,8 @@ export function nextState(type, data, existing) {
       if (!grant) return null;
       // A repeat event for a period already granted must not refill credits.
       const samePeriod = existing?.dodo_subscription_id === data.subscription_id && existing?.current_period_end === data.next_billing_date;
-      return { ...base, plan, period, status: 'active', credits_limit: grant, credits_remaining: samePeriod ? existing.credits_remaining : grant };
+      // Credits go to the shared wallet (see grantFor); a repeat event keeps any legacy balance as is.
+      return { ...base, plan, period, status: 'active', credits_limit: grant, credits_remaining: samePeriod ? existing.credits_remaining : 0 };
     }
     case 'subscription.on_hold':
     case 'subscription.past_due':
@@ -82,6 +84,15 @@ const sameInstant = (a, b) => !!a && !!b && new Date(a).getTime() === new Date(b
  * Pure: the `profiles` fields to write for this event, or null to leave the
  * profile alone. `existing` is the web_subscriptions row before this event.
  */
+/** Credits to add to the shared wallet for this event (0 if none), keyed by subscription + period. */
+export function grantFor(type, data) {
+  if (type !== 'subscription.active' && type !== 'subscription.renewed') return null;
+  const meta = data.metadata || {};
+  const amount = creditsFor(meta.plan, meta.period);
+  if (!amount || !data.subscription_id || !data.next_billing_date) return null;
+  return { amount, subscriptionId: data.subscription_id, periodEnd: data.next_billing_date };
+}
+
 export function profileUpdate(type, data, profile, existing, now = Date.now()) {
   if (!profile) return null;
   const meta = data.metadata || {};
@@ -163,6 +174,17 @@ export async function onRequestPost({ request, env }) {
   const profRes = await db(env, `profiles?id=eq.${encodeURIComponent(userId)}&select=subscription_type,subscription_status,subscription_start_date,subscription_end_date,google_play_purchase_token,razorpay_subscription_id`);
   if (!profRes.ok) return retry('profile read', profRes.status);
   const [profile] = await profRes.json();
+
+  // Add this period's credits to the shared wallet first. It is idempotent per
+  // (subscription, period), so a Dodo retry or a repeat event never adds twice.
+  const grant = grantFor(event.type, data);
+  if (grant) {
+    const g = await db(env, 'rpc/grant_web_period_credits', {
+      method: 'POST',
+      body: JSON.stringify({ p_user_id: userId, p_subscription_id: grant.subscriptionId, p_period_end: grant.periodEnd, p_amount: grant.amount }),
+    });
+    if (!g.ok) return retry('credit grant', g.status);
+  }
 
   const write = await db(env, 'web_subscriptions?on_conflict=user_id', {
     method: 'POST',

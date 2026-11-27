@@ -129,6 +129,20 @@ export async function useDailySwipe(userId: string): Promise<boolean> {
 
 /** Add bonus swipes (called when referral/social swipes are earned) */
 export async function addBonusDailySwipes(userId: string, count: number): Promise<void> {
+  // Paying users spend one wallet (applications_remaining). A bonus is added on top of it;
+  // writing the free-swipe count into it would wipe their credits.
+  const { data: paid } = await supabase
+    .from('profiles')
+    .select('applications_remaining, subscription_type')
+    .eq('id', userId)
+    .maybeSingle();
+  if (paid?.subscription_type === 'premium') {
+    await supabase
+      .from('profiles')
+      .update({ applications_remaining: (paid.applications_remaining ?? 0) + count })
+      .eq('id', userId);
+    return;
+  }
   const data = await fetchFromSupabase(userId);
   const newRemaining = data.remaining + count;
 
