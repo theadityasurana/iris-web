@@ -1,8 +1,9 @@
 // Rebuilds public/sheets/bengaluru-jobs.csv (pulled into the public Google Sheet via IMPORTDATA).
 // 1) supabase db query --linked "select id, company_name, title, experience, coalesce(posted_at, created_at::date) added from jobs where location ilike any(array['%bangalore%','%bengaluru%']) and coalesce(status,'') not in ('closed','expired','inactive');" > /tmp/blr.json
-// 2) node scripts/build-bengaluru-sheet.mjs /tmp/blr.json public/sheets/bengaluru-jobs.csv, then push.
+// 2) node scripts/build-bengaluru-sheet.mjs /tmp/blr.json public/sheets/bengaluru-jobs.csv [campaign], then push.
+// Other cities: same query with their location patterns (delhi-ncr-jobs.csv: gurgaon/gurugram/delhi; mumbai-pune-jobs.csv: mumbai/pune).
 import fs from 'fs';
-const [, , src, out] = process.argv;
+const [, , src, out, campaign = 'bengaluru-sheet'] = process.argv;
 const raw = fs.readFileSync(src, 'utf8');
 const rows = JSON.parse(raw.slice(raw.indexOf('{'))).rows;
 const D = [
@@ -38,7 +39,7 @@ const lines = [];
 for (const d of order) {
   const g = groups[d].sort((a, b) => a.rank - b.rank || String(b.added).localeCompare(String(a.added)) || a.co.localeCompare(b.co));
   lines.push([`${d}  ·  ${g.length} roles`, '', '', '', '', ''].join(','));
-  for (const j of g) lines.push([j.co, j.title, d, j.lvl, `https://irisjobs.live/job/${encodeURIComponent(j.id)}?utm_campaign=bengaluru-sheet`, j.added ? fmt(j.added) : ''].map(q).join(','));
+  for (const j of g) lines.push([j.co, j.title, d, j.lvl, `https://irisjobs.live/job/${encodeURIComponent(j.id)}?utm_campaign=${campaign}`, j.added ? fmt(j.added) : ''].map(q).join(','));
 }
 fs.writeFileSync(out, lines.join('\n') + '\n');
 const cos = new Set(jobs.map(j => j.co)).size;
