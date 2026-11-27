@@ -117,6 +117,9 @@ export default function OutOfSwipes() {
   const arrived = useArrivals(notes.length);
   const [narrow] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1040);
   const { data: variant } = useExperimentVariant();
+  // This page lives outside AppShell (which resets scroll on navigation), so the
+  // jobs page's scroll position would carry over and open it at the bottom on phones.
+  useLayoutEffect(() => { window.scrollTo(0, 0); }, []);
   useEffect(() => { markPaywallSeen(); }, []);
   const outTitle = variant === 'paywall' ? "You've used your free application" : "You've used all your free swipes";
   // A partner code (from /?code=…) is applied for them at checkout; otherwise suggest IRIS10.
