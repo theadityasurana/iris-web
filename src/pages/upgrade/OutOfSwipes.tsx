@@ -109,7 +109,7 @@ export default function OutOfSwipes() {
   const p = profile as { first_name?: string; name?: string; desiredRoles?: string[] } | null;
   const name = (p?.first_name || (p?.name || '').split(' ')[0] || '').trim();
   const role = (p?.desiredRoles?.[0] || 'Software Engineer').trim();
-  const price = region === 'IN' ? '₹4' : region === 'AF' ? 'under $0.05' : 'under $0.10';
+  const price = region === 'IN' ? '₹4' : '$0.02';
   const goPlans = () => navigate('/app/plans');
   const tomorrow = new Date(Date.now() + 864e5).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
   const cta = `Get started for ${price}`;

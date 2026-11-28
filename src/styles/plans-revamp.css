@@ -9,8 +9,17 @@
 .pl-title { font-family: var(--serif); font-weight: 500; font-size: clamp(36px, 6vw, 64px); line-height: 1.02; letter-spacing: -0.02em; margin: 18px auto 0; max-width: 14ch; color: #1d1a16; }
 .pl-title em { color: #5536c4; }
 .pl-sub { max-width: 52ch; margin: 14px auto 0; font-size: 16.5px; line-height: 1.5; color: #3d3932; }
-.pl-waiting { margin: 10px auto 0; font-size: 14.5px; color: #4e4a41; }
-.pl-waiting b { color: #1d1a16; }
+.pl-waiting { margin: 10px auto 0; font-size: 17px; color: #4e4a41; }
+.pl-waiting b { color: #1d1a16; font-size: 19px; }
+.pl-stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px auto 0; max-width: 680px; }
+.pl-stats > div { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 14px 20px; border-radius: 18px; background: rgba(255,253,249,.88); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 8px 24px -14px rgba(35,32,27,.35); min-width: 140px; flex: 1; }
+.pl-stats > div b { font-family: var(--serif); font-weight: 500; font-size: 28px; line-height: 1; letter-spacing: -.02em; color: #1d1a16; }
+.pl-stats > div > span:last-child { font-size: 12px; color: #4e4a41; }
+.pl-stat-live { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: #2f7a55; text-transform: uppercase; letter-spacing: .04em; }
+.pl-stat-live i { width: 6px; height: 6px; border-radius: 50%; background: #34a853; animation: pl-blink 1.6s ease-in-out infinite; }
+.pl-stat-tagline { flex-basis: 100%; min-width: unset; background: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 4px 0 0 !important; font-size: 14px; color: #3d3932; }
+.pl-stat-tagline b { font-family: inherit; font-size: inherit; letter-spacing: 0; color: #1d1a16; }
+@media (max-width: 600px) { .pl-stats > div { min-width: calc(50% - 5px); } }
 .pl-coffee { display: flex; width: fit-content; margin-left: auto; margin-right: auto; align-items: center; gap: 8px; margin-top: 18px; padding: 10px 16px; border-radius: 14px; background: rgba(255,253,249,.92); box-shadow: 0 10px 30px -18px rgba(35,32,27,.5); font-size: 14.5px; color: #3d3932; text-align: left; }
 .pl-coffee svg { flex-shrink: 0; color: #a8620f; }
 .pl-coffee b { color: #1d1a16; }

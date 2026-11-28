@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Check, CheckCircle2, Coffee, ShieldCheck, Sparkles, Tag } from 'lucide-react';
+import { useLiveCount } from '@web/lib/liveStats';
 import { useAuth } from '@web/auth/AuthProvider';
 import { useSubscription } from '@web/lib/queries';
 import { useCredits, useRegion, openBillingPortal, startCheckout, useWebPlan, webPeriodName, webPlanName, webPlanUsable } from '@web/lib/webBilling';
@@ -37,6 +38,9 @@ export default function Plans() {
   const { data: region = 'INTL' } = useRegion();
   const [promo] = useState(getPromoCode);
   const waitingRoles = useMemo(() => Math.floor(Math.random() * 401) + 800, []);
+  const interviews = useLiveCount('interviews');
+  const companies = useLiveCount('companies');
+  const jobs = useLiveCount('jobs');
   const { left: creditsLeft } = useCredits();
 
   const returned = params.get('checkout') === 'done';
@@ -69,7 +73,13 @@ export default function Plans() {
         <h1 className="pl-title">Get to your next interview <em>faster.</em></h1>
         <p className="pl-sub">Every plan is a stack of applications Iris sends for you, tailored to each role. Pick how many shots you want this month.</p>
         <p className="pl-waiting"><b>{waitingRoles.toLocaleString()} more roles</b> are relevant for you right now</p>
-        <div className="pl-coffee"><Coffee size={16} />Less than a coffee for each shot at an interview: from <b>{region === 'IN' ? '₹4' : region === 'AF' ? 'under $0.05' : 'under $0.10'}</b> per application</div>
+        <div className="pl-stats" aria-label="Live platform stats">
+          <div><span className="pl-stat-live"><i />Live</span><b>{interviews.toLocaleString()}</b><span>interviews landed</span></div>
+          <div><span className="pl-stat-live"><i />Live</span><b>{companies.toLocaleString()}</b><span>partner companies</span></div>
+          <div><span className="pl-stat-live"><i />Live</span><b>{jobs.toLocaleString()}</b><span>open jobs</span></div>
+          <div className="pl-stat-tagline">Every minute, someone on Iris lands an interview. <b>70% of users do.</b></div>
+        </div>
+        <div className="pl-coffee"><Coffee size={16} />Less than a coffee for each shot at an interview: from <b>{region === 'IN' ? '₹4' : '$0.02'}</b> per application</div>
         <div className="segmented pl-seg" role="group" aria-label="Billing period">
           <button className={period === 'monthly' ? 'on' : ''} aria-pressed={period === 'monthly'} onClick={() => setPeriod('monthly')}>Monthly</button>
           <button className={period === 'quarterly' ? 'on' : ''} aria-pressed={period === 'quarterly'} onClick={() => setPeriod('quarterly')}>Quarterly <span className="pl-save">save more</span></button>
