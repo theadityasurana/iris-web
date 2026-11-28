@@ -9,6 +9,8 @@
 .pl-title { font-family: var(--serif); font-weight: 500; font-size: clamp(36px, 6vw, 64px); line-height: 1.02; letter-spacing: -0.02em; margin: 18px auto 0; max-width: 14ch; color: #1d1a16; }
 .pl-title em { color: #5536c4; }
 .pl-sub { max-width: 52ch; margin: 14px auto 0; font-size: 16.5px; line-height: 1.5; color: #3d3932; }
+.pl-waiting { margin: 10px auto 0; font-size: 14.5px; color: #4e4a41; }
+.pl-waiting b { color: #1d1a16; }
 .pl-coffee { display: flex; width: fit-content; margin-left: auto; margin-right: auto; align-items: center; gap: 8px; margin-top: 18px; padding: 10px 16px; border-radius: 14px; background: rgba(255,253,249,.92); box-shadow: 0 10px 30px -18px rgba(35,32,27,.5); font-size: 14.5px; color: #3d3932; text-align: left; }
 .pl-coffee svg { flex-shrink: 0; color: #a8620f; }
 .pl-coffee b { color: #1d1a16; }

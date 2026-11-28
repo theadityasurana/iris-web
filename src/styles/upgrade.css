@@ -122,6 +122,8 @@
   .oc-lede { font-size: 18px; line-height: 1.55; color: #3d3932; max-width: 440px; margin: 0; }
   .oc-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; background: #23201b; color: #fff; font: inherit; font-weight: 600; font-size: 16px; padding: 15px 26px; border: 0; border-radius: 999px; cursor: pointer; }
   .oc-small { font-size: 13.5px; color: #4e4a41; margin-top: 12px; }
+  .oc-waiting { font-size: 14px; color: #4e4a41; margin: 20px 0 0; }
+  .oc-waiting b { color: #23201b; }
   .oc-notifs-m, .oc-out-m { display: none; }
   .oc-phones { position: relative; height: 790px; transform-origin: center; }
   .oc-phone { width: 372px; height: 790px; border-radius: 58px; background: #1b1b1d; padding: 11px; box-shadow: 0 0 0 2px #3a3a3d inset, 0 50px 90px -30px rgba(20,15,10,.55); }

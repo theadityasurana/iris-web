@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Check, CheckCircle2, Coffee, ShieldCheck, Sparkles, Tag } from 'lucide-react';
@@ -36,6 +36,7 @@ export default function Plans() {
   const [busy, setBusy] = useState<string | null>(null);
   const { data: region = 'INTL' } = useRegion();
   const [promo] = useState(getPromoCode);
+  const waitingRoles = useMemo(() => Math.floor(Math.random() * 401) + 800, []);
   const { left: creditsLeft } = useCredits();
 
   const returned = params.get('checkout') === 'done';
@@ -67,6 +68,7 @@ export default function Plans() {
         <div className="pl-pill"><span className="pl-blink" />Every minute, someone on Iris lands an interview</div>
         <h1 className="pl-title">Get to your next interview <em>faster.</em></h1>
         <p className="pl-sub">Every plan is a stack of applications Iris sends for you, tailored to each role. Pick how many shots you want this month.</p>
+        <p className="pl-waiting"><b>{waitingRoles.toLocaleString()} more roles</b> are relevant for you right now</p>
         <div className="pl-coffee"><Coffee size={16} />Less than a coffee for each shot at an interview: from <b>{region === 'IN' ? '₹4' : region === 'AF' ? 'under $0.05' : 'under $0.10'}</b> per application</div>
         <div className="segmented pl-seg" role="group" aria-label="Billing period">
           <button className={period === 'monthly' ? 'on' : ''} aria-pressed={period === 'monthly'} onClick={() => setPeriod('monthly')}>Monthly</button>

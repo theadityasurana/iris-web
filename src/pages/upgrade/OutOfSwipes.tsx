@@ -10,7 +10,7 @@ import { useRegion } from '@web/lib/webBilling';
 import '@web/styles/upgrade.css';
 import { getPromoCode } from '@web/lib/promo';
 import { markPaywallSeen, useExperimentVariant } from '@web/lib/experiment';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 const DEFAULT_CODE = 'IRIS10'; // 10% off any plan (Dodo discount, no expiry)
 
@@ -122,6 +122,7 @@ export default function OutOfSwipes() {
   useLayoutEffect(() => { window.scrollTo(0, 0); }, []);
   useEffect(() => { markPaywallSeen(); }, []);
   const outTitle = variant === 'paywall' ? "You've used your free application" : "You've used all your free swipes";
+  const waitingRoles = useMemo(() => Math.floor(Math.random() * 401) + 800, []);
   // A partner code (from /?code=…) is applied for them at checkout; otherwise suggest IRIS10.
   const saved = getPromoCode();
   const codeNote = saved ? <>Your code <b>{saved}</b> is applied automatically</> : <>Use code <b>{DEFAULT_CODE}</b> for an exclusive discount</>;
@@ -161,6 +162,7 @@ export default function OutOfSwipes() {
           <div className="oc-pill"><span className="oc-blink" />Every minute, someone on Iris lands an interview</div>
           <h1>Tomorrow morning, this could be <em>your phone.</em></h1>
           <p className="oc-lede">{variant === 'paywall' ? 'Your free application is done.' : 'Your free swipes are over.'} Keep applying, and the next notification you wake up to could be the interview you've been waiting for.</p>
+          <p className="oc-waiting"><b>{waitingRoles.toLocaleString()} more roles</b> are waiting for you</p>
           <button type="button" className="oc-btn" onClick={goPlans}>{cta}<ArrowRight size={18} /></button>
           <div className="oc-small">{codeNote} · cancel any time</div>
         </section>
